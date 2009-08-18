@@ -133,7 +133,9 @@
 		<echo append="false" file="${build.files.version}" message="${project.version}" />
 		
 		<!-- Create a new tag from the trunk -->
-		<!-- TODO Create tag -->
+		<svn username="${svn.username}" password="${svn.password}" javahl="${svn.javahl}" svnkit="${svn.svnkit}">
+			<copy srcPath="${basedir}" destURL="${svn.privurl}/tags/${project.version}" message="Tagging release version: ${project.version}" />
+		</svn>
 		
 		<echo message="Finished: Release of version ${project.version} complete"/>
 		<echo message="Remember to increment the version for next release"/>
