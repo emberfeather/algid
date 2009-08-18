@@ -158,7 +158,7 @@
 			<arg value="${svn.password}" />
 			<arg value="-disable-twitter-button" />
 			<arg value="-config-file" />
-			<arg value="${build.dist}/settings/svnstat.properties" />
+			<arg value="${build.dist}/settings/statSVN.properties" />
 			<arg value="${build.logs.svn}" />
 			<arg value="${basedir}" />
 		</java>
