@@ -209,8 +209,8 @@
 		
 		<!--- Setup the application managers --->
 		<cfset arguments.newApplication.managers = {
-				singleton = createObject('component', 'cf-compendium.inc.resource.application.singletonManager').init(isDebugMode),
-				transient = createObject('component', 'cf-compendium.inc.resource.application.transientManager').init(isDebugMode)
+				singleton = createObject('component', 'algid.inc.resource.application.singletonManager').init(isDebugMode),
+				transient = createObject('component', 'algid.inc.resource.application.transientManager').init(isDebugMode)
 			} />
 		
 		<!--- Create the default set of singletons --->
