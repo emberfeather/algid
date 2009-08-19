@@ -1,0 +1,5 @@
+#summary Release Notes for @project.version@
+#sidebar TOCReleaseNotes
+
+= @project.fullname@ v@project.version@ =
+

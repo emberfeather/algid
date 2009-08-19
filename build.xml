@@ -1,37 +1,8 @@
 <?xml version="1.0"?>
-<project name="algid" default="minify" basedir=".">
+<project name="algid" default="svnUpdate" basedir=".">
 	<!-- Include the property files -->
 	<property file="${basedir}/dist/settings/user.properties"/>
 	<property file="${basedir}/dist/settings/project.properties"/>
-	
-	<target name="minify" depends="prepare" description="Minify the CSS and JS files">
-		<echo message="Starting: CSS and JS minification"/>
-		
-		<!-- Use the jar to minify the css and js files -->
-		<apply executable="java" parallel="false" dest="${basedir}/${project.name}/script">
-			<fileset dir="${basedir}/${project.name}/script" includes="**/*.js" excludes="**/*-min.js" />
-			<arg line="-jar"/>
-			<arg path="${build.lib}/yuicompressor-2.4.2/yuicompressor.jar" />
-			<arg line="-v"/>
-			<srcfile/>
-			<arg line="-o"/>
-			<mapper type="glob" from="*.js" to="*-min.js"/>
-			<targetfile/>
-		</apply>
-		
-		<apply executable="java" parallel="false" dest="${basedir}/${project.name}/style">
-			<fileset dir="${basedir}/${project.name}/style" includes="**/*.css" excludes="**/*-min.css" />
-			<arg line="-jar"/>
-			<arg path="${basedir}/${build.lib}/yuicompressor-2.4.2/yuicompressor.jar" />
-			<arg line="-v"/>
-			<srcfile/>
-			<arg line="-o"/>
-			<mapper type="glob" from="*.css" to="*-min.css"/>
-			<targetfile/>
-		</apply>
-		
-		<echo message="Finished: CSS and JS minification"/>
-	</target>
 	
 	<target name="prepare">
 		<echo message="Starting: Environment Preparation"/>
@@ -75,7 +46,7 @@
 	</target>
 	
 	<!-- TODO Add in the Unit Testing as a prereq -->
-	<target name="release" depends="prepareSVN,minify,testVarScoper" description="Tags a release and uploads a new version of the setup zip">
+	<target name="release" depends="prepareSVN,testVarScoper" description="Tags a release and uploads a new version of the setup zip">
 		<echo message="Starting: Release of version ${project.version}"/>
 		
 		<!-- Load ANT tasks -->
@@ -132,13 +103,39 @@
 		<!-- Update the version tracking number -->
 		<echo append="false" file="${build.files.version}" message="${project.version}" />
 		
+		<!-- Create the new wiki release note page from the template and release notes -->
+		<concat destfile="${build.wiki.release.version}">
+			<filelist dir="${build.wiki}" files="ReleaseTemplate.wiki"/>
+			<filelist dir="${basedir}" files="releaseNotes.txt"/>
+		</concat>
+		
+		<!-- Replace the template information with real information -->
+		<replace file="${build.wiki.release.version}">
+			<replacefilter token="@project.fullname@" value="${project.fullname}"/>
+			<replacefilter token="@project.version@" value="${project.version}"/>
+		</replace>
+		
+		<!-- Add the new release note wiki page to the repository -->
+		<svn username="${svn.username}" password="${svn.password}" javahl="${svn.javahl}" svnkit="${svn.svnkit}">
+			<add file="${build.wiki.release.version}" />
+		</svn>
+		
+		<!-- Append the release to the main release note page -->
+		<echo append="true" file="${build.wiki.release.main}" message="${line.separator}  * [Release${project.version} Release v${project.version}] - ${build.date}" />
+		
+		<!-- Append the release to the release note TOC page -->
+		<echo append="true" file="${build.wiki.release.toc}" message="${line.separator}  * [Release${project.version} Release v${project.version}]" />
+		
 		<!-- Create a new tag from the trunk -->
 		<svn username="${svn.username}" password="${svn.password}" javahl="${svn.javahl}" svnkit="${svn.svnkit}">
 			<copy srcPath="${basedir}" destURL="${svn.privurl}/tags/${project.version}" message="Tagging release version: ${project.version}" />
 		</svn>
 		
+		<!-- Reset the release notes for the next version -->
+		<echo append="false" file="${build.files.releaseNotes}" message="" />
+		
 		<echo message="Finished: Release of version ${project.version} complete"/>
-		<echo message="Remember to increment the version for next release"/>
+		<echo message="Remember to increment the version for next release and commit changes to the trunk and wiki"/>
 	</target>
 	
 	<target name="statSVN" depends="svnLog" description="Generates statistics from the repository">
@@ -168,7 +165,7 @@
 		<echo message="Finished: SVN Statistics at ${build.dist}/stats"/>
 	</target>
 	
-	<target name="svnCommit" depends="prepareSVN,minify,testVarScoper,testMXUnit" description="Commits the code to the repository">
+	<target name="svnCommit" depends="prepareSVN,testVarScoper,testMXUnit" description="Commits the code to the repository">
 		<echo message="Starting: SVN Commit"/>
 		
 		<input addproperty="svn.message" message="Commit Message" />
