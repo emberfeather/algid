@@ -12,7 +12,7 @@
 		
 		<!-- Create the time stamp -->
 		<tstamp>
-			<format property="build.date" pattern="MM/dd/yy hh:mmaa"/>
+			<format property="build.date" timezone="UTC" pattern="MM/dd/yy hh:mmaa"/>
 		</tstamp>
 		
 		<echo message="Finished: Environment Preparation"/>
@@ -100,36 +100,19 @@
 		<!-- Remove the zip of the temporary files -->
 		<delete file="${build.files.source}" />
 		
-		<!-- Update the version tracking number -->
-		<echo append="false" file="${build.files.version}" message="${project.version}" />
+		<!-- Update the release note page from the release notes -->
+		<loadfile srcfile="${basedir}/releaseNotes.txt" property="build.releaseNotes" failonerror="true" />
 		
-		<!-- Create the new wiki release note page from the template and release notes -->
-		<concat destfile="${build.wiki.release.version}">
-			<filelist dir="${build.wiki}" files="ReleaseTemplate.wiki"/>
-			<filelist dir="${basedir}" files="releaseNotes.txt"/>
-		</concat>
-		
-		<!-- Replace the template information with real information -->
-		<replace file="${build.wiki.release.version}">
-			<replacefilter token="@project.fullname@" value="${project.fullname}"/>
-			<replacefilter token="@project.version@" value="${project.version}"/>
-		</replace>
-		
-		<!-- Add the new release note wiki page to the repository -->
-		<svn username="${svn.username}" password="${svn.password}" javahl="${svn.javahl}" svnkit="${svn.svnkit}">
-			<add file="${build.wiki.release.version}" />
-		</svn>
-		
-		<!-- Append the release to the main release note page -->
-		<echo append="true" file="${build.wiki.release.main}" message="${line.separator}  * [Release${project.version} Release v${project.version}] - ${build.date}" />
-		
-		<!-- Append the release to the release note TOC page -->
-		<echo append="true" file="${build.wiki.release.toc}" message="${line.separator}  * [Release${project.version} Release v${project.version}]" />
+		<!-- Place the release notes into the main release note page -->
+		<replace file="${build.wiki.releaseNotes}" token="::latest::" value="::latest::${line.separator}${line.separator}== v${project.version} ==${line.separator}${line.separator}Released: ${build.date} UTC${line.separator}${line.separator}${build.releaseNotes}" />
 		
 		<!-- Create a new tag from the trunk -->
 		<svn username="${svn.username}" password="${svn.password}" javahl="${svn.javahl}" svnkit="${svn.svnkit}">
 			<copy srcPath="${basedir}" destURL="${svn.privurl}/tags/${project.version}" message="Tagging ${project.fullname} release version: ${project.version}" />
 		</svn>
+		
+		<!-- Update the version tracking number -->
+		<echo append="false" file="${build.files.version}" message="${project.version}" />
 		
 		<!-- Reset the release notes for the next version -->
 		<echo append="false" file="${build.files.releaseNotes}" message="" />
