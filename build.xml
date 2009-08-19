@@ -128,7 +128,7 @@
 		
 		<!-- Create a new tag from the trunk -->
 		<svn username="${svn.username}" password="${svn.password}" javahl="${svn.javahl}" svnkit="${svn.svnkit}">
-			<copy srcPath="${basedir}" destURL="${svn.privurl}/tags/${project.version}" message="Tagging release version: ${project.version}" />
+			<copy srcPath="${basedir}" destURL="${svn.privurl}/tags/${project.version}" message="Tagging ${project.fullname} release version: ${project.version}" />
 		</svn>
 		
 		<!-- Reset the release notes for the next version -->
