@@ -160,7 +160,7 @@
 		<echo message="Finished: SVN Commit"/>
 	</target>
 	
-	<target name="svnLog" depends="prepareSVN" description="Generates logs from the repository">
+	<target name="svnLog" depends="prepareSVN">
 		<echo message="Starting: SVN Log"/>
 		
 		<exec executable="svn" output="${build.logs.svn}">
