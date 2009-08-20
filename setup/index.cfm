@@ -17,8 +17,7 @@
 	<!--- Create the directory structure --->
 	<cfswitch expression="#setupSettings['type']#">
 		<cfcase value="application">
-			<cfset directories = 'admin' />
-			<cfset directories &= ',config' />
+			<cfset directories = 'config' />
 			<cfset directories &= ',plugins' />
 		</cfcase>
 		
@@ -67,8 +66,7 @@
 	<!--- Create the file structure --->
 	<cfswitch expression="#setupSettings['type']#">
 		<cfcase value="application">
-			<cfset files = 'admin/index.cfm' />
-			<cfset files &= ',config/application.cfc,config/application.json.cfm' />
+			<cfset files = 'config/application.cfc,config/application.json.cfm,config/settings.example.json.cfm,config/settings.json.cfm' />
 			<cfset files &= ',application.cfc,index.cfm' />
 		</cfcase>
 		
@@ -76,7 +74,7 @@
 			<cfset files = 'config/application.cfc,config/configure.cfc,config/plugin.json.cfm' />
 			<cfset files &= ',extend/application.cfc' />
 			<cfset files &= ',i18n/config/plugin.properties,i18n/config/plugin_en_US.properties' />
-			<cfset files &= ',inc/application.cfc,inc/admin.cfm,inc/application.cfc,inc/index.cfm' />
+			<cfset files &= ',inc/application.cfc' />
 		</cfcase>
 		
 		<cfdefaultcase>

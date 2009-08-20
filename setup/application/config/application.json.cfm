@@ -1,12 +1,12 @@
 {
 	"information": {
-		"key": "{{key}}",
-		"title": "{{title}}",
-		"datasource": {
-			"dsn": "",
-			"type": "",
-			"prefix": ""
-		}
+		"i18n": {
+			"default": "en_US",
+			"locales": [
+				"en_US"
+			]
+		},
+		"key": "{{key}}"
 	},
 	"plugins": [
 	]

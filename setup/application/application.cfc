@@ -22,23 +22,6 @@
 		<cfreturn true />
 	</cffunction>
 	
-	<cffunction name="onError" access="public" returntype="void" output="false">
-		<cfargument name="Exception" type="struct" required="true" />
-		<cfargument name="EventName" type="string" required="true" />
-		
-		<cfset var errorLog = '' />
-		
-		<!--- Check if we have got far enough for the singletons --->
-		<cfif structKeyExists(application, 'singletons') AND NOT variables.isDebugMode>
-			<cfset errorLog = application.singletons.getErrorLog() />
-			
-			<cfset errorLog.log(argumentCollection = arguments) />
-		<cfelse>
-			<!--- Dump out the error --->
-			<cfdump var="#arguments.exception#" /><cfabort />
-		</cfif>
-	</cffunction>
-	
 	<cffunction name="onRequestStart" access="public" returntype="boolean" output="true">
 		<cfargument name="targetPage" type="string" required="true" />
 		
