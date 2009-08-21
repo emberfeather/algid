@@ -30,7 +30,22 @@
 		<!--- Check for reinit --->
 		<cfif structKeyExists(URL, 'reinit')>
 			<cfset onApplicationStart() />
+			
+			<!--- Remove the reinit --->
+			<cfset structDelete(URL, 'reinit') />
 		</cfif>
+		
+		<!--- Check for locale change --->
+		<cfif structKeyExists(URL, 'locale')>
+			<cfset SESSION.locale = URL.locale />
+			
+			<cfif NOT listFindNoCase(arrayToList(application.information.i18n.locales), SESSION.locale)>
+				<cfset SESSION.locale = application.information.i18n.default />
+			</cfif>
+		</cfif>
+		
+		<!--- Turn on or off the debugging --->
+		<cfsetting showdebugoutput="#application.settings.environment NEQ 'production'#" />
 		
 		<cfreturn true />
 	</cffunction>
@@ -38,7 +53,7 @@
 	<cffunction name="onSessionStart" access="public" returntype="void" output="false">
 		<cfset SESSION.locale = left(CGI.HTTP_ACCEPT_LANGUAGE, 4) />
 		
-		<cfif NOT listFindNoCase(application.information.i18n.locales, SESSION.locale)>
+		<cfif NOT listFindNoCase(arrayToList(application.information.i18n.locales), SESSION.locale)>
 			<cfset SESSION.locale = application.information.i18n.default />
 		</cfif>
 		
