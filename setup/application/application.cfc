@@ -5,11 +5,13 @@
 	<cfset this.sessionTimeout = createTimeSpan(0, 0, 30, 0) />
 	
 	<cfset this.mappings['/root'] = getDirectoryFromPath( getCurrentTemplatePath() ) />
+	<cfset this.mappings['/algid'] = this.mappings['/root'] & "algid/" />
+	<cfset this.mappings['/cf-compendium'] = this.mappings['/root'] & "cf-compendium/" />
 	<cfset this.mappings['/plugins'] = this.mappings['/root'] & "plugins/" />
 	
 	<cffunction name="onApplicationStart" access="public" returntype="boolean" output="false">
 		<cfset var appConfigFile = expandPath('config/application.json.cfm') />
-		<cfset var sparkplug = createObject('component', 'cf-compendium.inc.resource.application.sparkplug').init( this.mappings['/root'] ) />
+		<cfset var sparkplug = createObject('component', 'algid.inc.resource.application.sparkplug').init( this.mappings['/root'] ) />
 		
 		<cfset variables.isDebugMode = true />
 		
