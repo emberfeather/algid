@@ -9,6 +9,23 @@
 		<cfreturn this />
 	</cffunction>
 	
+	<cffunction name="list" access="public" returntype="string" output="false">
+		<cfargument name="items" type="query" required="true" />
+		<cfargument name="filter" type="struct" required="true" />
+		<cfargument name="options" type="struct" default="#{}#" />
+		
+		<cfset var html = '' />
+		
+		<!--- TODO Use the datagrid --->
+		
+		<!--- TODO Remove --->
+		<cfsavecontent variable="html">
+			<cfdump var="#arguments.items#" />
+		</cfsavecontent>
+		
+		<cfreturn html />
+	</cffunction>
+	
 	<cffunction name="toDatagrid" access="public" returntype="string" output="false">
 		<cfargument name="data" type="any" required="true" />
 		<cfargument name="options" type="struct" default="#{}#" />
