@@ -59,9 +59,9 @@
 		
 		<!--- Create the notification objects --->
 		<cfset SESSION.notification = {
-				message = createObject('component', 'cf-compendium.inc.resource.base.message').init(),
-				error = createObject('component', 'cf-compendium.inc.resource.base.message').init(),
-				success = createObject('component', 'cf-compendium.inc.resource.base.message').init()
+				message = createObject('component', 'algid.inc.resource.base.message').init(),
+				error = createObject('component', 'algid.inc.resource.base.message').init(),
+				success = createObject('component', 'algid.inc.resource.base.message').init()
 			} />
 		
 		<!--- Change the class --->

@@ -36,7 +36,7 @@
 				<!--- Check if we are missing the singleton --->
 				<cfif NOT structKeyExists(variables.instance, attribute)>
 					<!--- If not required create a stub --->
-					<cfset variables.instance[attribute] = createObject('component', 'cf-compendium.inc.resource.base.stub').init(attribute, variables.isDebugMode) />
+					<cfset variables.instance[attribute] = createObject('component', 'algid.inc.resource.base.stub').init(attribute, variables.isDebugMode) />
 				</cfif>
 				
 				<cfreturn variables.instance[attribute] />
@@ -44,7 +44,7 @@
 			
 			<cfcase value="has">
 				<!--- Check if we have the singleton defined --->
-				<cfreturn structKeyExists(variables.instance, attribute) AND NOT isInstanceOf(variables.instance[attribute], 'cf-compendium.inc.resource.base.stub') />
+				<cfreturn structKeyExists(variables.instance, attribute) AND NOT isInstanceOf(variables.instance[attribute], 'algid.inc.resource.base.stub') />
 			</cfcase>
 			
 			<cfcase value="set">

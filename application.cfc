@@ -9,7 +9,11 @@
 	
 	<cfset this.mappings['/algid'] = variables.mappingBase & 'algid' />
 	<cfset this.mappings['/cf-compendium'] = variables.mappingBase & 'cf-compendium' />
+	<cfset this.mappings['/example'] = variables.mappingBase & 'example' />
+	<cfset this.mappings['/i18n'] = variables.mappingBase & 'i18n' />
+	<cfset this.mappings['/implementation'] = variables.mappingBase & 'implementation' />
 	<cfset this.mappings['/mxunit'] = variables.mappingBase & 'mxunit' />
+	<cfset this.mappings['/profile'] = variables.mappingBase & 'profile' />
 	<cfset this.mappings['/setup'] = variables.mappingBase & 'setup' />
 	<cfset this.mappings['/test'] = variables.mappingBase & 'test' />
 	<cfset this.mappings['/varscoper'] = variables.mappingBase & 'varscoper' />
