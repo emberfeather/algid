@@ -8,6 +8,10 @@ svn.log.startDate=2009-01-01
 # General
 general.verbose=true
 
+# SVN Settings
+svn.javahl=false
+svn.svnkit=true
+
 # Build Settings
 build.wiki=/path/to/wiki/files
 

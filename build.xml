@@ -101,7 +101,7 @@
 		<delete file="${build.files.source}" />
 		
 		<!-- Update the release note page from the release notes -->
-		<loadfile srcfile="${basedir}/releaseNotes.txt" property="build.releaseNotes" failonerror="true" />
+		<loadfile srcfile="${build.files.releaseNotes}" property="build.releaseNotes" failonerror="true" />
 		
 		<!-- Place the release notes into the main release note page -->
 		<replace file="${build.wiki.releaseNotes}" token="::latest::" value="::latest::${line.separator}${line.separator}== v${project.version} ==${line.separator}${line.separator}Released: ${build.date} UTC${line.separator}${line.separator}${build.releaseNotes}" />
