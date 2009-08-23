@@ -47,6 +47,78 @@
 		<cfreturn precedence />
 	</cffunction>
 	
+	<cffunction name="loadAllAndDeterminePrecedence" access="public" returntype="string" output="false">
+		<cfargument name="appConfig" type="struct" required="true" />
+		<cfargument name="plugins" type="struct" required="true" />
+		
+		<cfset var i = '' />
+		<cfset var precedence = '' />
+		<cfset var pluginConfig = '' />
+		<cfset var pluginList = '' />
+		<cfset var pluginVersion = '' />
+		<cfset var projects = 'cf-compendium,algid' />
+		<cfset var projectConfig = '' />
+		
+		<!--- Pull in the list of plugins --->
+		<cfset pluginList = arrayToList(appConfig.plugins) />
+		
+		<!--- Read in all plugin configs --->
+		<cfloop list="#pluginList#" index="i">
+			<cfset arguments.plugins[i] = {
+					key = 'unknown',
+					i18n = {
+						locales = [
+							'en_US'
+						]
+					},
+					prerequisites = {
+					},
+					version = ''
+				} />
+			
+			<cfset pluginConfig = readPluginConfig(i) />
+			
+			<!--- Extend information from the config --->
+			<cfset arguments.plugins[i] = extend(arguments.plugins[i], pluginConfig, -1) />
+		</cfloop>
+		
+		<!--- Read in all project configs --->
+		<!--- This is used to help make sure that the right version of the projects are in place --->
+		<cfloop list="#projects#" index="i">
+			<cfset arguments.plugins[i] = {
+					key = 'unknown',
+					i18n = {
+						locales = [
+							'en_US'
+						]
+					},
+					prerequisites = {
+					},
+					version = ''
+				} />
+			<cfset projectConfig = readProjectConfig(i) />
+			
+			<!--- Extend information from the config --->
+			<cfset arguments.plugins[i] = extend(arguments.plugins[i], projectConfig, -1) />
+		</cfloop>
+		
+		<!--- Determine the precedence that the plugins should be worked with --->
+		<cfset precedence = determinePrecedence(arguments.plugins, pluginList) />
+		
+		<!--- Remove the projects --->
+		<!--- By this point we have already determined that the correct version of the projects are installed --->
+		<cfloop list="#projects#" index="i">
+			<!--- Remove the project if found in precedence --->
+			<cfset search = listFind(precedence, i) />
+			
+			<cfif search>
+				<cfset precedence = listDeleteAt(precedence, search) />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn precedence />
+	</cffunction>
+	
 	<cffunction name="normalizePath" access="private" returntype="string" output="false">
 		<cfargument name="path" type="string" required="true" />
 		
@@ -171,11 +243,7 @@
 		<cfset var j = '' />
 		<cfset var navigation = '' />
 		<cfset var plugins = {} />
-		<cfset var pluginConfig = '' />
-		<cfset var pluginList = '' />
 		<cfset var pluginVersion = '' />
-		<cfset var projects = 'cf-compendium,algid' />
-		<cfset var projectConfig = '' />
 		<cfset var precedence = '' />
 		<cfset var search = '' />
 		
@@ -242,61 +310,8 @@
 		<!--- Create the default set of singletons --->
 		<cfset setDefaultSingletons(arguments.newApplication) />
 		
-		<!--- Pull in the list of plugins --->
-		<cfset pluginList = arrayToList(appConfig.plugins) />
-		
-		<!--- Read in all plugin configs --->
-		<cfloop list="#pluginList#" index="i">
-			<cfset plugins[i] = {
-					key = 'unknown',
-					i18n = {
-						locales = [
-							'en_US'
-						]
-					},
-					prerequisites = {
-					},
-					version = ''
-				} />
-			<cfset pluginConfig = readPluginConfig(i) />
-			
-			<!--- Extend information from the config --->
-			<cfset plugins[i] = extend(plugins[i], pluginConfig, -1) />
-		</cfloop>
-		
-		<!--- Read in all project configs --->
-		<!--- This is used to help make sure that the right version of the projects are in place --->
-		<cfloop list="#projects#" index="i">
-			<cfset plugins[i] = {
-					key = 'unknown',
-					i18n = {
-						locales = [
-							'en_US'
-						]
-					},
-					prerequisites = {
-					},
-					version = ''
-				} />
-			<cfset projectConfig = readProjectConfig(i) />
-			
-			<!--- Extend information from the config --->
-			<cfset plugins[i] = extend(plugins[i], projectConfig, -1) />
-		</cfloop>
-		
-		<!--- Determine the precedence that the plugins should be worked with --->
-		<cfset precedence = determinePrecedence(plugins, pluginList) />
-		
-		<!--- Remove the projects --->
-		<!--- By this point we have already determined that the correct version of the projects are installed --->
-		<cfloop list="#projects#" index="i">
-			<!--- Remove the project if found in precedence --->
-			<cfset search = listFind(precedence, i) />
-			
-			<cfif search>
-				<cfset precedence = listDeleteAt(precedence, search) />
-			</cfif>
-		</cfloop>
+		<!--- Load all plugins and projects and determine the precedence --->
+		<cfset precedence = loadAllAndDeterminePrecedence( appConfig, plugins ) />
 		
 		<!--- Add the plugins to the new application in the proper order --->
 		<cfloop list="#precedence#" index="i">
