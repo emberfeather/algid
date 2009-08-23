@@ -46,7 +46,7 @@
 	</target>
 	
 	<!-- TODO Add in the Unit Testing as a prereq -->
-	<target name="release" depends="prepareSVN,testVarScoper" description="Tags a release and uploads a new version of the setup zip">
+	<target name="release" depends="prepareSVN,testVarScoper,template" description="Tags a release and uploads a new version of the setup zip">
 		<echo message="Starting: Release of version ${project.version}"/>
 		
 		<!-- Load ANT tasks -->
@@ -118,7 +118,7 @@
 		<echo append="false" file="${build.files.releaseNotes}" message="" />
 		
 		<echo message="Finished: Release of version ${project.version} complete"/>
-		<echo message="Remember to increment the version for next release and commit changes to the trunk and wiki"/>
+		<echo message="Remember to increment the version for next release, run the template target, and commit changes to the trunk and wiki"/>
 	</target>
 	
 	<target name="statSVN" depends="svnLog" description="Generates statistics from the repository">
@@ -193,6 +193,19 @@
 		</svn>
 		
 		<echo message="Finished: SVN Update"/>
+	</target>
+	
+	<target name="template" depends="prepare" description="Uses the templates to update files with dynamic information">
+		<echo message="Starting: Template"/>
+		
+		<copy tofile="${basedir}/${project.name}/config/algid.json.cfm" overwrite="true">
+			<fileset file="${build.templates}/config/algid.json.cfm"/>
+			<filterset>
+				<filter token="project.version" value="${project.version}"/>
+			</filterset>
+		</copy>
+		
+		<echo message="Finished: Template"/>
 	</target>
 	
 	<target name="testMXUnit" depends="prepare" description="Runs the Unit Tests">
