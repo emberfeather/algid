@@ -198,11 +198,16 @@
 	<target name="template" depends="prepare" description="Uses the templates to update files with dynamic information">
 		<echo message="Starting: Template"/>
 		
-		<copy tofile="${basedir}/${project.name}/config/algid.json.cfm" overwrite="true">
-			<fileset file="${build.templates}/config/algid.json.cfm"/>
-			<filterset>
-				<filter token="project.version" value="${project.version}"/>
-			</filterset>
+		<!-- Define the filter set for the template -->
+		<filterset id="templateFilterset">
+			<filtersfile file="${build.dist}/settings/user.properties" />
+			<filtersfile file="${build.dist}/settings/project.properties" />
+		</filterset>
+		
+		<!-- Copy the config file -->
+		<copy tofile="${basedir}/${project.name}/config/${project.name}.json.cfm" overwrite="true">
+			<fileset file="${build.templates}/config/${project.name}.json.cfm"/>
+			<filterset refid="templateFilterset" />
 		</copy>
 		
 		<echo message="Finished: Template"/>
