@@ -27,16 +27,16 @@
 			<cfloop list="#structKeyList(arguments.plugins[i].prerequisites)#" index="j">
 				<!--- Check for a completely missing plugin --->
 				<cfif NOT structKeyExists(arguments.plugins, j)>
-					<cfthrow message="Missing required plugin" detail="The #j# plugin with a version at least #arguments.plugins[i].prerequisites[j]# is required by the #i# plugin" />
+					<cfthrow message="Missing required dependency" detail="#j# with a version at least #arguments.plugins[i].prerequisites[j]# is required by #i#" />
 				</cfif>
 				
 				<!--- Check that the version of the current plugin meets the prerequisite version --->
 				<cfset compareVersion = compare(arguments.plugins[j].version, arguments.plugins[i].prerequisites[j]) />
 				
 				<cfif compareVersion LT 0>
-					<cfthrow message="Plugin too old" detail="The #j# plugin with a version at least #arguments.plugins[i].prerequisites[j]# is required by the #i# plugin" />
+					<cfthrow message="Dependency too old" detail="#j# with a version at least #arguments.plugins[i].prerequisites[j]# is required by #i#" />
 				<cfelseif compareVersion GT 0>
-					<cflog type="information" application="true" log="application" text="The #j# plugin is at version #arguments.plugins[j].version# when the #i# plugin is expecting #arguments.plugins[i].prerequisites[j]#" />
+					<cflog type="information" application="true" log="application" text="#j# is at version #arguments.plugins[j].version# when the #i# is expecting version #arguments.plugins[i].prerequisites[j]#" />
 				</cfif>
 				
 				<!--- Update the precedence to run install / updates based on prerequisites --->
@@ -113,6 +113,29 @@
 		<cfreturn deserializeJSON(pluginConfig) />
 	</cffunction>
 	
+	<cffunction name="readProjectConfig" access="private" returntype="struct" output="false">
+		<cfargument name="project" type="string" required="true" />
+		
+		<cfset var config = '' />
+		<cfset var configFile = arguments.project & '.json.cfm' />
+		<cfset var configPath = '/' & arguments.project & '/config/' />
+		<cfset var contents = '' />
+		
+		<cfset configPath = expandPath(configPath) />
+		
+		<cfif NOT fileExists(configPath & configFile)>
+			<cfthrow message="Could not find the #arguments.project# configuration" detail="The #arguments.project# could not be detected at #variables.configPath#" />
+		</cfif>
+		
+		<!--- Read the application config file --->
+		<cffile action="read" file="#configPath & configFile#" variable="contents" />
+		
+		<!--- Deserialize the Configuration --->
+		<cfset config = deserializeJSON(contents) />
+		
+		<cfreturn config />
+	</cffunction>
+	
 	<cffunction name="readPluginVersion" access="private" returntype="string" output="false">
 		<cfargument name="pluginKey" type="string" required="true" />
 		
@@ -151,7 +174,10 @@
 		<cfset var pluginConfig = '' />
 		<cfset var pluginList = '' />
 		<cfset var pluginVersion = '' />
+		<cfset var projects = 'cf-compendium,algid' />
+		<cfset var projectConfig = '' />
 		<cfset var precedence = '' />
+		<cfset var search = '' />
 		
 		<!--- Increase the page timeout so that it won't timeout in the middle of install/update --->
 		<cfsetting requesttimeout="60" />
@@ -238,8 +264,39 @@
 			<cfset plugins[i] = extend(plugins[i], pluginConfig, -1) />
 		</cfloop>
 		
+		<!--- Read in all project configs --->
+		<!--- This is used to help make sure that the right version of the projects are in place --->
+		<cfloop list="#projects#" index="i">
+			<cfset plugins[i] = {
+					key = 'unknown',
+					i18n = {
+						locales = [
+							'en_US'
+						]
+					},
+					prerequisites = {
+					},
+					version = ''
+				} />
+			<cfset projectConfig = readProjectConfig(i) />
+			
+			<!--- Extend information from the config --->
+			<cfset plugins[i] = extend(plugins[i], projectConfig, -1) />
+		</cfloop>
+		
 		<!--- Determine the precedence that the plugins should be worked with --->
 		<cfset precedence = determinePrecedence(plugins, pluginList) />
+		
+		<!--- Remove the projects --->
+		<!--- By this point we have already determined that the correct version of the projects are installed --->
+		<cfloop list="#projects#" index="i">
+			<!--- Remove the project if found in precedence --->
+			<cfset search = listFind(precedence, i) />
+			
+			<cfif search>
+				<cfset precedence = listDeleteAt(precedence, search) />
+			</cfif>
+		</cfloop>
 		
 		<!--- Add the plugins to the new application in the proper order --->
 		<cfloop list="#precedence#" index="i">
