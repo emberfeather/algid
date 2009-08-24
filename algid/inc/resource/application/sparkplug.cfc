@@ -58,6 +58,7 @@
 		<cfset var pluginVersion = '' />
 		<cfset var projects = 'cf-compendium,algid' />
 		<cfset var projectConfig = '' />
+		<cfset var search = '' />
 		
 		<!--- Pull in the list of plugins --->
 		<cfset pluginList = arrayToList(appConfig.plugins) />

@@ -31,6 +31,9 @@
 		<cfargument name="theApplication" type="struct" required="true" />
 		<cfargument name="newSession" type="struct" required="true" />
 		
+		<cfset var i = '' />
+		<cfset var j = '' />
+		
 		<!--- Increase the page timeout so that it won't timeout on session start --->
 		<cfsetting requesttimeout="60" />
 		
