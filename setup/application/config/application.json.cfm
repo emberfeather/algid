@@ -1,13 +1,11 @@
 {
-	"information": {
-		"i18n": {
-			"default": "en_US",
-			"locales": [
-				"en_US"
-			]
-		},
-		"key": "{{key}}"
+	"i18n": {
+		"default": "en_US",
+		"locales": [
+			"en_US"
+		]
 	},
+	"key": "{{key}}",
 	"plugins": [
 	]
 }

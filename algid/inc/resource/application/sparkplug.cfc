@@ -291,7 +291,7 @@
 		
 		<!--- Extend information from the config --->
 		<cfif structKeyExists(appConfig, 'information')>
-			<cfset arguments.newApplication.information = extend(arguments.newApplication.information, appConfig.information, -1) />
+			<cfset arguments.newApplication.information = extend(arguments.newApplication.information, appConfig, -1) />
 		</cfif>
 		
 		<!--- Extend settings from the config --->
