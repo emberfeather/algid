@@ -167,7 +167,10 @@
 		<!--- Get the levels from the current page --->
 		<cfset levels = variables.currentPage.getLevels() />
 		
-		<cfset breadcrumb = '<a href="' & levels[numLevels].link & '" title="' & levels[numLevels].title & '">' & (arguments.options.useNavTitle ? levels[numLevels].navTitle : levels[numLevels].title) & '</a>' />
+		<!--- Don't try and make the link if there is no navigation title to use --->
+		<cfif NOT arguments.options.useNavTitle OR levels[numLevels].navTitle NEQ ''>
+			<cfset breadcrumb = '<a href="' & levels[numLevels].link & '" title="' & levels[numLevels].title & '">' & (arguments.options.useNavTitle ? levels[numLevels].navTitle : levels[numLevels].title) & '</a>' />
+		</cfif>
 		
 		<!--- If we are showing multiples --->
 		<cfif arguments.options.showMultiple>

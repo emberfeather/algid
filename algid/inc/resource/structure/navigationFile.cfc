@@ -290,7 +290,6 @@
 			FROM variables.navigation
 			WHERE path IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#arrayToList(paths)#" list="true" />)
 				AND locale = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.locale#" />
-				AND navTitle <> <cfqueryparam cfsqltype="cf_sql_varchar" value="" />
 				
 				<!--- TODO add in authUser type permission checking --->
 				

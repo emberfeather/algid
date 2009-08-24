@@ -253,7 +253,6 @@
 		<!--- Set the default application variables --->
 		<cfset arguments.newApplication.information = {
 				key = 'undefined',
-				title = 'undefined',
 				i18n = {
 					base = '/root',
 					default = 'en_US',
