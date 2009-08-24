@@ -11,8 +11,15 @@
 		<cfreturn this />
 	</cffunction>
 	
-	<cffunction name="configure" access="public" returntype="void" output="false">
+	<cffunction name="configureApplication" access="public" returntype="void" output="false">
 		<cfargument name="newApplication" type="struct" required="true" />
+		
+		<!--- Base does nothing --->
+	</cffunction>
+	
+	<cffunction name="configureSession" access="public" returntype="void" output="false">
+		<cfargument name="theApplication" type="struct" required="true" />
+		<cfargument name="newSession" type="struct" required="true" />
 		
 		<!--- Base does nothing --->
 	</cffunction>

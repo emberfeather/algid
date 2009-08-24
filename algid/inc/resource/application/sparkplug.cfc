@@ -320,36 +320,39 @@
 		<!--- Update the plugins and setup the transient and singleton information --->
 		<cfloop array="#arguments.newApplication['plugins']#" index="i">
 			<!--- Create the configure utility for the plugin --->
-			<cfset configurers[i.key] = createObject('component', 'plugins.' & i.key & '.config.configure').init(variables.appBaseDirectory, arguments.newApplication.settings.datasources.alter) />
+			<cfset i.configure = createObject('component', 'plugins.' & i.key & '.config.configure').init(variables.appBaseDirectory, arguments.newApplication.settings.datasources.alter) />
 			
 			<cftransaction>
 				<!--- Upgrade the plugin --->
-				<cfset configurers[i.key].update(i, readPluginVersion(i.key)) />
+				<cfset i.configure.update(i, readPluginVersion(i.key)) />
 			</cftransaction>
 			
 			<!--- Update the plugin version information --->
 			<cfset updatePluginVersion(i.key, i.version) />
 			
-			<!--- Check for transient information --->
-			<cfif structKeyExists(i, 'transient')>
-				<cfloop collection="#i.transient#" item="j">
-					<!--- Set the transient path in the transient manager --->
-					<!--- Overrides any pre-existing transient paths --->
-					<cfinvoke component="#arguments.newApplication.managers.transient#" method="set#j#">
-						<cfinvokeargument name="path" value="#i.transient[j]#" />
-					</cfinvoke>
-				</cfloop>
-			</cfif>
-			
-			<!--- Check for singleton information --->
-			<cfif structKeyExists(i, 'singleton')>
-				<cfloop collection="#i.singleton#" item="j">
-					<!--- Create the singleton and set it to the singleton manager --->
-					<!--- Overrides any pre-existing singletons --->
-					<cfinvoke component="#arguments.newApplication.managers.singleton#" method="set#j#">
-						<cfinvokeargument name="singleton" value="#createObject('component', i.singleton[j]).init()#" />
-					</cfinvoke>
-				</cfloop>
+			<!--- Check for application wide settings --->
+			<cfif structKeyExists(i, 'application')>
+				<!--- Check for transient information --->
+				<cfif structKeyExists(i.application, 'transient')>
+					<cfloop collection="#i.application.transient#" item="j">
+						<!--- Set the transient path in the transient manager --->
+						<!--- Overrides any pre-existing transient paths --->
+						<cfinvoke component="#arguments.newApplication.managers.transient#" method="set#j#">
+							<cfinvokeargument name="path" value="#i.application.transient[j]#" />
+						</cfinvoke>
+					</cfloop>
+				</cfif>
+				
+				<!--- Check for singleton information --->
+				<cfif structKeyExists(i.application, 'singleton')>
+					<cfloop collection="#i.application.singleton#" item="j">
+						<!--- Create the singleton and set it to the singleton manager --->
+						<!--- Overrides any pre-existing singletons --->
+						<cfinvoke component="#arguments.newApplication.managers.singleton#" method="set#j#">
+							<cfinvokeargument name="singleton" value="#createObject('component', i.application.singleton[j]).init()#" />
+						</cfinvoke>
+					</cfloop>
+				</cfif>
 			</cfif>
 		</cfloop>
 		
@@ -360,7 +363,7 @@
 		--->
 		<cfloop array="#arguments.newApplication['plugins']#" index="i">
 			<!--- Configure the application for the plugin --->
-			<cfset configurers[i.key].configure(arguments.newApplication) />
+			<cfset i.configure.configureApplication(arguments.newApplication) />
 		</cfloop>
 	</cffunction>
 	

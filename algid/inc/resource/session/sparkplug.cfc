@@ -50,5 +50,43 @@
 		
 		<!--- Create the default set of singletons --->
 		<cfset setDefaultSingletons(arguments.newSession) />
+		
+		<!--- Update the plugins and setup the transient and singleton information --->
+		<cfloop array="#arguments.theApplication.plugins#" index="i">
+			<!--- Check for session wide settings --->
+			<cfif structKeyExists(i, 'sessions')>
+				<!--- Check for transient information --->
+				<cfif structKeyExists(i.session, 'transient')>
+					<cfloop collection="#i.session.transient#" item="j">
+						<!--- Set the transient path in the transient manager --->
+						<!--- Overrides any pre-existing transient paths --->
+						<cfinvoke component="#arguments.newSession.managers.transient#" method="set#j#">
+							<cfinvokeargument name="path" value="#i.session.transient[j]#" />
+						</cfinvoke>
+					</cfloop>
+				</cfif>
+				
+				<!--- Check for singleton information --->
+				<cfif structKeyExists(i.session, 'singleton')>
+					<cfloop collection="#i.session.singleton#" item="j">
+						<!--- Create the singleton and set it to the singleton manager --->
+						<!--- Overrides any pre-existing singletons --->
+						<cfinvoke component="#arguments.newSession.managers.singleton#" method="set#j#">
+							<cfinvokeargument name="singleton" value="#createObject('component', i.session.singleton[j]).init()#" />
+						</cfinvoke>
+					</cfloop>
+				</cfif>
+			</cfif>
+		</cfloop>
+		
+		<!---
+			Update the session with the plugin information
+			Gives the plugins power to manipulate the session
+			AFTER everything else is said and done
+		--->
+		<cfloop array="#arguments.theApplication['plugins']#" index="i">
+			<!--- Configure the application for the plugin --->
+			<cfset i.configure.configureSession(arguments.newSession) />
+		</cfloop>
 	</cffunction>
 </cfcomponent>
