@@ -233,7 +233,7 @@
 		<cfset arguments.newApplication.managers.singleton.setI18N(temp) />
 	</cffunction>
 	
-	<cffunction name="startApplication" access="public" returntype="void" output="false">
+	<cffunction name="start" access="public" returntype="void" output="false">
 		<cfargument name="newApplication" type="struct" required="true" />
 		
 		<cfset var appConfig = '' />
@@ -302,8 +302,8 @@
 		
 		<!--- Setup the application managers --->
 		<cfset arguments.newApplication.managers = {
-				singleton = createObject('component', 'algid.inc.resource.application.singletonManager').init(isDebugMode),
-				transient = createObject('component', 'algid.inc.resource.application.transientManager').init(isDebugMode)
+				singleton = createObject('component', 'algid.inc.resource.manager.singleton').init( variables.isDebugMode ),
+				transient = createObject('component', 'algid.inc.resource.manager.transient').init( variables.isDebugMode )
 			} />
 		
 		<!--- Create the default set of singletons --->

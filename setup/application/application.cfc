@@ -13,12 +13,10 @@
 		<cfset var appConfigFile = expandPath('config/application.json.cfm') />
 		<cfset var sparkplug = createObject('component', 'algid.inc.resource.application.sparkplug').init( this.mappings['/root'] ) />
 		
-		<cfset variables.isDebugMode = true />
-		
 		<!--- Lock the application scope --->
 		<cflock scope="application" type="exclusive" timeout="5">
 			<!--- Start the application --->
-			<cfset sparkplug.startApplication(application, variables.isDebugMode) />
+			<cfset sparkplug.start(application) />
 		</cflock>
 		
 		<cfreturn true />
@@ -26,6 +24,8 @@
 	
 	<cffunction name="onRequestStart" access="public" returntype="boolean" output="true">
 		<cfargument name="targetPage" type="string" required="true" />
+		
+		<cfset var sparkplug = createObject('component', 'algid.inc.resource.request.sparkplug').init() />
 		
 		<!--- Check for reinit --->
 		<cfif structKeyExists(URL, 'reinit')>
@@ -35,37 +35,17 @@
 			<cfset structDelete(URL, 'reinit') />
 		</cfif>
 		
-		<!--- Check for locale change --->
-		<cfif structKeyExists(URL, 'locale')>
-			<cfset SESSION.locale = URL.locale />
-			
-			<cfif NOT listFindNoCase(arrayToList(application.information.i18n.locales), SESSION.locale)>
-				<cfset SESSION.locale = application.information.i18n.default />
-			</cfif>
-		</cfif>
-		
-		<!--- Turn on or off the debugging --->
-		<cfsetting showdebugoutput="#application.settings.environment NEQ 'production'#" />
-		
-		<cfreturn true />
+		<!--- Start the request --->
+		<cfreturn sparkplug.start( application, SESSION, arguments.targetPage ) />
 	</cffunction>
 	
 	<cffunction name="onSessionStart" access="public" returntype="void" output="false">
-		<cfset SESSION.locale = left(CGI.HTTP_ACCEPT_LANGUAGE, 4) />
+		<cfset var sparkplug = createObject('component', 'algid.inc.resource.session.sparkplug').init() />
 		
-		<cfif NOT listFindNoCase(arrayToList(application.information.i18n.locales), SESSION.locale)>
-			<cfset SESSION.locale = application.information.i18n.default />
-		</cfif>
-		
-		<!--- Create the notification objects --->
-		<cfset SESSION.notification = {
-				message = createObject('component', 'algid.inc.resource.base.message').init(),
-				error = createObject('component', 'algid.inc.resource.base.message').init(),
-				success = createObject('component', 'algid.inc.resource.base.message').init()
-			} />
-		
-		<!--- Change the class --->
-		<cfset SESSION.notification.error.setClass('error') />
-		<cfset SESSION.notification.success.setClass('success') />
+		<!--- Lock the session scope --->
+		<cflock scope="session" type="exclusive" timeout="5">
+			<!--- Start the session --->
+			<cfset sparkplug.start( application, SESSION ) />
+		</cflock>
 	</cffunction>
 </cfcomponent>
