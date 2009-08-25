@@ -56,8 +56,8 @@
 		<cfset arguments.newSession.locale = left(CGI.HTTP_ACCEPT_LANGUAGE, 4) />
 		
 		<!--- If its not in the available locales use the default --->
-		<cfif NOT listFindNoCase( arrayToList(arguments.theApplication.information.i18n.locales), arguments.newSession.locale )>
-			<cfset arguments.newSession.locale = arguments.theApplication.information.i18n.default />
+		<cfif NOT listFindNoCase( arrayToList(arguments.theApplication.settings.i18n.locales), arguments.newSession.locale )>
+			<cfset arguments.newSession.locale = arguments.theApplication.settings.i18n.default />
 		</cfif>
 		
 		<!--- Setup the session managers --->

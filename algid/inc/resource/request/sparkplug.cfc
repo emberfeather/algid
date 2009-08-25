@@ -15,8 +15,8 @@
 		<cfif structKeyExists(URL, 'locale')>
 			<cfset arguments.theSession.locale = URL.locale />
 			
-			<cfif NOT listFindNoCase(arrayToList(arguments.theApplication.information.i18n.locales), arguments.theSession.locale)>
-				<cfset arguments.theSession.locale = arguments.theApplication.information.i18n.default />
+			<cfif NOT listFindNoCase(arrayToList(arguments.theApplication.settings.i18n.locales), arguments.theSession.locale)>
+				<cfset arguments.theSession.locale = arguments.theApplication.settings.i18n.default />
 			</cfif>
 		</cfif>
 		

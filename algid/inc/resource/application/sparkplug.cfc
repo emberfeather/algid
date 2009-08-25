@@ -160,7 +160,7 @@
 		<cffile action="read" file="#configPath & settingsFile#" variable="contents" />
 		
 		<!--- Deserialize the Settings --->
-		<cfset config['settings'] = deserializeJSON(contents) />
+		<cfset config = extend(config, deserializeJSON(contents), -1) />
 		
 		<cfreturn config />
 	</cffunction>
@@ -229,7 +229,7 @@
 		<cfset var temp = '' />
 		
 		<!--- Create the i18n singleton --->
-		<cfset temp = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath(arguments.newApplication.information.i18n.base)) />
+		<cfset temp = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath(arguments.newApplication.settings.i18n.base)) />
 		
 		<cfset arguments.newApplication.managers.singleton.setI18N(temp) />
 	</cffunction>
@@ -252,7 +252,7 @@
 		<cfsetting requesttimeout="60" />
 		
 		<!--- Set the default application variables --->
-		<cfset arguments.newApplication.information = {
+		<cfset arguments.newApplication.settings = {
 				key = 'undefined',
 				i18n = {
 					base = '/root',
@@ -260,10 +260,7 @@
 					locales = [
 						'en_US'
 					]
-				}
-			} />
-		
-		<cfset arguments.newApplication.settings = {
+				},
 				datasources = {},
 				environment = 'production'
 			} />
@@ -278,10 +275,10 @@
 		
 		<cfset arguments.newApplication.settings.datasources.update = duplicate(arguments.newApplication.settings.datasources.alter) />
 		
-		<!--- Placeholder for the plugin information --->
+		<!--- Placeholder for the plugin settings --->
 		<cfset arguments.newApplication.plugins = [] />
 		
-		<!--- Read in application information --->
+		<!--- Read in application settings --->
 		<cfset appConfig = readApplicationConfig() />
 		
 		<!---
@@ -289,15 +286,8 @@
 			need to extend keys inside the scope as the scope can't be replaced
 		--->
 		
-		<!--- Extend information from the config --->
-		<cfif structKeyExists(appConfig, 'information')>
-			<cfset arguments.newApplication.information = extend(arguments.newApplication.information, appConfig, -1) />
-		</cfif>
-		
-		<!--- Extend settings from the config --->
-		<cfif structKeyExists(appConfig, 'settings')>
-			<cfset arguments.newApplication.settings = extend(arguments.newApplication.settings, appConfig.settings, -1) />
-		</cfif>
+		<!--- Extend the config --->
+		<cfset arguments.newApplication.settings = extend(arguments.newApplication.settings, appConfig, -1) />
 		
 		<cfset variables.isDebugMode = newApplication.settings.environment NEQ 'production' />
 		
