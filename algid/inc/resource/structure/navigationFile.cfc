@@ -354,7 +354,8 @@
 		<cfset var uniquePageID = '' />
 		
 		<!--- Check for a logged-in user -- NO caching --->
-		<cfif structKeyExists(arguments, 'authUser')>
+		<!--- TODO Fix the unique ID --->
+		<cfif structKeyExists(arguments, 'authUser') OR 1 EQ 1>
 			<cfreturn super.toHTML(argumentCollection = arguments) />
 		</cfif>
 		
