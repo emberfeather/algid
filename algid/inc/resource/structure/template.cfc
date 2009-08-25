@@ -175,7 +175,9 @@
 		<!--- If we are showing multiples --->
 		<cfif arguments.options.showMultiple>
 			<cfloop from="#numLevels - 1#" to="1" index="i" step="-1">
-				<cfset breadcrumb = '<a href="' & levels[i].link & '" title="' & levels[i].title & '">' & (arguments.options.useNavTitle ? levels[i].navTitle : levels[i].title) & '</a>' & arguments.options.separator & breadcrumb />
+				<cfif NOT arguments.options.useNavTitle OR levels[i].navTitle NEQ ''>
+					<cfset breadcrumb = '<a href="' & levels[i].link & '" title="' & levels[i].title & '">' & (arguments.options.useNavTitle ? levels[i].navTitle : levels[i].title) & '</a>' & ( len(breadcrumb) ? arguments.options.separator : '' ) & breadcrumb />
+				</cfif>
 			</cfloop>
 		</cfif>
 		
@@ -214,7 +216,9 @@
 		<!--- If we are showing multiples --->
 		<cfif arguments.options.showMultiple>
 			<cfloop from="#numLevels - 1#" to="1" index="i" step="-1">
-				<cfset htmlTitle &= arguments.options.separator & (arguments.options.useNavTitle ? levels[i].navTitle : levels[i].title) />
+				<cfif NOT arguments.options.useNavTitle OR levels[i].navTitle NEQ ''>
+					<cfset htmlTitle &= arguments.options.separator & (arguments.options.useNavTitle ? levels[i].navTitle : levels[i].title) />
+				</cfif>
 			</cfloop>
 		</cfif>
 		
