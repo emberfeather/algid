@@ -5,7 +5,7 @@
 			"en_US"
 		]
 	},
-	"key": "{{key}}",
+	"key": "@key@",
 	"plugins": [
 	]
 }

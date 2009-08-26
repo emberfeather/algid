@@ -1,0 +1,12 @@
+#summary Release Notes for the @key@ plugin.
+#labels Featured
+
+= @title@ Plugin Releases =
+
+<wiki:comment>
+	The next line is used by the release target of the build file to insert the 
+	release notes from the latest version into the ReleaseNotes page in the 
+	proper place when pushing out a new version. Please leave it at the top of 
+	the list of releases.
+</wiki:comment>
+::latest::

@@ -82,7 +82,7 @@
 <cfoutput>
 	<div class="container_12">
 		<!--- Server Information and Execution Times --->
-		<div class="block">
+		<div class="section">
 			<div class="grid_3">
 				<div>
 					<strong>Algid Debugging</strong>
@@ -137,7 +137,7 @@
 		</div>
 		
 		<!--- Top --->
-		<div class="block">
+		<div class="section">
 			<div class="grid_1">
 				<strong>Count</strong>
 				
@@ -173,7 +173,7 @@
 				
 				<cfloop array="#execution.top#" index="page">
 					<div style="<cfif page.bad>color: red;</cfif>">
-						#numberFormat((page.total/execution.total) * 100, '0.__')#%
+						#numberFormat((page.total ? (page.total/execution.total) * 100 : 0), '0.__')#%
 					</div>
 				</cfloop>
 			</div>
@@ -201,7 +201,7 @@
 				ORDER BY total DESC
 			</cfquery>
 			
-			<div class="block">
+			<div class="section">
 				<div class="grid_1">
 					<strong>Count</strong>
 					
@@ -237,7 +237,7 @@
 					
 					<cfloop query="tickers">
 						<div style="<cfif tickers.average GT thresholds.timer>color: red;</cfif>">
-							#numberFormat((tickers.total/execution.total) * 100, '0.__')#%
+							#numberFormat(( tickers.total ? (tickers.total/execution.total) * 100 : 0 ), '0.__')#%
 						</div>
 					</cfloop>
 				</div>
@@ -258,7 +258,7 @@
 		
 		<!--- Timers --->
 		<cfif debugging.timers.recordcount>
-			<div class="block">
+			<div class="section">
 				<div class="grid_2">
 					<strong>Label</strong>
 					
@@ -304,7 +304,7 @@
 		</cfif>
 		
 		<!--- Queries --->
-		<div class="block">
+		<div class="section">
 			<cfloop query="debugging.queries">
 				<div style="<cfif debugging.queries.time GT thresholds.query>color: red;</cfif>">
 					<div class="grid_3">

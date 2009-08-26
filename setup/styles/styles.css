@@ -1,0 +1,178 @@
+/**
+ * Tags 
+ */
+
+body {
+	border-top: 5px solid #2A4353;
+	background: #D5D8DD;
+	font: 11px/2em Century Gothic, Apple Gothic, sans-serif;
+	color: #333;
+	
+}
+
+p,
+dl,
+hr,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ol,
+ul,
+pre,
+table,
+address,
+fieldset {
+	margin-bottom: 1.5em;
+}
+
+a {
+	color: #135487;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #2A4353;
+	text-decoration: underline;
+}
+
+a:focus {
+	outline: 1px dotted invert;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	line-height:1.2em;
+	margin: .3em 0;
+}
+
+h1 {
+	font-size: 25px;
+}
+
+h2 {
+	font-size: 23px;
+}
+
+h3 {
+	font-size: 21px;
+}
+
+h4 {
+	font-size: 19px;
+}
+
+h5 {
+	font-size: 17px;
+}
+
+h6 {
+	font-size: 15px;
+}
+
+dt {
+	font-weight: bold;
+	font-size: 1.5em;
+	margin-bottom: .5em;
+}
+
+ul, ol {
+	padding-top: 0;
+}
+
+ol {
+	list-style: decimal;
+}
+
+ul {
+	list-style: square;
+}
+
+li {
+	margin-left: 2em;
+}
+
+p,
+dd {
+	margin-bottom: 1em;
+}
+
+label {
+	font-weight: bold;
+}
+
+input[type=text] {
+	width: 100%;
+}
+
+input[type=submit] {
+	margin: 1em 0;
+}
+
+/**
+ * Classes 
+ */
+
+/* 960 grid system */
+.container_12 {
+	padding: 1em 0;
+}
+
+.content {
+	background: #fff;
+	-moz-border-radius: .5em;
+	-webkit-border-radius: .5em;
+	margin-bottom: 1em;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.success,
+.fail {
+	margin-bottom: 1em;
+	padding: 1em;
+	font-weight: bold;
+	font-size: 1.5em;
+}
+
+.success p,
+.fail p {
+	padding: 0;
+	margin: 0;
+}
+
+.success ul,
+.fail ul {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.success ul li,
+.fail ul li {
+	padding: 0;
+	margin: 0;
+}
+
+.success {
+	background:#F5F8FF;
+	border:1px dotted #003366;
+}
+
+.fail {
+	background:#FFEBE8;
+	border:1px dotted #DD3C10;
+}

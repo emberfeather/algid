@@ -1,5 +1,5 @@
 <cfcomponent output="false">
-	<cfset this.name = '{{key}}' />
+	<cfset this.name = '@key@' />
 	<cfset this.applicationTimeout = createTimeSpan(2, 0, 0, 0) />
 	<cfset this.sessionManagement = true />
 	<cfset this.sessionTimeout = createTimeSpan(0, 0, 30, 0) />
