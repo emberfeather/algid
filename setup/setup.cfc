@@ -199,7 +199,8 @@
 		<cfset createDirectories( arguments.request.path, directories ) />
 		
 		<!--- Copy the necessary files --->
-		<cfset files = 'dist/settings/project.properties,dist/settings/statSVN.properties,dist/settings/user.properties.example' />
+		<cfset files = 'application.cfc,build.xml,releaseNotes.txt,version.txt' />
+		<cfset files &= ',dist/settings/project.properties,dist/settings/statSVN.properties,dist/settings/user.properties.example' />
 		<cfset files &= ',dist/templates/config/plugin.json.cfm' />
 		
 		<cfset copyFiles( variables.setupBasePath & 'project/googleCode/plugin/trunk', arguments.request.path, files, arguments.request ) />
