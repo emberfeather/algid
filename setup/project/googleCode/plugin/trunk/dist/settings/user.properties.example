@@ -13,7 +13,7 @@ svn.javahl=false
 svn.svnkit=true
 
 # Build Settings
-build.wiki=/path/to/wiki/files
+build.wiki.path=/path/to/wiki/files
 
 # Test Settings
 test.host=localhost
