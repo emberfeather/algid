@@ -116,6 +116,16 @@ input[type=submit] {
 	margin: 1em 0;
 }
 
+blockquote {
+	margin: 1em;
+	padding-left: 1em;
+	border-left: 4px solid #ccc;
+}
+
+blockquote cite {
+	font-size: .9em;
+}
+
 /**
  * Classes 
  */

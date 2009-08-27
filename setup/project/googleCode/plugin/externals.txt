@@ -1,0 +1,4 @@
+cf-compendium		https://cf-compendium.googlecode.com/svn/trunk/cf-compendium
+algid				https://algid.googlecode.com/svn/trunk/algid
+mxunit				http://mxunit.googlecode.com/svn/mxunit/trunk
+varscoper			http://svn.riaforge.org/varscoper

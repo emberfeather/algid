@@ -23,6 +23,9 @@
 				</div>
 				<div class="grid_3">
 					<cfswitch expression="#arguments.type#">
+						<cfcase value="checkbox">
+							<input type="checkbox" id="ele_#arguments.name#" name="#arguments.name#" value="true"<cfif arguments.value EQ true> checked="checked"</cfif> />
+						</cfcase>
 						<cfcase value="text">
 							<input type="text" id="ele_#arguments.name#" name="#arguments.name#" value="#arguments.value#" />
 						</cfcase>
@@ -71,6 +74,13 @@
 		<cfparam name="arguments.request.title" default="" />
 		
 		<cfreturn element('Title', 'title', 'text', arguments.request.title, arguments.description) />
+	</cffunction>
+	
+	<cffunction name="elementUseSVN" access="private" returntype="string" output="false">
+		<cfargument name="request" type="struct" default="#{}#" />
+		<cfargument name="description" type="string" required="true" />
+		
+		<cfreturn element('Use SVN?', 'useSVN', 'checkbox', structKeyExists(arguments.request, 'useSVN'), arguments.description) />
 	</cffunction>
 	
 	<cffunction name="elementWikiPath" access="private" returntype="string" output="false">
@@ -142,8 +152,8 @@
 				#elementTitle(arguments.request, 'The full title of the plugin.')#
 				#elementKey(arguments.request, 'A unique key used to identify your plugin. This must be unique among <strong>all</strong> plugins.')#
 				#elementRepoName(arguments.request, 'The name of your google code project. EX: <strong>algid-pluginName</strong>.')#
-				#elementPath(arguments.request, 'The full path to the trunk directory of the svn checkout.')#
-				#elementWikiPath(arguments.request, 'The full path to the wiki directory of the svn checkout.')#
+				#elementPath(arguments.request, 'The full path to the svn checkout of the repository root.')#
+				#elementUseSVN(arguments.request, 'Would you like the wizard to add the files and properties for you?')#
 			</cfoutput>
 		</cfsavecontent>
 		

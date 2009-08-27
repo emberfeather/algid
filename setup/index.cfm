@@ -109,7 +109,7 @@
 						</div>
 						
 						<form action="<cfoutput>?wizard=#URL.wizard#&type=#URL.type#&host=#URL.host#</cfoutput>" method="post">
-							<cfoutput>#view.formProjectApplicationGoogle()#</cfoutput>
+							<cfoutput>#view.formProjectApplicationGoogle( FORM )#</cfoutput>
 							
 							<div class="grid_12 text-center">
 								<input type="submit" value="Go!" />
@@ -127,32 +127,31 @@
 								<a href="http://code.google.com/p/algid/wiki/DirectoryPlugin">Algid plugin directory</a>.
 							</p>
 							
-							<h3>Subversion Repository</h3>
+							<h3>Subversion Checkout</h3>
 							
 							<p>
-								<strong>Once the wizard is complete</strong> you will need to 
-								add the following trunk files to the <code>svn:ignore</code>
-								property:
+								To make things easier, select the option to add the files to the svn repository
+								and the wizard will attempt to run some of the svn commands to help you out.
 							</p>
 							
-							<ul>
-								<li><code>dist/settings/user.properties</code></li>
-							</ul>
-							
 							<p>
-								Each of the following directories should have the <code>svn:ignore</code>
-								property set to <code>*</code>:
+								The <code>Path</code> given below should be to the root of your repository.
+								Here is an example of how you might checkout the root of your new plugin repository:
 							</p>
 							
-							<ul>
-								<li><code>dist/export</code></li>
-								<li><code>dist/logs</code></li>
-								<li><code>dist/stats</code></li>
-								<li><code>dist/unit</code></li>
-							</ul>
+							<p>
+								<strong>Note:</strong> Replace anything inside the &lt; and &gt; with your information!
+							</p>
+							
+							<blockquote>
+								<code>svn checkout https://<em>&lt;your project name&gt;</em>.googlecode.com/svn/ <em>&lt;your project name&gt;</em> --username <em>&lt;your username&gt;</em></code>
+							</blockquote>
 							
 							<p>
-								All remaining files should be added to your repository.
+								In the <code>Path</code> field below enter the complete path to the new 
+								directory (named your project name), which will contain 
+								<code>branches</code>, <code>tags</code>, and <code>trunk</code> 
+								directories.
 							</p>
 							
 							<h3>The Wizard</h3>
@@ -163,7 +162,7 @@
 						</div>
 						
 						<form action="<cfoutput>?wizard=#URL.wizard#&type=#URL.type#&host=#URL.host#</cfoutput>" method="post">
-							<cfoutput>#view.formProjectPluginGoogle()#</cfoutput>
+							<cfoutput>#view.formProjectPluginGoogle( FORM )#</cfoutput>
 							
 							<div class="grid_12 text-center">
 								<input type="submit" value="Go!" />
@@ -187,7 +186,7 @@
 						</div>
 						
 						<form action="<cfoutput>?wizard=#URL.wizard#&type=#URL.type#&host=#URL.host#</cfoutput>" method="post">
-							<cfoutput>#view.formApplication()#</cfoutput>
+							<cfoutput>#view.formApplication( FORM )#</cfoutput>
 							
 							<div class="grid_12 text-center">
 								<input type="submit" value="Go!" />
@@ -211,7 +210,7 @@
 						</div>
 						
 						<form action="<cfoutput>?wizard=#URL.wizard#&type=#URL.type#&host=#URL.host#</cfoutput>" method="post">
-							<cfoutput>#view.formPlugin()#</cfoutput>
+							<cfoutput>#view.formPlugin( FORM )#</cfoutput>
 							
 							<div class="grid_12 text-center">
 								<input type="submit" value="Go!" />
