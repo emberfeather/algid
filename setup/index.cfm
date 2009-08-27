@@ -154,6 +154,14 @@
 								directories.
 							</p>
 							
+							<h3>All the Works</h3>
+							
+							<p>
+								After the wizard is complete, find out 
+								<a href="http://code.google.com/p/algid/wiki/ProjectGooglePlugin">how to use the extras</a>
+								to get the most from your new project!
+							</p>
+							
 							<h3>The Wizard</h3>
 							
 							<p>

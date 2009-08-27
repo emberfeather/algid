@@ -153,7 +153,7 @@
 				#elementKey(arguments.request, 'A unique key used to identify your plugin. This must be unique among <strong>all</strong> plugins.')#
 				#elementRepoName(arguments.request, 'The name of your google code project. EX: <strong>algid-pluginName</strong>.')#
 				#elementPath(arguments.request, 'The full path to the svn checkout of the repository root.')#
-				#elementUseSVN(arguments.request, 'Would you like the wizard to add the files and properties for you?')#
+				#elementUseSVN(arguments.request, 'Would you like the wizard to add the files and set the properties for you?')#
 			</cfoutput>
 		</cfsavecontent>
 		
