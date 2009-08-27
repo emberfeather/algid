@@ -8,6 +8,8 @@
 	<cfset variables.mappingBase = getDirectoryFromPath( getCurrentTemplatePath() ) />
 	
 	<cfset this.mappings = {} />
+	<cfset this.mappings['/cf-compendium'] = variables.mappingBase & 'cf-compendium' />
 	<cfset this.mappings['/plugins'] = variables.mappingBase />
 	<cfset this.mappings['/test'] = variables.mappingBase & 'test' />
+	<cfset this.mappings['/varscoper'] = variables.mappingBase & 'varscoper' />
 </cfcomponent>
