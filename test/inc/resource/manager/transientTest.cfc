@@ -4,7 +4,7 @@
 		it should return true for the has functionality.
 	--->
 	<cffunction name="testHasDefinition" access="public" returntype="void" output="false">
-		<cfset var transient = createObject('component', 'algid.inc.resource.application.transientManager').init() />
+		<cfset var transient = createObject('component', 'algid.inc.resource.manager.transient').init() />
 		
 		<cfset transient.setFactory('testing') />
 		
@@ -16,7 +16,7 @@
 		exist it should return false for the has functionality.
 	--->
 	<cffunction name="testHasDefinitionSansDefinition" access="public" returntype="void" output="false">
-		<cfset var transient = createObject('component', 'algid.inc.resource.application.transientManager').init() />
+		<cfset var transient = createObject('component', 'algid.inc.resource.manager.transient').init() />
 		
 		<cfset assertFalse(transient.hastransient()) />
 	</cffunction>
@@ -26,7 +26,7 @@
 		to have an string passed as an argument.
 	--->
 	<cffunction name="testSetSansArguments" access="public" returntype="void" output="false">
-		<cfset var transient = createObject('component', 'algid.inc.resource.application.transientManager').init() />
+		<cfset var transient = createObject('component', 'algid.inc.resource.manager.transient').init() />
 		
 		<cftry>
 			<cfset transient.settransient() />
@@ -48,7 +48,7 @@
 		to be a simple value.
 	--->
 	<cffunction name="testSetSansObject" access="public" returntype="void" output="false">
-		<cfset var transient = createObject('component', 'algid.inc.resource.application.transientManager').init() />
+		<cfset var transient = createObject('component', 'algid.inc.resource.manager.transient').init() />
 		<cfset var test = createObject('component', 'cf-compendium.inc.resource.base.base').init() />
 		
 		<cftry>

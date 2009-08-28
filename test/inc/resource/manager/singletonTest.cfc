@@ -5,7 +5,7 @@
 		functionality.
 	--->
 	<cffunction name="testHasSingleton" access="public" returntype="void" output="false">
-		<cfset var singletons = createObject('component', 'algid.inc.resource.application.singletonManager').init() />
+		<cfset var singletons = createObject('component', 'algid.inc.resource.manager.singleton').init() />
 		<cfset var test = createObject('component', 'cf-compendium.inc.resource.base.base').init() />
 		
 		<cfset singletons.setSingleton( test ) />
@@ -19,7 +19,7 @@
 		functionality.
 	--->
 	<cffunction name="testHasSingletonSansSingleton" access="public" returntype="void" output="false">
-		<cfset var singletons = createObject('component', 'algid.inc.resource.application.singletonManager').init() />
+		<cfset var singletons = createObject('component', 'algid.inc.resource.manager.singleton').init() />
 		
 		<cfset assertFalse(singletons.hasSingleton()) />
 	</cffunction>
@@ -30,7 +30,7 @@
 		functionality.
 	--->
 	<cffunction name="testHasSingletonStub" access="public" returntype="void" output="false">
-		<cfset var singletons = createObject('component', 'algid.inc.resource.application.singletonManager').init() />
+		<cfset var singletons = createObject('component', 'algid.inc.resource.manager.singleton').init() />
 		
 		<cfset singletons.getSingleton() />
 		
@@ -42,7 +42,7 @@
 		to have an object passed as an argument.
 	--->
 	<cffunction name="testSetSansArguments" access="public" returntype="void" output="false">
-		<cfset var singletons = createObject('component', 'algid.inc.resource.application.singletonManager').init() />
+		<cfset var singletons = createObject('component', 'algid.inc.resource.manager.singleton').init() />
 		
 		<cftry>
 			<cfset singletons.setSingleton() />
@@ -64,7 +64,7 @@
 		to be an actual object.
 	--->
 	<cffunction name="testSetSansObject" access="public" returntype="void" output="false">
-		<cfset var singletons = createObject('component', 'algid.inc.resource.application.singletonManager').init() />
+		<cfset var singletons = createObject('component', 'algid.inc.resource.manager.singleton').init() />
 		
 		<cftry>
 			<cfset singletons.setSingleton('testing simple value') />
