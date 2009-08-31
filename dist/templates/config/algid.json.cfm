@@ -9,5 +9,5 @@
 	"prerequisites": {
 		"cf-compendium": "@prerequisites.cf-compendium@"
 	},
-	"version": "@project.version@"
+	"version": "@project.version.major@.@project.version.minor@.@project.version.build@"
 }

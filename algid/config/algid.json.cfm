@@ -7,7 +7,7 @@
 	},
 	"key": "algid",
 	"prerequisites": {
-		"cf-compendium": "0.1.001"
+		"cf-compendium": "0.1.1"
 	},
-	"version": "0.1.001"
+	"version": "0.1.1"
 }
