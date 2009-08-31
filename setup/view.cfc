@@ -10,8 +10,10 @@
 		<cfargument name="type" type="string" required="true" />
 		<cfargument name="value" type="string" required="true" />
 		<cfargument name="description" type="string" required="true" />
+		<cfargument name="options" type="array" default="#[]#" />
 		
 		<cfset var html = '' />
+		<cfset var option = '' />
 		
 		<cfsavecontent variable="html">
 			<cfoutput>
@@ -25,6 +27,13 @@
 					<cfswitch expression="#arguments.type#">
 						<cfcase value="checkbox">
 							<input type="checkbox" id="ele_#arguments.name#" name="#arguments.name#" value="true"<cfif arguments.value EQ true> checked="checked"</cfif> />
+						</cfcase>
+						<cfcase value="radio">
+							<cfloop array="#arguments.options#" index="option">
+								<label>#option#
+									<input type="radio" id="ele_#arguments.name#_#option#" name="#arguments.name#" value="#option#"<cfif arguments.value EQ option> checked="checked"</cfif> />
+								</label>
+							</cfloop>
 						</cfcase>
 						<cfcase value="text">
 							<input type="text" id="ele_#arguments.name#" name="#arguments.name#" value="#arguments.value#" />
@@ -76,11 +85,13 @@
 		<cfreturn element('Title', 'title', 'text', arguments.request.title, arguments.description) />
 	</cffunction>
 	
-	<cffunction name="elementUseSVN" access="private" returntype="string" output="false">
+	<cffunction name="elementUseSCM" access="private" returntype="string" output="false">
 		<cfargument name="request" type="struct" default="#{}#" />
 		<cfargument name="description" type="string" required="true" />
 		
-		<cfreturn element('Use SVN?', 'useSVN', 'checkbox', structKeyExists(arguments.request, 'useSVN'), arguments.description) />
+		<cfparam name="arguments.request.scm" default="none" />
+		
+		<cfreturn element('Use Source Control?', 'scm', 'radio', arguments.request.scm, arguments.description, [ 'None', 'SVN' ]) />
 	</cffunction>
 	
 	<cffunction name="elementWikiPath" access="private" returntype="string" output="false">
@@ -129,14 +140,13 @@
 		<cfset var html = '' />
 		
 		<cfsavecontent variable="html">
-			<div class="grid_12">
-				<p>
-					Unfortunately we don't have the project wizard built yet for
-					this option. If you would like to help us get it setup just
-					or would like to request one be made please visit our 
-					<a href="http://groups.google.com/group/algid-users">Algid users group</a>.
-				</p>
-			</div>
+			<cfoutput>
+				#elementTitle(arguments.request, 'The full title of the application.')#
+				#elementKey(arguments.request, 'A unique key used to identify your application.')#
+				#elementRepoName(arguments.request, 'The name of your google code project. EX: http://code.google.com/p/<strong>application-name</strong>')#
+				#elementPath(arguments.request, 'The full path to the svn checkout of the repository root.')#
+				#elementUseSCM(arguments.request, 'Would you like the wizard to add the files and set the properties for you?')#
+			</cfoutput>
 		</cfsavecontent>
 		
 		<cfreturn html />
@@ -151,9 +161,9 @@
 			<cfoutput>
 				#elementTitle(arguments.request, 'The full title of the plugin.')#
 				#elementKey(arguments.request, 'A unique key used to identify your plugin. This must be unique among <strong>all</strong> plugins.')#
-				#elementRepoName(arguments.request, 'The name of your google code project. EX: <strong>algid-pluginName</strong>.')#
+				#elementRepoName(arguments.request, 'The name of your google code project. EX: http://code.google.com/p/<strong>algid-pluginName</strong>')#
 				#elementPath(arguments.request, 'The full path to the svn checkout of the repository root.')#
-				#elementUseSVN(arguments.request, 'Would you like the wizard to add the files and set the properties for you?')#
+				#elementUseSCM(arguments.request, 'Would you like the wizard to add the files and set the properties for you?')#
 			</cfoutput>
 		</cfsavecontent>
 		

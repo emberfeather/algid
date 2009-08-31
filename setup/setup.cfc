@@ -7,29 +7,6 @@
 		<cfreturn this />
 	</cffunction>
 	
-	<cffunction name="copyBinaries" access="private" returntype="string" output="false">
-		<cfargument name="srcPath" type="string" required="true" />
-		<cfargument name="destPath" type="string" required="true" />
-		<cfargument name="files" type="string" required="true" />
-		
-		<cfset var fileName = '' />
-		<cfset var newFiles = '' />
-		
-		<!--- Normalize the paths --->
-		<cfset arguments.srcPath = normalizePath(arguments.srcPath) />
-		<cfset arguments.destPath = normalizePath(arguments.destPath) />
-		
-		<cfloop list="#arguments.files#" index="fileName">
-			<cfif NOT fileExists(arguments.destPath & fileName)>
-				<cffile action="copy" source="#arguments.srcPath##fileName#" destination="#arguments.destPath##fileName#" />
-				
-				<cfset newFiles = listAppend( newFiles, fileName ) />
-			</cfif>
-		</cfloop>
-		
-		<cfreturn newFiles />
-	</cffunction>
-	
 	<cffunction name="copyFiles" access="private" returntype="string" output="false">
 		<cfargument name="srcPath" type="string" required="true" />
 		<cfargument name="destPath" type="string" required="true" />
@@ -55,6 +32,29 @@
 				</cfloop>
 				
 				<cffile action="write" file="#arguments.destPath##fileName#" output="#fileContents#" addnewline="false" />
+				
+				<cfset newFiles = listAppend( newFiles, fileName ) />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn newFiles />
+	</cffunction>
+	
+	<cffunction name="copyStatics" access="private" returntype="string" output="false">
+		<cfargument name="srcPath" type="string" required="true" />
+		<cfargument name="destPath" type="string" required="true" />
+		<cfargument name="files" type="string" required="true" />
+		
+		<cfset var fileName = '' />
+		<cfset var newFiles = '' />
+		
+		<!--- Normalize the paths --->
+		<cfset arguments.srcPath = normalizePath(arguments.srcPath) />
+		<cfset arguments.destPath = normalizePath(arguments.destPath) />
+		
+		<cfloop list="#arguments.files#" index="fileName">
+			<cfif NOT fileExists(arguments.destPath & fileName)>
+				<cffile action="copy" source="#arguments.srcPath##fileName#" destination="#arguments.destPath##fileName#" />
 				
 				<cfset newFiles = listAppend( newFiles, fileName ) />
 			</cfif>
@@ -102,19 +102,19 @@
 		
 		<cfswitch expression="#arguments.wizard#-#arguments.type#-#arguments.host#">
 			<cfcase value="project-app-google">
-				
+				<cfset projectGooglePlugin( arguments.request ) />
 			</cfcase>
 			
 			<cfcase value="project-plugin-google">
-				<cfset setupProjectGooglePlugin( arguments.request ) />
+				<cfset projectGooglePlugin( arguments.request ) />
 			</cfcase>
 			
 			<cfcase value="standalone-app-">
-				<cfset setupApplication( arguments.request ) />
+				<cfset standaloneApplication( arguments.request ) />
 			</cfcase>
 			
 			<cfcase value="standalone-plugin-">
-				<cfset setupPlugin( arguments.request ) />
+				<cfset standalonePlugin( arguments.request ) />
 			</cfcase>
 			
 			<cfdefaultcase>
@@ -135,190 +135,403 @@
 		<cfreturn arguments.path />
 	</cffunction>
 	
-	<cffunction name="setupApplication" access="private" returntype="void" output="false">
+	<cffunction name="projectGoogleApplication" access="private" returntype="void" output="false">
 		<cfargument name="request" type="struct" required="true" />
 		
-		<cfset var directories = '' />
-		<cfset var files = '' />
+		<cfset var args = {} />
+		<cfset var key = '' />
 		
-		<!--- Make the necessary directories --->
-		<cfset directories = 'config' />
-		<cfset directories &= ',plugins' />
+		<cfthrow message="Not yet implemented" />
 		
-		<cfset createDirectories(arguments.request.path, directories) />
+		<!--- Trim the key --->
+		<cfset key = trim( arguments.request.key ) />
 		
-		<!--- Copy the necessary files --->
-		<cfset files = 'config/application.cfc,config/application.json.cfm,config/settings.example.json.cfm,config/settings.json.cfm' />
-		<cfset files &= ',application.cfc,index.cfm' />
+		<cfset args.request = arguments.request />
+		<cfset args.srcPath = variables.setupBasePath & 'project/googleCode/application' />
 		
-		<cfset copyFiles( variables.setupBasePath & 'standalone/application', arguments.request.path, files, arguments.request ) />
-	</cffunction>
-	
-	<cffunction name="setupPlugin" access="private" returntype="void" output="false">
-		<cfargument name="request" type="struct" required="true" />
+		<!--- The versioned directories --->
+		<cfset args.directories = 'trunk/dist' />
+		<cfset args.directories &= ',trunk/dist/export' />
+		<cfset args.directories &= ',trunk/dist/lib,trunk/dist/lib/ant-googlecode-0.0.2,trunk/dist/lib/statSVN-0.5.0,trunk/dist/lib/svnant-1.3.0,trunk/dist/lib/yuicompressor-2.4.2' />
+		<cfset args.directories &= ',trunk/dist/logs' />
+		<cfset args.directories &= ',trunk/dist/settings' />
+		<cfset args.directories &= ',trunk/dist/stats' />
+		<cfset args.directories &= ',trunk/dist/templates,trunk/dist/templates/config' />
+		<cfset args.directories &= ',wiki' />
 		
-		<cfset var directories = '' />
-		<cfset var files = '' />
-		<cfset var newFiles = '' />
-		<cfset var svn = '' />
-		<cfset var usingSVN = '' />
+		<!--- The static files --->
+		<cfset args.staticFiles = 'trunk/dist/lib/ant-googlecode-0.0.2/ant-googlecode.jar' />
+		<cfset args.staticFiles &= ',trunk/dist/lib/statSVN-0.5.0/statsvn.jar' />
+		<cfset args.staticFiles &= ',trunk/dist/lib/svnant-1.3.0/ganymed.jar,trunk/dist/lib/svnant-1.3.0/svnant.jar,trunk/dist/lib/svnant-1.3.0/svnClientAdapter.jar,trunk/dist/lib/svnant-1.3.0/svnjavahl.jar,trunk/dist/lib/svnant-1.3.0/svnkit.jar' />
+		<cfset args.staticFiles &= ',trunk/dist/lib/yuicompressor-2.4.2/yuicompressor.jar' />
 		
-		<cfset usingSVN = structKeyExists(arguments.request, 'useSVN') />
+		<!--- The versioned files --->
+		<cfset args.versionedFiles = 'trunk/application.cfc,trunk/build.xml,trunk/releaseNotes.txt,trunk/version.txt' />
+		<cfset args.versionedFiles &= ',trunk/dist/settings/project.properties,trunk/dist/settings/statSVN.properties,trunk/dist/settings/user.properties.example,trunk/dist/settings/version.properties' />
+		<cfset args.versionedFiles &= ',trunk/dist/templates/config/application.json.cfm' />
+		<cfset args.versionedFiles &= ',wiki/ReleaseNotes.wiki' />
 		
-		<!--- If we want to use svn then create the svn helper --->
-		<cfif usingSVN>
-			<cfset svn = createObject('component', 'svn').init( arguments.request.path ) />
-		</cfif>
+		<!--- The unversioned files --->
+		<cfset args.unversionedFiles = 'trunk/dist/settings/user.properties' />
 		
-		<!--- Trim the plugin key --->
-		<cfset arguments.request.key = trim( arguments.request.key ) />
+		<!--- The repository properties --->
+		<cfset args.properties = [] />
 		
-		<!--- Create the plugin directory --->
-		<cfset newFiles = createDirectories( arguments.request.path, arguments.request.key ) />
+		<!--- The user property file --->
+		<cfset arrayAppend(args.properties, {
+				directories = 'trunk/dist/settings',
+				property = 'svn:ignore',
+				value = 'user.properties'
+			}) />
 		
-		<!--- Add the new directories to working copy --->
-		<cfif usingSVN>
-			<cfset svn.addFiles( newFiles ) />
-		</cfif>
+		<!--- The distribution directory contents --->
+		<cfset arrayAppend(args.properties, {
+				directories = 'trunk/dist/export,trunk/dist/logs,trunk/dist/stats',
+				property = 'svn:ignore',
+				value = '*'
+			}) />
 		
-		<!--- Change the path to the plugin directory --->
-		<cfset arguments.request.path = normalizePath(arguments.request.path) & arguments.request.key />
+		<!--- The externals --->
+		<cfset arrayAppend(args.properties, {
+				directories = 'trunk',
+				property = 'svn:externals',
+				file = 'trunk/externals.txt'
+			}) />
 		
-		<!--- Add the new directories to working copy --->
-		<cfif usingSVN>
-			<!--- Reinit the svn with the new working copy path --->
-			<cfset svn.init( arguments.request.path ) />
-		</cfif>
-		
-		<!--- Make the necessary directories --->
-		<cfset directories = 'config' />
-		<cfset directories &= ',extend' />
-		<cfset directories &= ',i18n,i18n/config,i18n/extend,i18n/inc,i18n/inc/model' />
-		<cfset directories &= ',img' />
-		<cfset directories &= ',inc,inc/content,inc/model,inc/resource,inc/service,inc/view' />
-		<cfset directories &= ',script' />
-		<cfset directories &= ',style' />
-		<cfset directories &= ',service' />
-		
-		<cfset newFiles = createDirectories( arguments.request.path, directories ) />
-		
-		<!--- Add the new directories to working copy --->
-		<cfif usingSVN>
-			<cfset svn.addFiles( newFiles ) />
-		</cfif>
-		
-		<!--- Copy the necessary files --->
-		<cfset files = 'config/application.cfc,config/configure.cfc,config/plugin.json.cfm' />
-		<cfset files &= ',extend/application.cfc' />
-		<cfset files &= ',i18n/config/plugin.properties,i18n/config/plugin_en_US.properties' />
-		<cfset files &= ',inc/application.cfc' />
-		
-		<cfset newFiles = copyFiles( variables.setupBasePath & 'standalone/plugin', arguments.request.path, files, arguments.request ) />
-		
-		<!--- Add the new directories to working copy --->
-		<cfif usingSVN>
-			<cfset svn.addFiles( newFiles ) />
-		</cfif>
-	</cffunction>
-	
-	<cffunction name="setupProjectGoogleApplication" access="private" returntype="void" output="false">
-		<cfargument name="request" type="struct" required="true" />
-		
-		
-	</cffunction>
-	
-	<cffunction name="setupProjectGooglePlugin" access="private" returntype="void" output="false">
-		<cfargument name="request" type="struct" required="true" />
-		
-		<cfset var directories = '' />
-		<cfset var files = '' />
-		<cfset var newFiles = '' />
-		<cfset var svn = '' />
-		<cfset var usingSVN = '' />
-		
-		<cfset usingSVN = structKeyExists(arguments.request, 'useSVN') />
-		
-		<!--- If we want to use svn then create the svn helper --->
-		<cfif usingSVN>
-			<cfset svn = createObject('component', 'svn').init( arguments.request.path ) />
-		</cfif>
-		
-		<!--- Make the necessary directories --->
-		<cfset directories = 'trunk/dist' />
-		<cfset directories &= ',trunk/dist/export' />
-		<cfset directories &= ',trunk/dist/lib,trunk/dist/lib/ant-googlecode-0.0.2,trunk/dist/lib/statSVN-0.5.0,trunk/dist/lib/svnant-1.3.0,trunk/dist/lib/yuicompressor-2.4.2' />
-		<cfset directories &= ',trunk/dist/logs' />
-		<cfset directories &= ',trunk/dist/settings' />
-		<cfset directories &= ',trunk/dist/stats' />
-		<cfset directories &= ',trunk/dist/templates,trunk/dist/templates/config' />
-		<cfset directories &= ',trunk/dist/unit' />
-		<cfset directories &= ',trunk/test' />
-		<cfset directories &= ',trunk/test/inc,trunk/test/inc/model' />
-		<cfset directories &= ',wiki' />
-		
-		<cfset newFiles = createDirectories( arguments.request.path, directories ) />
-		
-		<!--- Add the new directories to working copy --->
-		<cfif usingSVN>
-			<cfset svn.addFiles( newFiles ) />
-		</cfif>
-		
-		<!--- Copy the necessary files --->
-		<cfset files = 'trunk/application.cfc,trunk/build.xml,trunk/releaseNotes.txt,trunk/version.txt' />
-		<cfset files &= ',trunk/dist/settings/project.properties,trunk/dist/settings/statSVN.properties,trunk/dist/settings/user.properties.example' />
-		<cfset files &= ',trunk/dist/templates/config/plugin.json.cfm' />
-		
-		<cfset newFiles = copyFiles( variables.setupBasePath & 'project/googleCode/plugin', arguments.request.path, files, arguments.request ) />
-		
-		<!--- Add the new files to working copy --->
-		<cfif usingSVN>
-			<cfset svn.addFiles( newFiles ) />
-		</cfif>
-		
-		<!--- Copy the binary files --->
-		<cfset files = 'trunk/dist/lib/ant-googlecode-0.0.2/ant-googlecode.jar' />
-		<cfset files &= ',trunk/dist/lib/statSVN-0.5.0/statsvn.jar' />
-		<cfset files &= ',trunk/dist/lib/svnant-1.3.0/ganymed.jar,trunk/dist/lib/svnant-1.3.0/svnant.jar,trunk/dist/lib/svnant-1.3.0/svnClientAdapter.jar,trunk/dist/lib/svnant-1.3.0/svnjavahl.jar,trunk/dist/lib/svnant-1.3.0/svnkit.jar' />
-		<cfset files &= ',trunk/dist/lib/yuicompressor-2.4.2/yuicompressor.jar' />
-		
-		<cfset newFiles = copyBinaries( variables.setupBasePath & 'project/googleCode/plugin', arguments.request.path, files ) />
-		
-		<!--- Add the new files to working copy --->
-		<cfif usingSVN>
-			<cfset svn.addFiles( newFiles ) />
-		</cfif>
-		
-		<!--- Copy the wiki files --->
-		<cfset files = 'wiki/ReleaseNotes.wiki' />
-		
-		<cfset newFiles = copyFiles( variables.setupBasePath & 'project/googleCode/plugin', arguments.request.path, files, arguments.request ) />
-		
-		<!--- Add the new files to working copy --->
-		<cfif usingSVN>
-			<cfset svn.addFiles( newFiles ) />
-		</cfif>
-		
-		<!--- Set the svn properties --->
-		<cfif usingSVN>
-			<!--- Ignore the user property file --->
-			<cfset svn.setProperty('trunk/dist/settings', 'svn:ignore', 'user.properties') />
+		<cfswitch expression="#arguments.request.scm#">
+			<cfcase value="none">
+				<cfset setupFile( argumentCollection = args ) />
+			</cfcase>
 			
-			<!--- Ignore the dist directory contents --->
-			<cfset svn.setProperty('trunk/dist/export,trunk/dist/logs,trunk/dist/stats,trunk/dist/unit', 'svn:ignore', '*') />
+			<cfcase value="svn">
+				<cfset setupSVN( argumentCollection = args ) />
+			</cfcase>
 			
-			<!--- Set the svn:externals --->
-			<cfset svn.setPropertyFile('trunk', 'svn:externals', variables.setupBasePath & 'project/googleCode/plugin/externals.txt') />
-		</cfif>
+			<cfcase value="git">
+				<cfset setupGIT( argumentCollection = args ) />
+			</cfcase>
+			
+			<cfdefaultcase>
+				<cfthrow message="Not supported" detail="The #arguments.request.scm# type of SCM is not supported" />
+			</cfdefaultcase>
+		</cfswitch>
 		
-		<!--- Copy the files which should not be versioned --->
-		<cfset files = 'trunk/dist/settings/user.properties' />
+		<!--- Add the trunk to the path for the plugin setup --->
+		<cfset arguments.request.path = normalizePath(arguments.request.path) & key />
 		
-		<cfset copyFiles( variables.setupBasePath & 'project/googleCode/plugin', arguments.request.path, files, arguments.request ) />
+		<!--- Setup the plugin --->
+		<cfset standaloneApplication( arguments.request ) />
+	</cffunction>
+	
+	<cffunction name="projectGooglePlugin" access="private" returntype="void" output="false">
+		<cfargument name="request" type="struct" required="true" />
+		
+		<cfset var args = {} />
+		
+		<cfset args.request = arguments.request />
+		<cfset args.srcPath = variables.setupBasePath & 'project/googleCode/plugin' />
+		
+		<!--- The versioned directories --->
+		<cfset args.directories = 'trunk/dist' />
+		<cfset args.directories &= ',trunk/dist/export' />
+		<cfset args.directories &= ',trunk/dist/lib,trunk/dist/lib/ant-googlecode-0.0.2,trunk/dist/lib/statSVN-0.5.0,trunk/dist/lib/svnant-1.3.0,trunk/dist/lib/yuicompressor-2.4.2' />
+		<cfset args.directories &= ',trunk/dist/logs' />
+		<cfset args.directories &= ',trunk/dist/settings' />
+		<cfset args.directories &= ',trunk/dist/stats' />
+		<cfset args.directories &= ',trunk/dist/templates,trunk/dist/templates/config' />
+		<cfset args.directories &= ',trunk/dist/unit' />
+		<cfset args.directories &= ',trunk/test' />
+		<cfset args.directories &= ',trunk/test/inc,trunk/test/inc/model' />
+		<cfset args.directories &= ',wiki' />
+		
+		<!--- The static files --->
+		<cfset args.staticFiles = 'trunk/dist/lib/ant-googlecode-0.0.2/ant-googlecode.jar' />
+		<cfset args.staticFiles &= ',trunk/dist/lib/statSVN-0.5.0/statsvn.jar' />
+		<cfset args.staticFiles &= ',trunk/dist/lib/svnant-1.3.0/ganymed.jar,trunk/dist/lib/svnant-1.3.0/svnant.jar,trunk/dist/lib/svnant-1.3.0/svnClientAdapter.jar,trunk/dist/lib/svnant-1.3.0/svnjavahl.jar,trunk/dist/lib/svnant-1.3.0/svnkit.jar' />
+		<cfset args.staticFiles &= ',trunk/dist/lib/yuicompressor-2.4.2/yuicompressor.jar' />
+		
+		<!--- The versioned files --->
+		<cfset args.versionedFiles = 'trunk/application.cfc,trunk/build.xml,trunk/releaseNotes.txt,trunk/version.txt' />
+		<cfset args.versionedFiles &= ',trunk/dist/settings/project.properties,trunk/dist/settings/statSVN.properties,trunk/dist/settings/user.properties.example,trunk/dist/settings/version.properties' />
+		<cfset args.versionedFiles &= ',trunk/dist/templates/config/plugin.json.cfm' />
+		<cfset args.versionedFiles &= ',wiki/ReleaseNotes.wiki' />
+		
+		<!--- The unversioned files --->
+		<cfset args.unversionedFiles = 'trunk/dist/settings/user.properties' />
+		
+		<!--- The repository properties --->
+		<cfset args.properties = [] />
+		
+		<!--- The user property file --->
+		<cfset arrayAppend(args.properties, {
+				directories = 'trunk/dist/settings',
+				property = 'svn:ignore',
+				value = 'user.properties'
+			}) />
+		
+		<!--- The distribution directory contents --->
+		<cfset arrayAppend(args.properties, {
+				directories = 'trunk/dist/export,trunk/dist/logs,trunk/dist/stats,trunk/dist/unit',
+				property = 'svn:ignore',
+				value = '*'
+			}) />
+		
+		<!--- The externals --->
+		<cfset arrayAppend(args.properties, {
+				directories = 'trunk',
+				property = 'svn:externals',
+				file = 'trunk/externals.txt'
+			}) />
+		
+		<cfswitch expression="#arguments.request.scm#">
+			<cfcase value="none">
+				<cfset setupFile( argumentCollection = args ) />
+			</cfcase>
+			
+			<cfcase value="svn">
+				<cfset setupSVN( argumentCollection = args ) />
+			</cfcase>
+			
+			<cfcase value="git">
+				<cfset setupGIT( argumentCollection = args ) />
+			</cfcase>
+			
+			<cfdefaultcase>
+				<cfthrow message="Not supported" detail="The #arguments.request.scm# type of SCM is not supported" />
+			</cfdefaultcase>
+		</cfswitch>
 		
 		<!--- Add the trunk to the path for the plugin setup --->
 		<cfset arguments.request.path = normalizePath(arguments.request.path) & 'trunk/' />
 		
 		<!--- Setup the plugin --->
-		<cfset setupPlugin( arguments.request ) />
+		<cfset standalonePlugin( arguments.request ) />
+	</cffunction>
+	
+	<!---
+		Used to setup files only -- No SCM
+	--->
+	<cffunction name="setupFile" access="public" returntype="void" output="false">
+		<cfargument name="request" type="struct" required="true" />
+		<cfargument name="srcPath" type="string" required="true" />
+		<cfargument name="directories" type="string" required="true" />
+		<cfargument name="staticFiles" type="string" required="true" />
+		<cfargument name="versionedFiles" type="string" required="true" />
+		<cfargument name="unversionedFiles" type="string" required="true" />
+		
+		<cfset arguments.request.path = normalizePath(arguments.request.path) />
+		
+		<!--- Create the directories --->
+		<cfset createDirectories( arguments.request.path, arguments.directories ) />
+		
+		<!--- Copy the static files --->
+		<cfset copyStatics( arguments.srcPath, arguments.request.path, arguments.staticFiles ) />
+		
+		<!--- Copy the versioned files --->
+		<cfset copyFiles( arguments.srcPath, arguments.request.path, arguments.versionedFiles, arguments.request ) />
+		
+		<!--- Copy the unversioned files --->
+		<cfset copyFiles( arguments.srcPath, arguments.request.path, arguments.versionedFiles, arguments.request ) />
+	</cffunction>
+	
+	<!---
+		Used to setup files in GIT
+	--->
+	<cffunction name="setupGIT" access="public" returntype="void" output="false">
+		<cfargument name="request" type="struct" required="true" />
+		<cfargument name="srcPath" type="string" required="true" />
+		<cfargument name="directories" type="string" required="true" />
+		<cfargument name="staticFiles" type="string" required="true" />
+		<cfargument name="versionedFiles" type="string" required="true" />
+		<cfargument name="unversionedFiles" type="string" required="true" />
+		
+		<cfset var newObjects = '' />
+		
+		<cfthrow message="Not implemented yet" />
+	</cffunction>
+	
+	<!---
+		Used to setup files in SVN
+	--->
+	<cffunction name="setupSVN" access="public" returntype="void" output="false">
+		<cfargument name="request" type="struct" required="true" />
+		<cfargument name="srcPath" type="string" required="true" />
+		<cfargument name="directories" type="string" required="true" />
+		<cfargument name="staticFiles" type="string" required="true" />
+		<cfargument name="versionedFiles" type="string" required="true" />
+		<cfargument name="unversionedFiles" type="string" required="true" />
+		<cfargument name="properties" type="array" default="#[]#" />
+		
+		<cfset var newObjects = '' />
+		<cfset var svn = '' />
+		<cfset var property = '' />
+		
+		<cfset arguments.request.path = normalizePath(arguments.request.path) />
+		
+		<!--- Create the svn helper object --->
+		<cfset svn = createObject('component', 'svn').init( arguments.request.path ) />
+		
+		<!--- Create the directories and add to repository --->
+		<cfset newObjects = createDirectories( arguments.request.path, arguments.directories ) />
+		
+		<cfset svn.addFiles( newObjects ) />
+		
+		<!--- Copy the static versioned files and add to repository --->
+		<cfset newObjects = copyStatics( arguments.srcPath, arguments.request.path, arguments.staticFiles ) />
+		
+		<cfset svn.addFiles( newObjects ) />
+		
+		<!--- Copy the versioned files and add to repository --->
+		<cfset newObjects = copyFiles( arguments.srcPath, arguments.request.path, arguments.versionedFiles, arguments.request ) />
+		
+		<cfset svn.addFiles( newObjects ) />
+		
+		<!--- Set repository properties --->
+		<cfloop array="#arguments.properties#" index="property">
+			<cfif structKeyExists(property, 'file')>
+				<cfset svn.setPropertyFile(property.directories, property.property, normalizePath(arguments.srcPath) & property.file) />
+			<cfelse>
+				<cfset svn.setProperty(property.directories, property.property, property.value) />
+			</cfif>
+		</cfloop>
+		
+		<!--- Copy the unversioned files --->
+		<cfset copyFiles( arguments.srcPath, arguments.request.path, arguments.versionedFiles, arguments.request ) />
+	</cffunction>
+	
+	<cffunction name="standaloneApplication" access="private" returntype="void" output="false">
+		<cfargument name="request" type="struct" required="true" />
+		
+		<cfset var args = {} />
+		
+		<cfset args.request = arguments.request />
+		<cfset args.srcPath = variables.setupBasePath & 'standalone/application' />
+		
+		<!--- The versioned directories --->
+		<cfset args.directories = 'config' />
+		<cfset args.directories &= ',plugins' />
+		
+		<!--- The static files --->
+		<cfset args.staticFiles = '' />
+		
+		<!--- The versioned files --->
+		<cfset args.versionedFiles = 'config/application.cfc,config/application.json.cfm,config/settings.example.json.cfm,config/settings.json.cfm' />
+		<cfset args.versionedFiles &= ',application.cfc,index.cfm' />
+		
+		<!--- The unversioned files --->
+		<cfset args.unversionedFiles = '' />
+		
+		<!--- The repository properties --->
+		<cfset args.properties = [] />
+		
+		<cfswitch expression="#arguments.request.scm#">
+			<cfcase value="none">
+				<cfset setupFile( argumentCollection = args ) />
+			</cfcase>
+			
+			<cfcase value="svn">
+				<cfset setupSVN( argumentCollection = args ) />
+			</cfcase>
+			
+			<cfcase value="git">
+				<cfset setupGIT( argumentCollection = args ) />
+			</cfcase>
+			
+			<cfdefaultcase>
+				<cfthrow message="Not supported" detail="The #arguments.request.scm# type of SCM is not supported" />
+			</cfdefaultcase>
+		</cfswitch>
+	</cffunction>
+	
+	<cffunction name="standalonePlugin" access="private" returntype="void" output="false">
+		<cfargument name="request" type="struct" required="true" />
+		
+		<cfset var args = {} />
+		<cfset var key = '' />
+		
+		<!--- Trim the key --->
+		<cfset key = trim( arguments.request.key ) />
+		
+		<cfset args.request = arguments.request />
+		<cfset args.srcPath = variables.setupBasePath & 'standalone/plugin' />
+		
+		<!--- The versioned directories --->
+		<cfset args.directories = key />
+		
+		<!--- The static files --->
+		<cfset args.staticFiles = '' />
+		
+		<!--- The versioned files --->
+		<cfset args.versionedFiles = '' />
+		
+		<!--- The unversioned files --->
+		<cfset args.unversionedFiles = '' />
+		
+		<!--- The repository properties --->
+		<cfset args.properties = [] />
+		
+		<cfswitch expression="#arguments.request.scm#">
+			<cfcase value="none">
+				<cfset setupFile( argumentCollection = args ) />
+			</cfcase>
+			
+			<cfcase value="svn">
+				<cfset setupSVN( argumentCollection = args ) />
+			</cfcase>
+			
+			<cfcase value="git">
+				<cfset setupGIT( argumentCollection = args ) />
+			</cfcase>
+			
+			<cfdefaultcase>
+				<cfthrow message="Not supported" detail="The #arguments.request.scm# type of SCM is not supported" />
+			</cfdefaultcase>
+		</cfswitch>
+		
+		<!--- Go into the new plugin directory --->
+		<cfset args.request.path = normalizePath(arguments.request.path) & key />
+		
+		<!--- The versioned directories --->
+		<cfset args.directories = 'config' />
+		<cfset args.directories &= ',extend' />
+		<cfset args.directories &= ',i18n,i18n/config,i18n/extend,i18n/inc,i18n/inc/model' />
+		<cfset args.directories &= ',img' />
+		<cfset args.directories &= ',inc,inc/content,inc/model,inc/resource,inc/service,inc/view' />
+		<cfset args.directories &= ',script' />
+		<cfset args.directories &= ',style' />
+		<cfset args.directories &= ',service' />
+		
+		<!--- The static files --->
+		<cfset args.staticFiles = '' />
+		
+		<!--- The versioned files --->
+		<cfset args.versionedFiles = 'config/application.cfc,config/configure.cfc,config/plugin.json.cfm' />
+		<cfset args.versionedFiles &= ',extend/application.cfc' />
+		<cfset args.versionedFiles &= ',i18n/config/plugin.properties,i18n/config/plugin_en_US.properties' />
+		<cfset args.versionedFiles &= ',inc/application.cfc' />
+		
+		<!--- The unversioned files --->
+		<cfset args.unversionedFiles = '' />
+		
+		<!--- The repository properties --->
+		<cfset args.properties = [] />
+		
+		<cfswitch expression="#arguments.request.scm#">
+			<cfcase value="none">
+				<cfset setupFile( argumentCollection = args ) />
+			</cfcase>
+			
+			<cfcase value="svn">
+				<cfset setupSVN( argumentCollection = args ) />
+			</cfcase>
+			
+			<cfcase value="git">
+				<cfset setupGIT( argumentCollection = args ) />
+			</cfcase>
+			
+			<cfdefaultcase>
+				<cfthrow message="Not supported" detail="The #arguments.request.scm# type of SCM is not supported" />
+			</cfdefaultcase>
+		</cfswitch>
 	</cffunction>
 </cfcomponent>

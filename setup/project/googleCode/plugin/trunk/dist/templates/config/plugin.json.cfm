@@ -1,7 +1,6 @@
 {
 	"i18n": {
 		"locales": [
-			"en_PI",
 			"en_US"
 		]
 	},
@@ -9,5 +8,5 @@
 	"prerequisites": {
 		"algid": "@prerequisites.algid@"
 	},
-	"version": "@project.version@"
+	"version": "@project.version.major@.@project.version.minor@.@project.version.build@"
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="algid-@key@" default="minify" basedir=".">
+<project name="@key@" default="minify" basedir=".">
 	<!-- Include the property files -->
 	<property file="${basedir}/dist/settings/user.properties"/>
 	<property file="${basedir}/dist/settings/version.properties"/>
@@ -75,7 +75,7 @@
 		<echo message="Finished: SVN Preparation"/>
 	</target>
 	
-	<target name="release" depends="prepareSVN,minify,testVarScoper,testMXUnit" description="Tags a release and uploads a new version of the setup zip">
+	<target name="release" depends="prepareSVN,minify,testVarScoper" description="Tags a release and uploads a new version of the setup zip">
 		<echo message="Starting: Release of version ${project.version}"/>
 		
 		<!-- Load ANT tasks -->
@@ -155,7 +155,7 @@
 		<echo message="Finished: SVN Statistics at ${build.dist}/stats"/>
 	</target>
 	
-	<target name="svnCommit" depends="prepareSVN,minify,testVarScoper,testMXUnit" description="Commits the code to the repository">
+	<target name="svnCommit" depends="prepareSVN,minify,testVarScoper" description="Commits the code to the repository">
 		<echo message="Starting: SVN Commit"/>
 		
 		<input addproperty="svn.message" message="Commit Message" />
@@ -213,27 +213,12 @@
 		</filterset>
 		
 		<!-- Copy the plugin config file -->
-		<copy tofile="${basedir}/${project.key}/config/plugin.json.cfm" overwrite="true">
-			<fileset file="${build.templates}/config/plugin.json.cfm"/>
+		<copy tofile="${basedir}/${project.key}/config/application.json.cfm" overwrite="true">
+			<fileset file="${build.templates}/config/application.json.cfm"/>
 			<filterset refid="templateFilterset"/>
 		</copy>
 		
 		<echo message="Finished: Template"/>
-	</target>
-	
-	<target name="testMXUnit" depends="prepare" description="Runs the Unit Tests">
-		<echo message="Starting: Unit Tests"/>
-		
-		<!-- Load ANT tasks -->
-		<taskdef name="mxunittask" classname="org.mxunit.ant.MXUnitAntTask" classpath="${basedir}/mxunit/ant/lib/mxunit-ant-java5.jar" />
-		
-		<mxunittask server="${test.host}" port="${test.port}" outputdir="${build.dist}/unit" defaultrunner="${test.mxunit.defaultrunner}" failureproperty="test.mxunit.failure" verbose="${general.verbose}">
-			<directory path="${basedir}/test" componentPath="${test.mxunit.componentpath}" recurse="true" />
-		</mxunittask>
-		
-		<fail if="test.mxunit.failure" message="Unit tests failed" />
-		
-		<echo message="Finished: Unit Tests"/>
 	</target>
 	
 	<target name="testVarScoper" depends="prepare" description="Runs the varScoper">
