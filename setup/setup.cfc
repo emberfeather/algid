@@ -331,7 +331,7 @@
 		<cfset copyFiles( arguments.srcPath, arguments.request.path, arguments.versionedFiles, arguments.request ) />
 		
 		<!--- Copy the unversioned files --->
-		<cfset copyFiles( arguments.srcPath, arguments.request.path, arguments.versionedFiles, arguments.request ) />
+		<cfset copyFiles( arguments.srcPath, arguments.request.path, arguments.unversionedFiles, arguments.request ) />
 	</cffunction>
 	
 	<!---
@@ -396,7 +396,7 @@
 		</cfloop>
 		
 		<!--- Copy the unversioned files --->
-		<cfset copyFiles( arguments.srcPath, arguments.request.path, arguments.versionedFiles, arguments.request ) />
+		<cfset copyFiles( arguments.srcPath, arguments.request.path, arguments.unversionedFiles, arguments.request ) />
 	</cffunction>
 	
 	<cffunction name="standaloneApplication" access="private" returntype="void" output="false">
@@ -415,14 +415,21 @@
 		<cfset args.staticFiles = '' />
 		
 		<!--- The versioned files --->
-		<cfset args.versionedFiles = 'config/application.cfc,config/application.json.cfm,config/settings.example.json.cfm,config/settings.json.cfm' />
+		<cfset args.versionedFiles = 'config/application.cfc,config/application.json.cfm,config/settings.example.json.cfm' />
 		<cfset args.versionedFiles &= ',application.cfc,index.cfm' />
 		
 		<!--- The unversioned files --->
-		<cfset args.unversionedFiles = '' />
+		<cfset args.unversionedFiles = 'config/settings.json.cfm' />
 		
 		<!--- The repository properties --->
 		<cfset args.properties = [] />
+		
+		<!--- The settings file --->
+		<cfset arrayAppend(args.properties, {
+				directories = 'config',
+				property = 'svn:ignore',
+				value = 'settings.json.cfm'
+			}) />
 		
 		<cfswitch expression="#arguments.request.scm#">
 			<cfcase value="none">
@@ -515,6 +522,13 @@
 		
 		<!--- The repository properties --->
 		<cfset args.properties = [] />
+		
+		<!--- The settings file --->
+		<cfset arrayAppend(args.properties, {
+				directories = 'config',
+				property = 'svn:ignore',
+				value = 'settings.json.cfm'
+			}) />
 		
 		<cfswitch expression="#arguments.request.scm#">
 			<cfcase value="none">
