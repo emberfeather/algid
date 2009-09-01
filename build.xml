@@ -4,6 +4,8 @@
 	<property file="${basedir}/dist/settings/user.properties"/>
 	<property file="${basedir}/dist/settings/version.properties"/>
 	<property file="${basedir}/dist/settings/project.properties"/>
+	<property file="${basedir}/dist/settings/build.properties"/>
+	<property file="${basedir}/dist/settings/test.properties"/>
 	
 	<target name="prepare">
 		<echo message="Starting: Environment Preparation"/>
@@ -58,7 +60,7 @@
 		</svn>
 		
 		<!-- Create a zip of the temporary files -->
-		<zip destfile="${build.files.setup}" basedir="${build.export}/setup" update="true" />
+		<zip destfile="${build.release.setup.zip}" basedir="${build.export}/setup" update="true" />
 		
 		<!-- Remove the temporary location -->
 		<delete dir="${build.export}/setup" />
@@ -68,13 +70,13 @@
 			username="${svn.username}"
 			password="${svn.password}"
 			projectname="${project.name}"
-			filename="${build.files.setup}"
+			filename="${build.release.setup.zip}"
 			targetfilename="${project.name}-setup-${project.version}.zip"
 			summary="Setup files for applications and plugins for ${project.name} version ${project.version}"
 			labels="Featured, Type-Archive, OpSys-All" />
 		
 		<!-- Remove the zip of the temporary files -->
-		<delete file="${build.files.setup}" />
+		<delete file="${build.release.setup.zip}" />
 		
 		<!-- Export the files to a temporary location -->
 		<svn username="${svn.username}" password="${svn.password}" javahl="${svn.javahl}" svnkit="${svn.svnkit}">
@@ -82,7 +84,7 @@
 		</svn>
 		
 		<!-- Create a zip of the temporary files -->
-		<zip destfile="${build.files.source}" basedir="${build.export}/${project.name}" update="true" />
+		<zip destfile="${build.release.source.zip}" basedir="${build.export}/${project.name}" update="true" />
 		
 		<!-- Remove the temporary location -->
 		<delete dir="${build.export}/${project.name}" />
@@ -92,19 +94,19 @@
 			username="${svn.username}"
 			password="${svn.password}"
 			projectname="${project.name}"
-			filename="${build.files.source}"
+			filename="${build.release.source.zip}"
 			targetfilename="${project.name}-${project.version}.zip"
 			summary="${project.fullname} - version ${project.version}"
 			labels="Featured, Type-Source, OpSys-All" />
 		
 		<!-- Remove the zip of the temporary files -->
-		<delete file="${build.files.source}" />
+		<delete file="${build.release.source.zip}" />
 		
 		<!-- Update the release note page from the release notes -->
-		<loadfile srcfile="${build.files.releaseNotes}" property="build.releaseNotes" failonerror="true" />
+		<loadfile srcfile="${build.release.notes.txt}" property="build.releaseNotes" failonerror="true" />
 		
 		<!-- Place the release notes into the main release note page -->
-		<replace file="${build.wiki.releaseNotes}" token="::latest::" value="::latest::${line.separator}${line.separator}== v${project.version} ==${line.separator}${line.separator}Released: ${build.date} UTC${line.separator}${line.separator}${build.releaseNotes}" />
+		<replace file="${build.wiki.releaseNotes.wiki}" token="::latest::" value="::latest::${line.separator}${line.separator}== v${project.version} ==${line.separator}${line.separator}Released: ${build.date} UTC${line.separator}${line.separator}${build.releaseNotes}" />
 		
 		<!-- Create a new tag from the trunk -->
 		<svn username="${svn.username}" password="${svn.password}" javahl="${svn.javahl}" svnkit="${svn.svnkit}">
@@ -112,13 +114,13 @@
 		</svn>
 		
 		<!-- Update the version tracking number -->
-		<echo append="false" file="${build.files.version}" message="${project.version}" />
+		<echo append="false" file="${build.release.version.txt}" message="${project.version}" />
 		
 		<!-- Reset the release notes for the next version -->
-		<echo append="false" file="${build.files.releaseNotes}" message="" />
+		<echo append="false" file="${build.release.notes.txt}" message="" />
 		
 		<!-- Update the build version -->
-		<propertyfile file="${build.properties.version}" comment="Version properties">
+		<propertyfile file="${build.dist}/settings/version.properties" comment="Version properties">
 			<entry key="project.version.build" value="1" operation="+" type="int"/>
 		</propertyfile>
 		
