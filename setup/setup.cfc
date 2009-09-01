@@ -505,7 +505,7 @@
 		<cfset args.directories &= ',extend' />
 		<cfset args.directories &= ',i18n,i18n/config,i18n/extend,i18n/inc,i18n/inc/model' />
 		<cfset args.directories &= ',img' />
-		<cfset args.directories &= ',inc,inc/content,inc/model,inc/resource,inc/service,inc/view' />
+		<cfset args.directories &= ',inc,inc/model,inc/resource,inc/service,inc/view' />
 		<cfset args.directories &= ',script' />
 		<cfset args.directories &= ',style' />
 		<cfset args.directories &= ',service' />
