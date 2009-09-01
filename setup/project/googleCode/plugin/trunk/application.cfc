@@ -7,7 +7,7 @@
 	<!--- Set the mappings --->
 	<cfset variables.mappingBase = getDirectoryFromPath( getCurrentTemplatePath() ) />
 	
-	<cfset this.mappings = {} />
+	<cfset this.mappings['/algid'] = variables.mappingBase & 'algid' />
 	<cfset this.mappings['/cf-compendium'] = variables.mappingBase & 'cf-compendium' />
 	<cfset this.mappings['/plugins'] = variables.mappingBase />
 	<cfset this.mappings['/test'] = variables.mappingBase & 'test' />
