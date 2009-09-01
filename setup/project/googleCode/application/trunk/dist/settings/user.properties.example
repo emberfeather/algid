@@ -13,6 +13,7 @@ svn.javahl=false
 svn.svnkit=true
 
 # Build Settings
+#build.war.lib=/path/to/war/lib/files
 build.wiki.path=/path/to/wiki/files
 
 # Test Settings

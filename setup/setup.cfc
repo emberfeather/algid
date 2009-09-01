@@ -157,6 +157,7 @@
 		<cfset args.directories &= ',trunk/dist/settings' />
 		<cfset args.directories &= ',trunk/dist/stats' />
 		<cfset args.directories &= ',trunk/dist/templates,trunk/dist/templates/config' />
+		<cfset args.directories &= ',trunk/dist/war,trunk/dist/war/lib,trunk/dist/war/META-INF,trunk/dist/war/WEB-INF' />
 		<cfset args.directories &= ',wiki' />
 		
 		<!--- The static files --->
@@ -167,8 +168,9 @@
 		
 		<!--- The versioned files --->
 		<cfset args.versionedFiles = 'trunk/application.cfc,trunk/build.xml,trunk/releaseNotes.txt,trunk/version.txt' />
-		<cfset args.versionedFiles &= ',trunk/dist/settings/project.properties,trunk/dist/settings/statSVN.properties,trunk/dist/settings/user.properties.example,trunk/dist/settings/version.properties' />
+		<cfset args.versionedFiles &= ',trunk/dist/settings/build.properties,trunk/dist/settings/project.properties,trunk/dist/settings/statSVN.properties,trunk/dist/settings/test.properties,trunk/dist/settings/user.properties.example,trunk/dist/settings/version.properties' />
 		<cfset args.versionedFiles &= ',trunk/dist/templates/config/application.json.cfm' />
+		<cfset args.versionedFiles &= ',trunk/dist/war/railo.xml,trunk/dist/war/META-INF/context.xml' />
 		<cfset args.versionedFiles &= ',wiki/ReleaseNotes.wiki' />
 		
 		<!--- The unversioned files --->
@@ -186,7 +188,7 @@
 		
 		<!--- The distribution directory contents --->
 		<cfset arrayAppend(args.properties, {
-				directories = 'trunk/dist/export,trunk/dist/logs,trunk/dist/stats',
+				directories = 'trunk/dist/export,trunk/dist/logs,trunk/dist/stats,trunk/dist/war/lib',
 				property = 'svn:ignore',
 				value = '*'
 			}) />
@@ -252,7 +254,7 @@
 		
 		<!--- The versioned files --->
 		<cfset args.versionedFiles = 'trunk/application.cfc,trunk/build.xml,trunk/releaseNotes.txt,trunk/version.txt' />
-		<cfset args.versionedFiles &= ',trunk/dist/settings/project.properties,trunk/dist/settings/statSVN.properties,trunk/dist/settings/user.properties.example,trunk/dist/settings/version.properties' />
+		<cfset args.versionedFiles &= ',trunk/dist/settings/build.properties,trunk/dist/settings/project.properties,trunk/dist/settings/statSVN.properties,trunk/dist/settings/test.properties,trunk/dist/settings/user.properties.example,trunk/dist/settings/version.properties' />
 		<cfset args.versionedFiles &= ',trunk/dist/templates/config/plugin.json.cfm' />
 		<cfset args.versionedFiles &= ',wiki/ReleaseNotes.wiki' />
 		
