@@ -1,13 +1,22 @@
-/**
- * Tags 
- */
+/*
+====================
+=== Colors - old man winter | ver 04
+====================
+=        Lighter
+=======  Darker
+====================
+*/
+
+/*
+====================
+=== Tags
+====================
+*/
 
 body {
-	border-top: 5px solid #2A4353;
-	background: #D5D8DD;
-	font: 11px/2em Century Gothic, Apple Gothic, sans-serif;
+	background: #FFF url(../img/back.jpg) repeat-x top;
 	color: #333;
-	
+	font: 11px/15px Century Gothic, Apple Gothic, sans-serif;
 }
 
 p,
@@ -43,16 +52,6 @@ a:focus {
 	outline: 1px dotted invert;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	line-height:1.2em;
-	margin: .3em 0;
-}
-
 h1 {
 	font-size: 25px;
 }
@@ -77,14 +76,19 @@ h6 {
 	font-size: 15px;
 }
 
-dt {
-	font-weight: bold;
-	font-size: 1.5em;
-	margin-bottom: .5em;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	line-height:1.2em;
+	margin: .3em 0;
 }
 
-ul, ol {
-	padding-top: 0;
+h2 {
+	border-bottom: 1px solid #016392;
+	margin: .3em 0 0 0;
 }
 
 ol {
@@ -96,29 +100,30 @@ ul {
 }
 
 li {
-	margin-left: 2em;
+	margin: .5em 2em;
 }
 
-p,
-dd {
-	margin-bottom: 1em;
-}
-
-label {
+dt {
+	font-size: 1.25em;
+	line-height: 1.5em;
 	font-weight: bold;
 }
 
-input[type=text] {
-	width: 100%;
+dd {
+	margin: 1em 0;
+	padding: 0 1em;
+	border-left: 4px solid #ccc;
 }
 
-input[type=submit] {
-	margin: 1em 0;
+p {
+	padding: 1em 0;
+	margin: 0;
 }
 
 blockquote {
-	margin: 1em;
-	padding-left: 1em;
+	font-family: Georgia, 'Times New Roman', serif;
+	font-size: 1.2em;
+	padding-left: 1.5em;
 	border-left: 4px solid #ccc;
 }
 
@@ -126,28 +131,64 @@ blockquote cite {
 	font-size: .9em;
 }
 
-/**
- * Classes 
- */
+ul, ol {
+	padding-top: 0;
+}
 
-/* 960 grid system */
-.container_12 {
-	padding: 1em 0;
+/*
+====================
+=== IDs
+====================
+*/
+
+#header {
+	color: #fff;
+}
+
+#breadcrumb {
+	font-size: .75em;
+}
+
+/*
+====================
+=== Classes
+====================
+*/
+
+/*
+	General Classes
+*/
+
+.float-right {
+	float: right;
+}
+
+.align-center {
+	text-align: center;
+}
+
+.align-right {
+	text-align: right;
+}
+
+/* 
+	960 grid system
+*/
+.container_12,
+.container_16 {
+	padding: 0;
 }
 
 .content {
 	background: #fff;
-	-moz-border-radius: .5em;
-	-webkit-border-radius: .5em;
+	-moz-border-radius: .75em;
+	-webkit-border-radius: .75em;
+	padding-bottom: 1em;
 	margin-bottom: 1em;
 }
 
-.text-center {
-	text-align: center;
-}
-
-.text-right {
-	text-align: right;
+.section {
+	margin-bottom: 1em;
 }
 
 .success,

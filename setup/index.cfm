@@ -47,11 +47,15 @@
 	</head>
 	<body>
 		<div class="container_12">
-			<div class="content">
+			<div id="header">
 				<div class="grid_12">
 					<h1>Algid Setup Wizard</h1>
 				</div>
 				
+				<div class="clear"><!-- clear --></div>
+			</div>
+			
+			<div class="content">
 				<!--- Check if we have processed the information yet --->
 				<cfif results.isProcessed>
 					<div class="grid_12">
@@ -103,6 +107,41 @@
 								<a href="http://code.google.com/p/algid/wiki/DirectoryApplication">Algid application directory</a>.
 							</p>
 							
+							<h3>Subversion Checkout</h3>
+							
+							<p>
+								To make things easier, select the option to add the files to the svn repository
+								and the wizard will attempt to run some of the svn commands to help you out.
+							</p>
+							
+							<p>
+								The <code>Path</code> given below should be to the root of your repository.
+								Here is an example of how you might checkout the root of your new application repository:
+							</p>
+							
+							<p>
+								<strong>Note:</strong> Replace anything inside the &lt; and &gt; with your information!
+							</p>
+							
+							<blockquote>
+								<code>svn checkout https://<em>&lt;your project name&gt;</em>.googlecode.com/svn/ <em>&lt;your project name&gt;</em> --username <em>&lt;your username&gt;</em></code>
+							</blockquote>
+							
+							<p>
+								In the <code>Path</code> field below enter the complete path to the new 
+								directory (named your project name), which, by default, will contain 
+								<code>branches</code>, <code>tags</code>, and <code>trunk</code> 
+								directories.
+							</p>
+							
+							<h3>All the Works</h3>
+							
+							<p>
+								After the wizard is complete, find out 
+								<a href="http://code.google.com/p/algid/wiki/ProjectGoogleApplication">how to use the extras</a>
+								to get the most from your new application!
+							</p>
+							
 							<p>
 								To do the wizardly thing, this is what we need:
 							</p>
@@ -111,8 +150,8 @@
 						<form action="<cfoutput>?wizard=#URL.wizard#&type=#URL.type#&host=#URL.host#</cfoutput>" method="post">
 							<cfoutput>#view.formProjectApplicationGoogle( FORM )#</cfoutput>
 							
-							<div class="grid_12 text-center">
-								<input type="submit" value="Go!" />
+							<div class="grid_12 align-center">
+								<input type="submit" value="Create Application Project!" />
 							</div>
 						</form>
 					</cfcase>
@@ -149,7 +188,7 @@
 							
 							<p>
 								In the <code>Path</code> field below enter the complete path to the new 
-								directory (named your project name), which will contain 
+								directory (named your project name), which, by default, will contain 
 								<code>branches</code>, <code>tags</code>, and <code>trunk</code> 
 								directories.
 							</p>
@@ -172,8 +211,8 @@
 						<form action="<cfoutput>?wizard=#URL.wizard#&type=#URL.type#&host=#URL.host#</cfoutput>" method="post">
 							<cfoutput>#view.formProjectPluginGoogle( FORM )#</cfoutput>
 							
-							<div class="grid_12 text-center">
-								<input type="submit" value="Go!" />
+							<div class="grid_12 align-center">
+								<input type="submit" value="Create Plugin Project!" />
 							</div>
 						</form>
 					</cfcase>
@@ -183,7 +222,7 @@
 							<h2>New Standalone Application</h2>
 							
 							<p>
-								
+								This wizard will create the basic structure of an Algid application.
 							</p>
 							
 							<h3>The Wizard</h3>
@@ -196,8 +235,8 @@
 						<form action="<cfoutput>?wizard=#URL.wizard#&type=#URL.type#&host=#URL.host#</cfoutput>" method="post">
 							<cfoutput>#view.formApplication( FORM )#</cfoutput>
 							
-							<div class="grid_12 text-center">
-								<input type="submit" value="Go!" />
+							<div class="grid_12 align-center">
+								<input type="submit" value="Create Application!" />
 							</div>
 						</form>
 					</cfcase>
@@ -207,7 +246,7 @@
 							<h2>New Standalone Plugin</h2>
 							
 							<p>
-								
+								This wizard will create the basic structure of an Algid plugin.
 							</p>
 							
 							<h3>The Wizard</h3>
@@ -220,8 +259,8 @@
 						<form action="<cfoutput>?wizard=#URL.wizard#&type=#URL.type#&host=#URL.host#</cfoutput>" method="post">
 							<cfoutput>#view.formPlugin( FORM )#</cfoutput>
 							
-							<div class="grid_12 text-center">
-								<input type="submit" value="Go!" />
+							<div class="grid_12 align-center">
+								<input type="submit" value="Create Plugin!" />
 							</div>
 						</form>
 					</cfcase>
