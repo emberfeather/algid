@@ -281,12 +281,12 @@
 							
 							<p>
 								Projects are the preferred method when:
-								
-								<ul>
-									<li>Starting a new application or project on a supported project host.</li>
-									<li>Looking for some extra project structures and utilities.</li>
-								</ul>
 							</p>
+							
+							<ul>
+								<li>Starting a new application or project on a supported project host.</li>
+								<li>Looking for some extra project structures and utilities.</li>
+							</ul>
 						</div>
 						
 						<div class="grid_6">
@@ -336,12 +336,12 @@
 							
 							<p>
 								Standalone setups are the preferred method when:
-								
-								<ul>
-									<li>Using private or unsupported project hosting.</li>
-									<li>Just trying Algid out!</li>
-								</ul>
 							</p>
+							
+							<ul>
+								<li>Using private or unsupported project hosting.</li>
+								<li>Just trying Algid out!</li>
+							</ul>
 						</div>
 						
 						<div class="grid_6">
