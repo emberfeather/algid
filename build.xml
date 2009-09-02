@@ -18,6 +18,8 @@
 			<format property="build.date" timezone="UTC" pattern="MM/dd/yy hh:mmaa"/>
 		</tstamp>
 		
+		<property name="project.version" value="${project.version.major}.${project.version.minor}.${project.version.build}"/>
+		
 		<echo message="Finished: Environment Preparation"/>
 	</target>
 	
