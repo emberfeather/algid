@@ -218,7 +218,7 @@
 			</cfdefaultcase>
 		</cfswitch>
 		
-		<!--- Add the trunk to the path for the plugin setup --->
+		<!--- Add the key to the path for the application setup --->
 		<cfset arguments.request.path = normalizePath(arguments.request.path) & key />
 		
 		<!--- Setup the plugin --->
