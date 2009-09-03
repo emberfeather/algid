@@ -1,29 +1,41 @@
 <h1>Navigation Examples</h1>
 
+<blockquote>
+	<code>
+		i18n = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath('/i18n/'))<br />
+		navigation = createObject('component', 'algid.inc.resource.structure.navigationFile').init(i18n)
+	</code>
+</blockquote>
+
 <cfset i18n = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath('/i18n/')) />
 <cfset navigation = createObject('component', 'algid.inc.resource.structure.navigationFile').init(i18n) />
 
-<h2>applyMask(maskFile)</h2>
+<h2>applyMask(maskFile, contentPath, bundlePath, bundleName, locales)</h2>
 
-<div>
-	<cfset filename = "/implementation/config/navigation01.xml.cfm" />
-	
-	<cffile action="read" file="#expandPath(filename)#" variable="fileContents">
-	
-	<blockquote>
-		<code>
-			<pre><cfoutput>#HTMLCodeFormat(fileContents)#</cfoutput></pre>
-		</code>
-	</blockquote>
-	
-	<cfset navigation.applyMask(filename, '/plugin/content/path', 'config', 'navigation01', 'en_US,en_PI') />
-	
-	<p>
-		<cfdump var="#navigation.getNavigation()#" />
-	</p>
-</div>
+<blockquote>
+	<code>
+		filename = '/implementation/config/navigation01.xml.cfm'<br />
+		navigation.applyMask(filename, '/plugin/content/path', 'config', 'navigation01', 'en_US,en_PI')
+	</code>
+</blockquote>
 
-<h2>toHTML(theURL, level, navPosition)</h2>
+<cfset filename = "/implementation/config/navigation01.xml.cfm" />
+<cfset navigation.applyMask(filename, '/plugin/content/path', 'config', 'navigation01', 'en_US,en_PI') />
+
+<cfdump var="#navigation.getNavigation()#" label="Navigation" />
+
+<h2>toHTML(theURL, level, navPosition, options, locale)</h2>
+
+<blockquote>
+	<code>
+		theURL = createObject('component', 'cf-compendium.inc.resource.utility.url').init('')<br />
+		theURL.set('_base', '.main2')<br />
+		options = {
+				depth = -1,
+				selectedOnly = false
+			}
+	</code>
+</blockquote>
 
 <cfset theURL = createObject('component', 'cf-compendium.inc.resource.utility.url').init('') />
 <cfset theURL.set('_base', '.main2') />
@@ -32,18 +44,26 @@
 		selectedOnly = false
 	} />
 
-<h3>US English</h3>
+<h3>English (US)</h3>
 
-<div>
-	<cfoutput>#navigation.toHTML(theURL, 1, '', options, 'en_US')#</cfoutput>
-</div>
+<blockquote>
+	<code>
+		navigation.toHTML(theURL, 1, '', options, 'en_US')
+	</code>
+</blockquote>
+
+<cfoutput>#navigation.toHTML(theURL, 1, '', options, 'en_US')#</cfoutput>
 
 <h3>Pirate</h3>
 
-<div>
-	<cfoutput>#navigation.toHTML(theURL, 1, '', options, 'en_PI')#</cfoutput>
-</div>
+<blockquote>
+	<code>
+		navigation.toHTML(theURL, 1, '', options, 'en_PI')
+	</code>
+</blockquote>
 
-<h2>the object</h2>
+<cfoutput>#navigation.toHTML(theURL, 1, '', options, 'en_PI')#</cfoutput>
+
+<h2>The Object</h2>
 
 <cfdump var="#navigation#" />

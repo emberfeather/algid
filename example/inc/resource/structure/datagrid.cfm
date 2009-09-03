@@ -1,50 +1,79 @@
-<head>
-	<link rel="stylesheet" href="/cf-compendium/style/datagrid.css" />
-</head>
+<cfhtmlhead text="<link rel=""stylesheet"" href=""/cf-compendium/style/datagrid.css"" />">
 
 <h1>Datagrid Examples</h1>
 
-<cfset theObject = createObject('component', 'algid.inc.resource.structure.datagrid').init() />
+<blockquote>
+	<code>
+		datagrid = createObject('component', 'algid.inc.resource.structure.datagrid').init()
+	</code>
+</blockquote>
 
-<h2>addColumn('columnName'[, 'options'])</h2>
+<cfset datagrid = createObject('component', 'algid.inc.resource.structure.datagrid').init() />
+
+<h2>addColumn(columnName [, options])</h2>
 
 <p>
 	Adds a column to be displayed in the dataGrid.
 </p>
 
-<div>
-	options = { label = "First Name" }<br/>
-	addColumn('FirstName', options) --&gt;<br />
-	
-	<cfset options = {
-			label = 'First Name',
-			class = 'namae'
-		} />
-	<cfset theObject.addColumn('FirstName', options) />
-	
-	options = { label = "Last Name" }<br/>
-	addColumn('LastName', options) --&gt;<br />
-	
-	<cfset options = {
-			label = "Last Name"
-		} />
-	<cfset theObject.addColumn('LastName', options) />
-</div>
+<blockquote>
+	<code>
+		options = {
+				label = 'First Name',
+				class = 'namae'
+			}<br />
+		datagrid.addColumn('FirstName', options)
+	</code>
+</blockquote>
 
-<div>
-	<cfset data = [
-			{
-				firstname = "John", lastName= "Doe"
-			},
-			{
-				firstname = "Jane", lastName="Doe"
-			},
-			{
-				firstname = "Bobby", lastName="Joe"
+<cfset options = {
+		label = 'First Name',
+		class = 'namae'
+	} />
+<cfset datagrid.addColumn('FirstName', options) />
+
+<blockquote>
+	<code>
+		options = {
+				label = "Last Name"
 			}
-		] />
-	
-	<p>
-		<cfoutput>#theObject.toHTML(data)#</cfoutput>
-	</p>
-</div>
+		datagrid.addColumn('LastName', options)
+	</code>
+</blockquote>
+
+<cfset options = {
+		label = "Last Name"
+	} />
+<cfset datagrid.addColumn('LastName', options) />
+
+<blockquote>
+	<code>
+		data = [
+				{
+					firstname = "John", lastName= "Doe"
+				},
+				{
+					firstname = "Jane", lastName="Doe"
+				},
+				{
+					firstname = "Bobby", lastName="Joe"
+				}
+			]<br />
+		
+		datagrid.toHTML(data)
+	</code>
+</blockquote>
+
+<cfset data = [
+		{
+			firstname = "John", lastName= "Doe"
+		},
+		{
+			firstname = "Jane", lastName="Doe"
+		},
+		{
+			firstname = "Bobby", lastName="Joe"
+		}
+	] />
+
+<cfoutput>#datagrid.toHTML(data)#</cfoutput>

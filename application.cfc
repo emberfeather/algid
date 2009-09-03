@@ -4,17 +4,15 @@
 	<cfset this.clientManagement = false />
 	<cfset this.sessionManagement = false />
 	
-	<!--- Set the mappings --->
-	<cfset variables.mappingBase = getDirectoryFromPath( getCurrentTemplatePath() ) />
-	
-	<cfset this.mappings['/algid'] = variables.mappingBase & 'algid' />
-	<cfset this.mappings['/cf-compendium'] = variables.mappingBase & 'cf-compendium' />
-	<cfset this.mappings['/example'] = variables.mappingBase & 'example' />
-	<cfset this.mappings['/i18n'] = variables.mappingBase & 'i18n' />
-	<cfset this.mappings['/implementation'] = variables.mappingBase & 'implementation' />
-	<cfset this.mappings['/mxunit'] = variables.mappingBase & 'mxunit' />
-	<cfset this.mappings['/profile'] = variables.mappingBase & 'profile' />
-	<cfset this.mappings['/setup'] = variables.mappingBase & 'setup' />
-	<cfset this.mappings['/test'] = variables.mappingBase & 'test' />
-	<cfset this.mappings['/varscoper'] = variables.mappingBase & 'varscoper' />
+	<cfset this.mappings['/root'] = getDirectoryFromPath( getCurrentTemplatePath() ) />
+	<cfset this.mappings['/algid'] = this.mappings['/root'] & 'algid' />
+	<cfset this.mappings['/cf-compendium'] = this.mappings['/root'] & 'cf-compendium' />
+	<cfset this.mappings['/example'] = this.mappings['/root'] & 'example' />
+	<cfset this.mappings['/i18n'] = this.mappings['/root'] & 'i18n' />
+	<cfset this.mappings['/implementation'] = this.mappings['/root'] & 'implementation' />
+	<cfset this.mappings['/mxunit'] = this.mappings['/root'] & 'mxunit' />
+	<cfset this.mappings['/profile'] = this.mappings['/root'] & 'profile' />
+	<cfset this.mappings['/setup'] = this.mappings['/root'] & 'setup' />
+	<cfset this.mappings['/test'] = this.mappings['/root'] & 'test' />
+	<cfset this.mappings['/varscoper'] = this.mappings['/root'] & 'varscoper' />
 </cfcomponent>

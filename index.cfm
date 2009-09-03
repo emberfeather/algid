@@ -1,1 +1,1 @@
-Algid, a CFML framework.
+<cfinclude template="preview/index.cfm" />
