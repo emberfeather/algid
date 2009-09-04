@@ -102,7 +102,7 @@
 		
 		<cfswitch expression="#arguments.wizard#-#arguments.type#-#arguments.host#">
 			<cfcase value="project-app-google">
-				<cfset projectGooglePlugin( arguments.request ) />
+				<cfset projectGoogleApplication( arguments.request ) />
 			</cfcase>
 			
 			<cfcase value="project-plugin-google">
@@ -141,8 +141,6 @@
 		<cfset var args = {} />
 		<cfset var key = '' />
 		
-		<cfthrow message="Not yet implemented" />
-		
 		<!--- Trim the key --->
 		<cfset key = trim( arguments.request.key ) />
 		
@@ -158,6 +156,7 @@
 		<cfset args.directories &= ',trunk/dist/stats' />
 		<cfset args.directories &= ',trunk/dist/templates,trunk/dist/templates/config' />
 		<cfset args.directories &= ',trunk/dist/war,trunk/dist/war/lib,trunk/dist/war/META-INF,trunk/dist/war/WEB-INF' />
+		<cfset args.directories &= ',trunk/' & key />
 		<cfset args.directories &= ',wiki' />
 		
 		<!--- The static files --->
@@ -200,6 +199,13 @@
 				file = 'trunk/externals.txt'
 			}) />
 		
+		<!--- The externals --->
+		<cfset arrayAppend(args.properties, {
+				directories = 'trunk/' & key,
+				property = 'svn:externals',
+				file = 'trunk/externalsApp.txt'
+			}) />
+		
 		<cfswitch expression="#arguments.request.scm#">
 			<cfcase value="none">
 				<cfset setupFile( argumentCollection = args ) />
@@ -219,7 +225,7 @@
 		</cfswitch>
 		
 		<!--- Add the key to the path for the application setup --->
-		<cfset arguments.request.path = normalizePath(arguments.request.path) & key />
+		<cfset arguments.request.path = normalizePath(arguments.request.path) & 'trunk/' & key />
 		
 		<!--- Setup the plugin --->
 		<cfset standaloneApplication( arguments.request ) />
@@ -304,7 +310,7 @@
 		</cfswitch>
 		
 		<!--- Add the trunk to the path for the plugin setup --->
-		<cfset arguments.request.path = normalizePath(arguments.request.path) & 'trunk/' />
+		<cfset arguments.request.path = normalizePath(arguments.request.path) & 'trunk/' & key />
 		
 		<!--- Setup the plugin --->
 		<cfset standalonePlugin( arguments.request ) />

@@ -1,0 +1,2 @@
+algid					https://algid.googlecode.com/svn/trunk/algid
+cf-compendium			https://cf-compendium.googlecode.com/svn/trunk/cf-compendium
