@@ -9,11 +9,51 @@
 		<cfreturn this />
 	</cffunction>
 	
+	<cffunction name="compareVersion" access="public" returntype="numeric" output="false">
+		<cfargument name="version1" type="string" required="true" />
+		<cfargument name="version2" type="string" required="true" />
+		
+		<cfset var level = '' />
+		<cfset var version1Len = '' />
+		<cfset var version2Len = '' />
+		
+		<!--- If they are the same return a 0 --->
+		<cfif arguments.version1 EQ arguments.version2>
+			<cfreturn 0 />
+		</cfif>
+		
+		<!--- Find out the number of levels for each version --->
+		<cfset version1Len = listLen(arguments.version1, '.') />
+		<cfset version2Len = listLen(arguments.version2, '.') />
+		
+		<!--- Make the versions the same length by padding the end with .0 --->
+		<cfloop condition="version1Len LT version2Len">
+			<cfset arguments.version1 &= '.0' />
+			
+			<cfset version1Len = listLen(arguments.version1, '.') />
+		</cfloop>
+		
+		<cfloop condition="version2Len LT version1Len">
+			<cfset arguments.version2 &= '.0' />
+			
+			<cfset version2Len = listLen(arguments.version2, '.') />
+		</cfloop>
+		
+		<cfloop from="1" to="#version1Len#" index="level">
+			<!--- Check if the version information at the level is greater --->
+			<cfif listGetAt(arguments.version1, level, '.') GT listGetAt(arguments.version2, level, '.')>
+				<cfreturn 1 />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn -1 />
+	</cffunction>
+	
 	<cffunction name="determinePrecedence" access="private" returntype="string" output="false">
 		<cfargument name="plugins" type="struct" required="true" />
 		<cfargument name="pluginList" type="string" required="true" />
 		
-		<cfset var compareVersion = '' />
+		<cfset var comparedVersion = '' />
 		<cfset var i = '' />
 		<cfset var j = '' />
 		<cfset var precedence = '' />
@@ -31,11 +71,11 @@
 				</cfif>
 				
 				<!--- Check that the version of the current plugin meets the prerequisite version --->
-				<cfset compareVersion = compare(arguments.plugins[j].version, arguments.plugins[i].prerequisites[j]) />
+				<cfset comparedVersion = compareVersion(arguments.plugins[j].version, arguments.plugins[i].prerequisites[j]) />
 				
-				<cfif compareVersion LT 0>
+				<cfif comparedVersion LT 0>
 					<cfthrow message="Dependency too old" detail="#j# with a version at least #arguments.plugins[i].prerequisites[j]# is required by #i#" />
-				<cfelseif compareVersion GT 0>
+				<cfelseif comparedVersion GT 0>
 					<cflog type="information" application="true" log="application" text="#j# is at version #arguments.plugins[j].version# when the #i# is expecting version #arguments.plugins[i].prerequisites[j]#" />
 				</cfif>
 				
@@ -307,6 +347,10 @@
 		<cfloop list="#precedence#" index="i">
 			<cfset arrayAppend(arguments.newApplication['plugins'], plugins[i]) />
 		</cfloop>
+		
+		<!--- TODO Remove --->
+		<cfdump var="#precedence#" />
+		<cfabort />
 		
 		<!--- Update the plugins and setup the transient and singleton information --->
 		<cfloop array="#arguments.newApplication['plugins']#" index="i">
