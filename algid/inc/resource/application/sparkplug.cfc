@@ -85,6 +85,7 @@
 		
 		<cfset var i = '' />
 		<cfset var precedence = '' />
+		<cfset var search = '' />
 		
 		<!--- Check for plugin prerequisites --->
 		<cfloop array="#arguments.enabledPlugins#" index="i">
