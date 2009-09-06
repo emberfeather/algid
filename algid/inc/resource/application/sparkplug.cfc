@@ -5,8 +5,38 @@
 		<cfset super.init() />
 		
 		<cfset variables.appBaseDirectory = normalizePath(arguments.appBaseDirectory) />
+		<cfset variables.projects = ['cf-compendium', 'algid'] />
 		
 		<cfreturn this />
+	</cffunction>
+	
+	<cffunction name="checkPrerequisites" access="private" returntype="void" output="false">
+		<cfargument name="plugins" type="struct" required="true" />
+		<cfargument name="enabledPlugins" type="array" required="true" />
+		
+		<cfset var comparedVersion = '' />
+		<cfset var i = '' />
+		<cfset var j = '' />
+		
+		<!--- Check for plugin prerequisites --->
+		<cfloop array="#arguments.enabledPlugins#" index="i">
+			<!--- Go through each prerequisite to see if we don't have one or if the version is wrong --->
+			<cfloop list="#structKeyList(arguments.plugins[i].prerequisites)#" index="j">
+				<!--- Check for a completely missing plugin --->
+				<cfif NOT structKeyExists(arguments.plugins, j)>
+					<cfthrow message="Missing required dependency" detail="#j# with a version at least #arguments.plugins[i].prerequisites[j]# is required by #i#" />
+				</cfif>
+				
+				<!--- Check that the version of the current plugin meets the prerequisite version --->
+				<cfset comparedVersion = compareVersion(arguments.plugins[j].version, arguments.plugins[i].prerequisites[j]) />
+				
+				<cfif comparedVersion LT 0>
+					<cfthrow message="Dependency too old" detail="#j# with a version at least #arguments.plugins[i].prerequisites[j]# is required by #i#" />
+				<cfelseif comparedVersion GT 0>
+					<cflog type="information" application="true" log="application" text="#j# is at version #arguments.plugins[j].version# when the #i# is expecting version #arguments.plugins[i].prerequisites[j]#" />
+				</cfif>
+			</cfloop>
+		</cfloop>
 	</cffunction>
 	
 	<cffunction name="compareVersion" access="public" returntype="numeric" output="false">
@@ -51,60 +81,68 @@
 	
 	<cffunction name="determinePrecedence" access="private" returntype="string" output="false">
 		<cfargument name="plugins" type="struct" required="true" />
-		<cfargument name="pluginList" type="string" required="true" />
+		<cfargument name="enabledPlugins" type="array" required="true" />
 		
-		<cfset var comparedVersion = '' />
 		<cfset var i = '' />
-		<cfset var j = '' />
 		<cfset var precedence = '' />
 		
-		<!--- Start with the plugin list that we have as an unordered precedence --->
-		<cfset precedence = arguments.pluginList />
-		
 		<!--- Check for plugin prerequisites --->
-		<cfloop list="#arguments.pluginList#" index="i">
-			<!--- Go through each prerequisite to see if we don't have one or if the version is wrong --->
-			<cfloop list="#structKeyList(arguments.plugins[i].prerequisites)#" index="j">
-				<!--- Check for a completely missing plugin --->
-				<cfif NOT structKeyExists(arguments.plugins, j)>
-					<cfthrow message="Missing required dependency" detail="#j# with a version at least #arguments.plugins[i].prerequisites[j]# is required by #i#" />
-				</cfif>
-				
-				<!--- Check that the version of the current plugin meets the prerequisite version --->
-				<cfset comparedVersion = compareVersion(arguments.plugins[j].version, arguments.plugins[i].prerequisites[j]) />
-				
-				<cfif comparedVersion LT 0>
-					<cfthrow message="Dependency too old" detail="#j# with a version at least #arguments.plugins[i].prerequisites[j]# is required by #i#" />
-				<cfelseif comparedVersion GT 0>
-					<cflog type="information" application="true" log="application" text="#j# is at version #arguments.plugins[j].version# when the #i# is expecting version #arguments.plugins[i].prerequisites[j]#" />
-				</cfif>
-				
-				<!--- Update the precedence to run install / updates based on prerequisites --->
-				<cfset precedence = updatePrecedence(precedence, j) />
-			</cfloop>
+		<cfloop array="#arguments.enabledPlugins#" index="i">
+			<cfset precedence = determinePrecedencePlugin(arguments.plugins, i, precedence) />
+		</cfloop>
+		
+		<!--- Remove the projects --->
+		<!--- Do not need to be configured and only need to exist --->
+		<cfloop array="#variables.projects#" index="i">
+			<cfset search = listFind(precedence, i) />
+			
+			<cfif search>
+				<cfset precedence = listDeleteAt(precedence, search) />
+			</cfif>
 		</cfloop>
 		
 		<cfreturn precedence />
 	</cffunction>
 	
-	<cffunction name="loadAllAndDeterminePrecedence" access="public" returntype="string" output="false">
-		<cfargument name="appConfig" type="struct" required="true" />
+	<!---
+		Used to recursively find all the plugin precedences by adding the plugin to the
+		precedence list only after it has verified all the preceding plugins are in the
+		list.
+	--->
+	<cffunction name="determinePrecedencePlugin" access="private" returntype="string" output="false">
 		<cfargument name="plugins" type="struct" required="true" />
+		<cfargument name="plugin" type="string" required="true" />
+		<cfargument name="precedence" type="string" required="true" />
+		
+		<cfset var i = '' />
+		
+		<!--- Check if the plugin is already in the precedence list --->
+		<cfif listFind(arguments.precedence, arguments.plugin)>
+			<cfreturn arguments.precedence />
+		</cfif>
+		
+		<!--- Make sure that all the prerequisites are added --->
+		<cfloop list="#structKeyList(arguments.plugins[arguments.plugin].prerequisites)#" index="i">
+			<cfset arguments.precedence = determinePrecedencePlugin(arguments.plugins, i, arguments.precedence) />
+		</cfloop>
+		
+		<cfset arguments.precedence = listAppend(arguments.precedence, arguments.plugins[arguments.plugin].key) />
+		
+		<cfreturn arguments.precedence />
+	</cffunction>
+	
+	<cffunction name="loadAllConfigs" access="public" returntype="void" output="false">
+		<cfargument name="plugins" type="struct" required="true" />
+		<cfargument name="enabledPlugins" type="array" required="true" />
 		
 		<cfset var i = '' />
 		<cfset var precedence = '' />
 		<cfset var pluginConfig = '' />
-		<cfset var pluginList = '' />
-		<cfset var pluginVersion = '' />
-		<cfset var projects = 'cf-compendium,algid' />
 		<cfset var projectConfig = '' />
 		<cfset var search = '' />
 		
-		<!--- Pull in the list of plugins --->
-		<cfset pluginList = arrayToList(appConfig.plugins) />
-		
 		<!--- Read in all plugin configs --->
-		<cfloop list="#pluginList#" index="i">
+		<cfloop array="#arguments.enabledPlugins#" index="i">
 			<cfset arguments.plugins[i] = {
 					key = 'unknown',
 					i18n = {
@@ -125,7 +163,7 @@
 		
 		<!--- Read in all project configs --->
 		<!--- This is used to help make sure that the right version of the projects are in place --->
-		<cfloop list="#projects#" index="i">
+		<cfloop array="#variables.projects#" index="i">
 			<cfset arguments.plugins[i] = {
 					key = 'unknown',
 					i18n = {
@@ -137,27 +175,12 @@
 					},
 					version = ''
 				} />
+			
 			<cfset projectConfig = readProjectConfig(i) />
 			
 			<!--- Extend information from the config --->
 			<cfset arguments.plugins[i] = extend(arguments.plugins[i], projectConfig, -1) />
 		</cfloop>
-		
-		<!--- Determine the precedence that the plugins should be worked with --->
-		<cfset precedence = determinePrecedence(arguments.plugins, pluginList) />
-		
-		<!--- Remove the projects --->
-		<!--- By this point we have already determined that the correct version of the projects are installed --->
-		<cfloop list="#projects#" index="i">
-			<!--- Remove the project if found in precedence --->
-			<cfset search = listFind(precedence, i) />
-			
-			<cfif search>
-				<cfset precedence = listDeleteAt(precedence, search) />
-			</cfif>
-		</cfloop>
-		
-		<cfreturn precedence />
 	</cffunction>
 	
 	<cffunction name="normalizePath" access="private" returntype="string" output="false">
@@ -284,6 +307,7 @@
 		<cfset var j = '' />
 		<cfset var navigation = '' />
 		<cfset var plugins = {} />
+		<cfset var pluginList = '' />
 		<cfset var pluginVersion = '' />
 		<cfset var precedence = '' />
 		<cfset var search = '' />
@@ -340,17 +364,19 @@
 		<!--- Create the default set of singletons --->
 		<cfset setDefaultSingletons(arguments.newApplication) />
 		
-		<!--- Load all plugins and projects and determine the precedence --->
-		<cfset precedence = loadAllAndDeterminePrecedence( appConfig, plugins ) />
+		<!--- Load all plugins and projects configurations --->
+		<cfset loadAllConfigs( plugins, appConfig.plugins ) />
+		
+		<!--- Check prerequisites --->
+		<cfset checkPrerequisites( plugins, appConfig.plugins )>
+		
+		<!--- Determine the install precedence --->
+		<cfset precedence = determinePrecedence( plugins, appConfig.plugins ) />
 		
 		<!--- Add the plugins to the new application in the proper order --->
 		<cfloop list="#precedence#" index="i">
 			<cfset arrayAppend(arguments.newApplication['plugins'], plugins[i]) />
 		</cfloop>
-		
-		<!--- TODO Remove --->
-		<cfdump var="#precedence#" />
-		<cfabort />
 		
 		<!--- Update the plugins and setup the transient and singleton information --->
 		<cfloop array="#arguments.newApplication['plugins']#" index="i">
