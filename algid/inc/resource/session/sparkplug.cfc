@@ -60,10 +60,16 @@
 			<cfset arguments.newSession.locale = arguments.theApplication.settings.i18n.default />
 		</cfif>
 		
+		<cfset variables.isDebugMode = arguments.theApplication.settings.environment NEQ 'production' />
+		
 		<!--- Setup the session managers --->
 		<cfset arguments.newSession.managers = {
-				singleton = createObject('component', 'algid.inc.resource.manager.singleton').init( false ),
-				transient = createObject('component', 'algid.inc.resource.manager.transient').init( false )
+				singleton = createObject('component', 'algid.inc.resource.manager.singleton').init( variables.isDebugMode )
+			} />
+		
+		<!--- Setup the session factories --->
+		<cfset arguments.newSession.factories = {
+				transient = createObject('component', 'algid.inc.resource.factory.transient').init( variables.isDebugMode )
 			} />
 		
 		<!--- Create the default set of singletons --->

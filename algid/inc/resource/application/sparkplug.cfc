@@ -322,7 +322,11 @@
 		
 		<!--- Setup the application managers --->
 		<cfset arguments.newApplication.managers = {
-				singleton = createObject('component', 'algid.inc.resource.manager.singleton').init( variables.isDebugMode ),
+				singleton = createObject('component', 'algid.inc.resource.manager.singleton').init( variables.isDebugMode )
+			} />
+		
+		<!--- Setup the application factories --->
+		<cfset arguments.newApplication.factories = {
 				transient = createObject('component', 'algid.inc.resource.manager.transient').init( variables.isDebugMode )
 			} />
 		
