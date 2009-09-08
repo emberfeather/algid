@@ -367,7 +367,7 @@
 					<cfloop collection="#i.applicationManagers.transient#" item="j">
 						<!--- Set the transient path in the transient manager --->
 						<!--- Overrides any pre-existing transient paths --->
-						<cfinvoke component="#arguments.newApplication.managers.transient#" method="set#j#">
+						<cfinvoke component="#arguments.newApplication.factories.transient#" method="set#j#">
 							<cfinvokeargument name="path" value="#i.applicationManagers.transient[j]#" />
 						</cfinvoke>
 					</cfloop>

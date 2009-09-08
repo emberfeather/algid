@@ -84,7 +84,7 @@
 					<cfloop collection="#i.sessionManagers.transient#" item="j">
 						<!--- Set the transient path in the transient manager --->
 						<!--- Overrides any pre-existing transient paths --->
-						<cfinvoke component="#arguments.newSession.managers.transient#" method="set#j#">
+						<cfinvoke component="#arguments.newSession.factories.transient#" method="set#j#">
 							<cfinvokeargument name="path" value="#i.sessionManagers.transient[j]#" />
 						</cfinvoke>
 					</cfloop>
