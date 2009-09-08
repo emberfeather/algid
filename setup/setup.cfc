@@ -531,11 +531,11 @@
 		<!--- The repository properties --->
 		<cfset args.properties = [] />
 		
-		<!--- The settings file --->
+		<!--- The ignores --->
 		<cfset arrayAppend(args.properties, {
 				directories = 'config',
 				property = 'svn:ignore',
-				value = 'settings.json.cfm'
+				file = 'config/ignore.txt'
 			}) />
 		
 		<cfswitch expression="#arguments.request.scm#">
