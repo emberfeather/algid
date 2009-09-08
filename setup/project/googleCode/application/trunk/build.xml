@@ -142,9 +142,6 @@
 			<copy srcPath="${basedir}" destURL="${svn.privurl}/tags/${project.version}" message="Tagging release version: ${project.version}" />
 		</svn>
 		
-		<!-- Update the version tracking file -->
-		<echo append="false" file="${build.release.version.txt}" message="${project.version}" />
-		
 		<!-- Reset the release notes for the next version -->
 		<echo append="false" file="${build.release.notes.txt}" message="  * " />
 		
@@ -153,6 +150,9 @@
 			<entry key="project.version.build" value="1" operation="+" type="int"/>
 		</propertyfile>
 		
+		<!-- Call the template target -->
+		<antcall target="releaseTemplate"/>
+		
 		<!-- Commit changes -->
 		<svn username="${svn.username}" password="${svn.password}" javahl="${svn.javahl}" svnkit="${svn.svnkit}">
 			<commit dir="${basedir}" recurse="true" message="Release changes from version: ${project.version}"/>
@@ -160,6 +160,26 @@
 		</svn>
 		
 		<echo message="Finished: Release of version ${project.version} complete"/>
+	</target>
+	
+	<target name="releaseTemplate" depends="template">
+		<echo message="Starting: Release Template"/>
+		
+		<!-- Copy the version file -->
+		<copy tofile="${basedir}/version.json" overwrite="true">
+			<fileset file="${build.templates}/version.json"/>
+			<filterset>
+				<filterset>
+					<filter token="project.releaseNotes" value="${project.wiki}/ReleaseNotes"/>
+					<filter token="project.releaseURL" value="${project.files}/${project.key}-${project.version}.zip"/>
+					<filter token="project.url" value="${project.files}/${project.key}-${project.version}.zip"/>
+					<filter token="project.version" value="${project.version}"/>
+					<filter token="project.warURL" value="${project.files}/${project.key}-${project.version}.war"/>
+				</filterset>
+			</filterset>
+		</copy>
+		
+		<echo message="Finished: Release Template"/>
 	</target>
 	
 	<target name="statSVN" depends="svnLog" description="Generates statistics from the repository">
@@ -231,6 +251,26 @@
 		</svn>
 		
 		<echo message="Finished: SVN Update"/>
+	</target>
+
+	<target name="template" depends="prepare" description="Uses the templates to update files with dynamic information">
+		<echo message="Starting: Template"/>
+
+		
+		<!-- Define the filter set for the template -->
+		<filterset id="templateFilterset">
+			<filtersfile file="${build.dist}/settings/user.properties" />
+			<filtersfile file="${build.dist}/settings/project.properties" />
+			<filtersfile file="${build.dist}/settings/version.properties" />
+		</filterset>
+		
+		<!-- Copy the plugin config file -->
+		<copy tofile="${basedir}/${project.key}/config/application.json.cfm" overwrite="true">
+			<fileset file="${build.templates}/config/application.json.cfm"/>
+			<filterset refid="templateFilterset"/>
+		</copy>
+		
+		<echo message="Finished: Template"/>
 	</target>
 	
 	<target name="testVarScoper" depends="prepare" description="Runs the varScoper">

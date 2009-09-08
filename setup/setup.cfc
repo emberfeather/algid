@@ -166,9 +166,9 @@
 		<cfset args.staticFiles &= ',trunk/dist/lib/yuicompressor-2.4.2/yuicompressor.jar' />
 		
 		<!--- The versioned files --->
-		<cfset args.versionedFiles = 'trunk/application.cfc,trunk/build.xml,trunk/releaseNotes.txt,trunk/version.txt' />
+		<cfset args.versionedFiles = 'trunk/application.cfc,trunk/build.xml,trunk/releaseNotes.txt,trunk/version.json' />
 		<cfset args.versionedFiles &= ',trunk/dist/settings/build.properties,trunk/dist/settings/project.properties,trunk/dist/settings/statSVN.properties,trunk/dist/settings/test.properties,trunk/dist/settings/user.properties.example,trunk/dist/settings/version.properties' />
-		<cfset args.versionedFiles &= ',trunk/dist/templates/config/application.json.cfm' />
+		<cfset args.versionedFiles &= ',trunk/dist/templates/config/application.json.cfm,trunk/dist/templates/version.json' />
 		<cfset args.versionedFiles &= ',trunk/dist/war/railo.xml,trunk/dist/war/META-INF/context.xml' />
 		<cfset args.versionedFiles &= ',wiki/ReleaseNotes.wiki' />
 		
@@ -259,9 +259,9 @@
 		<cfset args.staticFiles &= ',trunk/dist/lib/yuicompressor-2.4.2/yuicompressor.jar' />
 		
 		<!--- The versioned files --->
-		<cfset args.versionedFiles = 'trunk/application.cfc,trunk/build.xml,trunk/releaseNotes.txt,trunk/version.txt' />
+		<cfset args.versionedFiles = 'trunk/application.cfc,trunk/build.xml,trunk/releaseNotes.txt,trunk/version.json' />
 		<cfset args.versionedFiles &= ',trunk/dist/settings/build.properties,trunk/dist/settings/project.properties,trunk/dist/settings/statSVN.properties,trunk/dist/settings/test.properties,trunk/dist/settings/user.properties.example,trunk/dist/settings/version.properties' />
-		<cfset args.versionedFiles &= ',trunk/dist/templates/config/plugin.json.cfm' />
+		<cfset args.versionedFiles &= ',trunk/dist/templates/config/plugin.json.cfm,trunk/dist/templates/version.json' />
 		<cfset args.versionedFiles &= ',wiki/ReleaseNotes.wiki' />
 		
 		<!--- The unversioned files --->
