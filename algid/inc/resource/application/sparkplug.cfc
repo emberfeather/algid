@@ -327,7 +327,7 @@
 		
 		<!--- Setup the application factories --->
 		<cfset arguments.newApplication.factories = {
-				transient = createObject('component', 'algid.inc.resource.manager.transient').init( variables.isDebugMode )
+				transient = createObject('component', 'algid.inc.resource.factory.transient').init( variables.isDebugMode )
 			} />
 		
 		<!--- Create the default set of singletons --->
