@@ -176,31 +176,31 @@
 		<cfset args.unversionedFiles = 'trunk/dist/settings/user.properties' />
 		
 		<!--- The repository properties --->
-		<cfset args.properties = [] />
+		<cfset args.svnProperties = [] />
 		
 		<!--- The user property file --->
-		<cfset arrayAppend(args.properties, {
+		<cfset arrayAppend(args.svnProperties, {
 				directories = 'trunk/dist/settings',
 				property = 'svn:ignore',
 				value = 'user.properties'
 			}) />
 		
 		<!--- The distribution directory contents --->
-		<cfset arrayAppend(args.properties, {
+		<cfset arrayAppend(args.svnProperties, {
 				directories = 'trunk/dist/export,trunk/dist/logs,trunk/dist/stats,trunk/dist/war/lib',
 				property = 'svn:ignore',
 				value = '*'
 			}) />
 		
 		<!--- The externals --->
-		<cfset arrayAppend(args.properties, {
+		<cfset arrayAppend(args.svnProperties, {
 				directories = 'trunk',
 				property = 'svn:externals',
 				file = 'trunk/externals.txt'
 			}) />
 		
 		<!--- The externals --->
-		<cfset arrayAppend(args.properties, {
+		<cfset arrayAppend(args.svnProperties, {
 				directories = 'trunk/' & key,
 				property = 'svn:externals',
 				file = 'trunk/externalsApp.txt'
@@ -268,24 +268,24 @@
 		<cfset args.unversionedFiles = 'trunk/dist/settings/user.properties' />
 		
 		<!--- The repository properties --->
-		<cfset args.properties = [] />
+		<cfset args.svnProperties = [] />
 		
 		<!--- The user property file --->
-		<cfset arrayAppend(args.properties, {
+		<cfset arrayAppend(args.svnProperties, {
 				directories = 'trunk/dist/settings',
 				property = 'svn:ignore',
 				value = 'user.properties'
 			}) />
 		
 		<!--- The distribution directory contents --->
-		<cfset arrayAppend(args.properties, {
+		<cfset arrayAppend(args.svnProperties, {
 				directories = 'trunk/dist/export,trunk/dist/logs,trunk/dist/stats,trunk/dist/unit',
 				property = 'svn:ignore',
 				value = '*'
 			}) />
 		
 		<!--- The externals --->
-		<cfset arrayAppend(args.properties, {
+		<cfset arrayAppend(args.svnProperties, {
 				directories = 'trunk',
 				property = 'svn:externals',
 				file = 'trunk/externals.txt'
@@ -368,7 +368,7 @@
 		<cfargument name="staticFiles" type="string" required="true" />
 		<cfargument name="versionedFiles" type="string" required="true" />
 		<cfargument name="unversionedFiles" type="string" required="true" />
-		<cfargument name="properties" type="array" default="#[]#" />
+		<cfargument name="svnProperties" type="array" default="#[]#" />
 		
 		<cfset var newObjects = '' />
 		<cfset var svn = '' />
@@ -395,7 +395,7 @@
 		<cfset svn.addFiles( newObjects ) />
 		
 		<!--- Set repository properties --->
-		<cfloop array="#arguments.properties#" index="property">
+		<cfloop array="#arguments.svnProperties#" index="property">
 			<cfif structKeyExists(property, 'file')>
 				<cfset svn.setPropertyFile(property.directories, property.property, normalizePath(arguments.srcPath) & property.file) />
 			<cfelse>
@@ -430,13 +430,20 @@
 		<cfset args.unversionedFiles = '' />
 		
 		<!--- The repository properties --->
-		<cfset args.properties = [] />
+		<cfset args.svnProperties = [] />
 		
 		<!--- The settings file --->
-		<cfset arrayAppend(args.properties, {
+		<cfset arrayAppend(args.svnProperties, {
 				directories = 'config',
 				property = 'svn:ignore',
 				value = 'settings.json.cfm'
+			}) />
+		
+		<!--- The plugins directory --->
+		<cfset arrayAppend(args.svnProperties, {
+				directories = 'plugins',
+				property = 'svn:ignore',
+				value = '*'
 			}) />
 		
 		<cfswitch expression="#arguments.request.scm#">
@@ -483,7 +490,7 @@
 		<cfset args.unversionedFiles = '' />
 		
 		<!--- The repository properties --->
-		<cfset args.properties = [] />
+		<cfset args.svnProperties = [] />
 		
 		<cfswitch expression="#arguments.request.scm#">
 			<cfcase value="none">
@@ -529,10 +536,10 @@
 		<cfset args.unversionedFiles = '' />
 		
 		<!--- The repository properties --->
-		<cfset args.properties = [] />
+		<cfset args.svnProperties = [] />
 		
 		<!--- The ignores --->
-		<cfset arrayAppend(args.properties, {
+		<cfset arrayAppend(args.svnProperties, {
 				directories = 'config',
 				property = 'svn:ignore',
 				file = 'config/ignore.txt'
