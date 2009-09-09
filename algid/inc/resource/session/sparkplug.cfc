@@ -48,6 +48,9 @@
 		
 		<cfset var i = '' />
 		<cfset var j = '' />
+		<cfset var plugin = '' />
+		<cfset var singletons = '' />
+		<cfset var transients = '' />
 		
 		<!--- Increase the page timeout so that it won't timeout on session start --->
 		<cfsetting requesttimeout="60" />

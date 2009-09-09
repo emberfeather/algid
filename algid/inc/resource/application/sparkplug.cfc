@@ -264,17 +264,13 @@
 	<cffunction name="start" access="public" returntype="void" output="false">
 		<cfargument name="newApplication" type="struct" required="true" />
 		
-		<cfset var appConfig = '' />
 		<cfset var configurer = '' />
-		<cfset var defaultPluginConfig = '' />
 		<cfset var i = '' />
 		<cfset var isDevelopment = '' />
 		<cfset var j = '' />
-		<cfset var navigation = '' />
-		<cfset var pluginList = '' />
+		<cfset var plugin = '' />
 		<cfset var pluginVersion = '' />
 		<cfset var precedence = '' />
-		<cfset var search = '' />
 		<cfset var singletons = '' />
 		<cfset var transients = '' />
 		
