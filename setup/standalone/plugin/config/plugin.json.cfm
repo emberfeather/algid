@@ -1,4 +1,8 @@
 {
+	"applicationSingletons": {
+	},
+	"applicationTransients": {
+	},
 	"i18n": {
 		"locales": [
 			"en_US"
@@ -7,5 +11,9 @@
 	"key": "@key@",
 	"prerequisites": {
 	},
-	"version": "0.1.000"
+	"sessionSingletons": {
+	},
+	"sessionTransients": {
+	},
+	"version": "0.1.0"
 }

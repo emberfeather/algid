@@ -3,11 +3,7 @@
 		<cfset var defaults = {
 				applicationSingletons = {},
 				applicationTransients = {},
-				datasources = {},
-				environment = 'production',
 				i18n = {
-					base = '/root',
-					default = 'en_US',
 					locales = [
 						'en_US'
 					]
