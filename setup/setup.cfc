@@ -310,7 +310,7 @@
 		</cfswitch>
 		
 		<!--- Add the trunk to the path for the plugin setup --->
-		<cfset arguments.request.path = normalizePath(arguments.request.path) & 'trunk/' & key />
+		<cfset arguments.request.path = normalizePath(arguments.request.path) & 'trunk/' />
 		
 		<!--- Setup the plugin --->
 		<cfset standalonePlugin( arguments.request ) />

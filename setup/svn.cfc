@@ -10,6 +10,10 @@
 	<cffunction name="addFiles" access="public" returntype="void" output="false">
 		<cfargument name="files" type="string" required="true" />
 		
+		<cfif NOT len(arguments.files)>
+			<cfreturn />
+		</cfif>
+		
 		<cfset arguments.files = variables.workingCopy & replace(arguments.files, ',', ' ' & variables.workingCopy, 'all') />
 		
 		<cfexecute name="svn" arguments="add #arguments.files#" />
