@@ -21,7 +21,7 @@
 		</cfif>
 		
 		<!--- Turn on or off the debugging --->
-		<cfsetting showdebugoutput="#arguments.theApplication.settings.environment NEQ 'production'#" />
+		<cfsetting showdebugoutput="#arguments.theApplication.app.getEnvironment() NEQ 'production'#" />
 		
 		<cfreturn true />
 	</cffunction>

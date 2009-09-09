@@ -56,51 +56,50 @@
 		<cfset arguments.newSession.locale = left(CGI.HTTP_ACCEPT_LANGUAGE, 4) />
 		
 		<!--- If its not in the available locales use the default --->
-		<cfif NOT listFindNoCase( arrayToList(arguments.theApplication.settings.i18n.locales), arguments.newSession.locale )>
-			<cfset arguments.newSession.locale = arguments.theApplication.settings.i18n.default />
+		<cfif NOT listFindNoCase( arrayToList(arguments.theApplication.app.getI18n().locales), arguments.newSession.locale )>
+			<cfset arguments.newSession.locale = arguments.theApplication.app.getI18n().default />
 		</cfif>
 		
-		<cfset variables.isDebugMode = arguments.theApplication.settings.environment NEQ 'production' />
+		<cfset variables.isDevelopment = arguments.theApplication.app.getEnvironment() NEQ 'production' />
 		
 		<!--- Setup the session managers --->
 		<cfset arguments.newSession.managers = {
-				singleton = createObject('component', 'algid.inc.resource.manager.singleton').init( variables.isDebugMode )
+				singleton = createObject('component', 'algid.inc.resource.manager.singleton').init( variables.isDevelopment )
 			} />
 		
 		<!--- Setup the session factories --->
 		<cfset arguments.newSession.factories = {
-				transient = createObject('component', 'algid.inc.resource.factory.transient').init( variables.isDebugMode )
+				transient = createObject('component', 'algid.inc.resource.factory.transient').init( variables.isDevelopment )
 			} />
 		
 		<!--- Create the default set of singletons --->
 		<cfset setDefaultSingletons(arguments.newSession) />
 		
 		<!--- Update the plugins and setup the transient and singleton information --->
-		<cfloop array="#arguments.theApplication.plugins#" index="i">
-			<!--- Check for session wide settings --->
-			<cfif structKeyExists(i, 'sessionManagers')>
-				<!--- Check for transient information --->
-				<cfif structKeyExists(i.sessionManagers, 'transient')>
-					<cfloop collection="#i.sessionManagers.transient#" item="j">
-						<!--- Set the transient path in the transient manager --->
-						<!--- Overrides any pre-existing transient paths --->
-						<cfinvoke component="#arguments.newSession.factories.transient#" method="set#j#">
-							<cfinvokeargument name="path" value="#i.sessionManagers.transient[j]#" />
-						</cfinvoke>
-					</cfloop>
-				</cfif>
-				
-				<!--- Check for singleton information --->
-				<cfif structKeyExists(i.sessionManagers, 'singleton')>
-					<cfloop collection="#i.sessionManagers.singleton#" item="j">
-						<!--- Create the singleton and set it to the singleton manager --->
-						<!--- Overrides any pre-existing singletons --->
-						<cfinvoke component="#arguments.newSession.managers.singleton#" method="set#j#">
-							<cfinvokeargument name="singleton" value="#createObject('component', i.sessionManagers.singleton[j]).init()#" />
-						</cfinvoke>
-					</cfloop>
-				</cfif>
-			</cfif>
+		<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
+			<cfset plugin = arguments.theApplication.managers.plugins.get(i) />
+			
+			<!--- Check for singleton information --->
+			<cfset singletons = plugin.getSessionSingletons() />
+			
+			<cfloop collection="#singletons#" item="j">
+				<!--- Create the singleton and set it to the singleton manager --->
+				<!--- Overrides any pre-existing singletons of the same name --->
+				<cfinvoke component="#arguments.newSession.managers.singleton#" method="set#j#">
+					<cfinvokeargument name="singleton" value="#createObject('component', singletons[j]).init()#" />
+				</cfinvoke>
+			</cfloop>
+			
+			<!--- Check for transient information --->
+			<cfset transients = plugin.getSessionTransients() />
+			
+			<cfloop collection="#transients#" item="j">
+				<!--- Set the transient path in the transient manager --->
+				<!--- Overrides any pre-existing transient paths --->
+				<cfinvoke component="#arguments.newSession.factories.transient#" method="set#j#">
+					<cfinvokeargument name="path" value="#transients[j]#" />
+				</cfinvoke>
+			</cfloop>
 		</cfloop>
 		
 		<!---
@@ -108,9 +107,11 @@
 			Gives the plugins power to manipulate the session
 			AFTER everything else is said and done
 		--->
-		<cfloop array="#arguments.theApplication.plugins#" index="i">
+		<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
+			<cfset plugin = arguments.theApplication.managers.plugins.get(i) />
+			
 			<!--- Configure the application for the plugin --->
-			<cfset i.configure.configureSession(arguments.theApplication, arguments.newSession) />
+			<cfset plugin.getConfigure().configureSession(arguments.theApplication, arguments.newSession) />
 		</cfloop>
 	</cffunction>
 </cfcomponent>

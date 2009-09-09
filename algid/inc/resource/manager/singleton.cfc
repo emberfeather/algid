@@ -8,6 +8,25 @@
 		<cfreturn this />
 	</cffunction>
 	
+	<cffunction name="get" access="public" returntype="component" output="false">
+		<cfargument name="singleton" type="string" required="true" />
+		
+		<!--- Check if we are missing the singleton --->
+		<cfif NOT structKeyExists(variables.instance, arguments.singleton)>
+			<!--- If not required create a stub --->
+			<cfset variables.instance[arguments.singleton] = createObject('component', 'algid.inc.resource.base.stub').init(arguments.singleton, variables.isDebugMode) />
+		</cfif>
+		
+		<cfreturn variables.instance[arguments.singleton] />
+	</cffunction>
+	
+	<cffunction name="has" access="public" returntype="boolean" output="false">
+		<cfargument name="singleton" type="string" required="true" />
+		
+		<!--- Check if we have the singleton defined --->
+		<cfreturn structKeyExists(variables.instance, arguments.singleton) AND NOT isInstanceOf(variables.instance[arguments.singleton], 'algid.inc.resource.base.stub') />
+	</cffunction>
+	
 	<cffunction name="onMissingMethod" access="public" returntype="any" output="false">
 		<cfargument name="missingMethodName" type="string" required="true" />
 		<cfargument name="missingMethodArguments" type="struct" required="true" />
@@ -33,18 +52,12 @@
 		<!--- Do the fun stuff --->
 		<cfswitch expression="#prefix#">
 			<cfcase value="get">
-				<!--- Check if we are missing the singleton --->
-				<cfif NOT structKeyExists(variables.instance, attribute)>
-					<!--- If not required create a stub --->
-					<cfset variables.instance[attribute] = createObject('component', 'algid.inc.resource.base.stub').init(attribute, variables.isDebugMode) />
-				</cfif>
-				
-				<cfreturn variables.instance[attribute] />
+				<!--- Return the results of the get for the singleton --->
+				<cfreturn get( attribute ) />
 			</cfcase>
 			
 			<cfcase value="has">
-				<!--- Check if we have the singleton defined --->
-				<cfreturn structKeyExists(variables.instance, attribute) AND NOT isInstanceOf(variables.instance[attribute], 'algid.inc.resource.base.stub') />
+				<cfreturn has( attribute ) />
 			</cfcase>
 			
 			<cfcase value="set">
@@ -52,11 +65,7 @@
 					<cfthrow message="Setting singleton requires an argument" detail="Singletons need one argument." />
 				</cfif>
 				
-				<cfif NOT isObject(arguments.missingMethodArguments[1])>
-					<cfthrow message="Singletons must be objects" detail="Singletons need to be objects when set into the singleton manager" />
-				</cfif>
-				
-				<cfset variables.instance[attribute] = arguments.missingMethodArguments[1] />
+				<cfset set( attribute, arguments.missingMethodArguments[1] ) />
 			</cfcase>
 		</cfswitch>
 	</cffunction>
@@ -64,5 +73,12 @@
 	<!--- TODO Remove -- for debug purposes only --->
 	<cffunction name="print" access="public" returntype="void" output="true">
 		<cfdump var="#variables.instance#" />
+	</cffunction>
+	
+	<cffunction name="set" access="public" returntype="void" output="false">
+		<cfargument name="singleton" type="string" required="true" />
+		<cfargument name="value" type="component" required="true" />
+		
+		<cfset variables.instance[arguments.singleton] = arguments.value />
 	</cffunction>
 </cfcomponent>
