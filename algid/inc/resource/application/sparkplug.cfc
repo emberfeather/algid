@@ -250,7 +250,7 @@
 		<cfreturn trim(pluginVersion) />
 	</cffunction>
 	
-	<cffunction name="setDefaultSingletons" access="private" returntype="void" output="false">
+	<cffunction name="setDefaults" access="private" returntype="void" output="false">
 		<cfargument name="newApplication" type="struct" required="true" />
 		
 		<cfset var temp = '' />
@@ -259,6 +259,9 @@
 		<cfset temp = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath(arguments.newApplication.app.getI18n().base)) />
 		
 		<cfset arguments.newApplication.managers.singleton.setI18N(temp) />
+		
+		<!--- Set the factory for tokens --->
+		<cfset arguments.newApplication.factories.transient.setTokens('cf-compendium.inc.resource.security.tokens') />
 	</cffunction>
 	
 	<cffunction name="start" access="public" returntype="void" output="false">
@@ -292,8 +295,8 @@
 				transient = createObject('component', 'algid.inc.resource.factory.transient').init( isDevelopment )
 			} />
 		
-		<!--- Create the default set of singletons --->
-		<cfset setDefaultSingletons(arguments.newApplication) />
+		<!--- Create the defaults --->
+		<cfset setDefaults(arguments.newApplication) />
 		
 		<!--- Load all plugins and projects configurations --->
 		<cfset loadAll( arguments.newApplication.managers.plugins, arguments.newApplication.app.getPlugins() ) />

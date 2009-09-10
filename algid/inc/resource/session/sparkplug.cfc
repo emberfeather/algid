@@ -6,7 +6,8 @@
 		<cfreturn this />
 	</cffunction>
 	
-	<cffunction name="setDefaultSingletons" access="private" returntype="void" output="false">
+	<cffunction name="setDefaults" access="private" returntype="void" output="false">
+		<cfargument name="theApplication" type="struct" required="true" />
 		<cfargument name="newSession" type="struct" required="true" />
 		
 		<cfset var temp = '' />
@@ -25,6 +26,11 @@
 		<cfset temp = createObject('component', 'algid.inc.resource.base.message').init( { class='success' } ) />
 		
 		<cfset arguments.newSession.managers.singleton.setSuccess(temp) />
+		
+		<!--- Create the tokens objects --->
+		<cfset temp = arguments.theApplication.factories.transient.getTokens() />
+		
+		<cfset arguments.newSession.managers.singleton.setTokens(temp) />
 	</cffunction>
 	
 	<cffunction name="restart" access="public" returntype="void" output="false">
@@ -75,8 +81,8 @@
 				transient = createObject('component', 'algid.inc.resource.factory.transient').init( variables.isDevelopment )
 			} />
 		
-		<!--- Create the default set of singletons --->
-		<cfset setDefaultSingletons(arguments.newSession) />
+		<!--- Create the defaults --->
+		<cfset setDefaults(arguments.theApplication, arguments.newSession) />
 		
 		<!--- Update the plugins and setup the transient and singleton information --->
 		<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
