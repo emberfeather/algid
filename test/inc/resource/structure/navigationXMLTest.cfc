@@ -1,11 +1,14 @@
 <cfcomponent extends="mxunit.framework.TestCase" output="false">
+	<cffunction name="setup" access="public" returntype="void" output="false">
+		<cfset variables.i18n = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath('/i18n/')) />
+	</cffunction>
+	
 	<!---
 		Tests masks that the navigation worked on level 1.
 	--->
 	<cffunction name="testMaskLevel1" access="public" returntype="void" output="false">
 		<cfset var filename = "/implementation/config/navigation01.xml.cfm" />
-		<cfset var i18n = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath('/i18n/')) />
-		<cfset var navigation = createObject('component', 'algid.inc.resource.structure.navigationFile').init(i18n) />
+		<cfset var navigation = createObject('component', 'algid.inc.resource.structure.navigationFile').init(variables.i18n) />
 		<cfset var navQuery = '' />
 		<cfset var checkQuery = '' />
 		
@@ -34,8 +37,7 @@
 	--->
 	<cffunction name="testMaskLevel2" access="public" returntype="void" output="false">
 		<cfset var filename = "/implementation/config/navigation01.xml.cfm" />
-		<cfset var i18n = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath('/i18n/')) />
-		<cfset var navigation = createObject('component', 'algid.inc.resource.structure.navigationFile').init(i18n) />
+		<cfset var navigation = createObject('component', 'algid.inc.resource.structure.navigationFile').init(variables.i18n) />
 		<cfset var navQuery = '' />
 		<cfset var checkQuery = '' />
 		
@@ -64,8 +66,7 @@
 	--->
 	<cffunction name="testMaskLevel3" access="public" returntype="void" output="false">
 		<cfset var filename = "/implementation/config/navigation01.xml.cfm" />
-		<cfset var i18n = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath('/i18n/')) />
-		<cfset var navigation = createObject('component', 'algid.inc.resource.structure.navigationFile').init(i18n) />
+		<cfset var navigation = createObject('component', 'algid.inc.resource.structure.navigationFile').init(variables.i18n) />
 		<cfset var navQuery = '' />
 		<cfset var checkQuery = '' />
 		

@@ -18,7 +18,7 @@
 	<cffunction name="testHasDefinitionSansDefinition" access="public" returntype="void" output="false">
 		<cfset var transient = createObject('component', 'algid.inc.resource.factory.transient').init() />
 		
-		<cfset assertFalse(transient.hastransient()) />
+		<cfset assertFalse(transient.hasTransient()) />
 	</cffunction>
 	
 	<!---
