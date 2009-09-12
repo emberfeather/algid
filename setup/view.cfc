@@ -30,8 +30,9 @@
 						</cfcase>
 						<cfcase value="radio">
 							<cfloop array="#arguments.options#" index="option">
-								<label>#option#
+								<label>
 									<input type="radio" id="ele_#arguments.name#_#option#" name="#arguments.name#" value="#option#"<cfif arguments.value EQ option> checked="checked"</cfif> />
+									#option#
 								</label>
 							</cfloop>
 						</cfcase>
