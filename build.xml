@@ -51,7 +51,7 @@
 		<echo message="Finished: SVN Preparation"/>
 	</target>
 	
-	<target name="release" depends="prepareSVN,svnUpdate,testVarScoper,testMXUnit" description="Tags a release and uploads a new version of the setup zip">
+	<target name="release" depends="prepareSVN,svnUpdate,testVarScoper,testMXUnit,releasePreTemplate" description="Tags a release and uploads a new version of the setup zip">
 		<echo message="Starting: Release of version ${project.version}"/>
 		
 		<!-- Load ANT tasks -->
@@ -139,8 +139,31 @@
 		<echo message="Finished: Release of version ${project.version} complete"/>
 	</target>
 	
-	<target name="releaseTemplate" depends="prepare">
-		<echo message="Starting: Release Template"/>
+	<target name="releasePreTemplate" depends="prepare">
+		<echo message="Starting: Release Pre Template"/>
+		
+		<filterset id="prereq">
+			<filter token="prerequisites.algid" value="${project.version}"/>
+			<filter token="prerequisites.cf-compendium" value="${prerequisites.cf-compendium}"/>
+		</filterset>
+		
+		<!-- Copy the setup application properties file -->
+		<copy tofile="${basedir}/setup/project/googleCode/application/trunk/dist/settings/project.properties" overwrite="true">
+			<fileset file="${build.templates}/setup/project/googleCode/application/trunk/dist/settings/project.properties"/>
+			<filterset refid="prereq" />
+		</copy>
+		
+		<!-- Copy the setup plugin properties file -->
+		<copy tofile="${basedir}/setup/project/googleCode/plugin/trunk/dist/settings/project.properties" overwrite="true">
+			<fileset file="${build.templates}/setup/project/googleCode/plugin/trunk/dist/settings/project.properties"/>
+			<filterset refid="prereq" />
+		</copy>
+		
+		<echo message="Finished: Release Pre Template"/>
+	</target>
+	
+	<target name="releasePostTemplate" depends="prepare">
+		<echo message="Starting: Release Post Template"/>
 		
 		<!-- Copy the version file -->
 		<copy tofile="${basedir}/version.json" overwrite="true">
@@ -155,7 +178,7 @@
 			</filterset>
 		</copy>
 		
-		<echo message="Finished: Release Template"/>
+		<echo message="Finished: Release Post Template"/>
 	</target>
 	
 	<target name="statSVN" depends="svnLog" description="Generates statistics from the repository">
