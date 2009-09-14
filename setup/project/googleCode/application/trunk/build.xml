@@ -137,10 +137,20 @@
 		<!-- Place the release notes into the main release note page -->
 		<replace file="${build.wiki.releaseNotes.wiki}" token="::latest::" value="::latest::${line.separator}${line.separator}== v${project.version} ==${line.separator}${line.separator}Released: ${build.date} UTC${line.separator}${line.separator}${build.releaseNotes}" />
 		
+		<!-- Set the externals for the application for release -->
+		<antcall target="svnExternals">
+			<param name="build.svn.externals" value="${build.templates}/externalsApp.txt"/>
+		</antcall>
+		
 		<!-- Create a new tag from the trunk -->
 		<svn username="${svn.username}" password="${svn.password}" javahl="${svn.javahl}" svnkit="${svn.svnkit}">
 			<copy srcPath="${basedir}" destURL="${svn.privurl}/tags/${project.version}" message="Tagging release version: ${project.version}" />
 		</svn>
+		
+		<!-- Set the externals for the application for developement -->
+		<antcall target="svnExternals">
+			<param name="build.svn.externals" value="${build.templates}/externalsAppDev.txt"/>
+		</antcall>
 		
 		<!-- Reset the release notes for the next version -->
 		<echo append="false" file="${build.release.notes.txt}" message="  * " />
@@ -218,6 +228,33 @@
 		<echo message="Finished: SVN Commit"/>
 	</target>
 	
+	<target name="svnExternals" depends="prepareSVN" description="Sets the svn externals for development">
+		<echo message="Starting: SVN Externals"/>
+		
+		<!-- Default to the dev externals -->
+		<property name="build.svn.externals" value="${build.templates}/externalsAppDev.txt"/>
+		
+		<filterset id="externals">
+			<filtersfile file="${build.dist}/settings/project.properties" />
+		</filterset>
+		
+		<!-- Copy the externals file -->
+		<copy tofile="${basedir}/externalsApp.txt" overwrite="true">
+			<fileset file="${build.svn.externals}"/>
+			<filterset refid="externals"/>
+		</copy>
+		
+		<!-- Set the externals -->
+		<svn username="${svn.username}" password="${svn.password}" javahl="${svn.javahl}" svnkit="${svn.svnkit}">
+			<propset path="${basedir}/${project.key}" name="svn:externals" file="${basedir}/externalsApp.txt"/>
+		</svn>
+		
+		<!-- Delete the externals file -->
+		<delete file="${basedir}/externalsApp.txt" />
+		
+		<echo message="Finished: SVN Externals"/>
+	</target>
+	
 	<target name="svnLog" depends="prepareSVN" description="Generates logs from the repository">
 		<echo message="Starting: SVN Log"/>
 		
@@ -255,7 +292,6 @@
 
 	<target name="template" depends="prepare" description="Uses the templates to update files with dynamic information">
 		<echo message="Starting: Template"/>
-
 		
 		<!-- Define the filter set for the template -->
 		<filterset id="templateFilterset">

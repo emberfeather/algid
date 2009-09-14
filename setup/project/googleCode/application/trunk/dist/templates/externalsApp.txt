@@ -1,0 +1,2 @@
+algid					https://algid.googlecode.com/svn/tags/@prerequisites.algid@/algid
+cf-compendium			https://cf-compendium.googlecode.com/svn/tags/@prerequisites.cf-compendium@/cf-compendium
