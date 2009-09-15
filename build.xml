@@ -245,7 +245,7 @@
 		
 		<!-- Set the externals -->
 		<svn username="${svn.username}" password="${svn.password}" javahl="${svn.javahl}" svnkit="${svn.svnkit}">
-			<propset path="${basedir}/${project.key}" name="svn:externals" file="${basedir}/externals.txt"/>
+			<propset path="${basedir}" name="svn:externals" file="${basedir}/externals.txt"/>
 		</svn>
 		
 		<!-- Delete the externals file -->
