@@ -61,6 +61,31 @@
 	</cffunction>
 	
 	<!---
+		Used to clone the model attributes of the original object
+	--->
+	<cffunction name="clone" access="public" returntype="void" output="false">
+		<cfargument name="original" type="component" required="true" />
+		
+		<cfset var i = '' />
+		<cfset var value = '' />
+		
+		<cfloop list="#this.getAttributeList()#" index="i">
+			<!--- Get the value from the original --->
+			<cfinvoke component="#arguments.original#" method="get#i#" returnvariable="value" />
+			
+			<!--- TODO Check for an object with a clone method that could be used to clone variables...? --->
+			
+			<!--- Duplicate the value so that it is not the same as the original --->
+			<cfset value = duplicate(value) />
+			
+			<!--- Set the new value --->
+			<cfinvoke component="#this#" method="set#i#">
+				<cfinvokeargument name="value" value="#value#" />
+			</cfinvoke>
+		</cfloop>
+	</cffunction>
+	
+	<!---
 		Used to get an attribute
 	--->
 	<cffunction name="getAttribute" access="public" returntype="struct" output="false">

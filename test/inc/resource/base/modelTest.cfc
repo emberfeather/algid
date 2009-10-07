@@ -4,20 +4,45 @@
 	</cffunction>
 	
 	<!---
+		Test the get attribute cloning.
+	--->
+	<cffunction name="testClone" access="public" returntype="void" output="false">
+		<cfset var model = createObject('component', 'implementation.inc.resource.base.modelWithValidation').init(variables.i18n) />
+		<cfset var clone = createObject('component', 'implementation.inc.resource.base.modelWithValidation').init(variables.i18n) />
+		
+		<cfset model.setFirstName('test') />
+		<cfset model.setLastName('title') />
+		
+		<cfset clone.clone(model) />
+		
+		<cfset assertEquals('test', clone.getFirstName()) />
+		<cfset assertEquals('title', clone.getLastName()) />
+	</cffunction>
+	
+	<!---
+		Test the get attribute cloning and separation. The original should remain independent.
+	--->
+	<cffunction name="testCloneIndependence" access="public" returntype="void" output="false">
+		<cfset var model = createObject('component', 'implementation.inc.resource.base.modelWithValidation').init(variables.i18n) />
+		<cfset var clone = createObject('component', 'implementation.inc.resource.base.modelWithValidation').init(variables.i18n) />
+		
+		<cfset model.setFirstName('test') />
+		<cfset model.setLastName('title') />
+		
+		<cfset clone.clone(model) />
+		
+		<cfset clone.setFirstName('something') />
+		
+		<cfset assertEquals('test', model.getFirstName()) />
+		<cfset assertEquals('something', clone.getFirstName()) />
+	</cffunction>
+	
+	<!---
 		Test the get attribute list functionality.
 	--->
 	<cffunction name="testGetAttributeList" access="public" returntype="void" output="false">
-		<cfset var model = createObject('component', 'algid.inc.resource.base.model').init(variables.i18n) />
+		<cfset var model = createObject('component', 'implementation.inc.resource.base.modelWithValidation').init(variables.i18n) />
 		
-		<cfset model.setTest('value') />
-		
-		<cfset model.addAttribute('testing') />
-		<cfset model.addAttribute('again') />
-		<cfset model.addAttribute('for') />
-		<cfset model.addAttribute('bugs') />
-		
-		<cfset model.setTester('value') />
-		
-		<cfset assertEquals('testing,again,for,bugs', model.getAttributeList()) />
+		<cfset assertEquals('firstName,lastName', listSort(model.getAttributeList(), 'text')) />
 	</cffunction>
 </cfcomponent>
