@@ -44,7 +44,7 @@
 		<cfset var defaults = {
 				attributes = arguments.object.getAttributeList(),
 				id = 'objectForm',
-				formComponent = 'cf-compendium.inc.resource.utility.formExtended'
+				formComponent = 'cf-compendium.inc.resource.structure.formExtended'
 			} />
 		<cfset var theForm = '' />
 		<cfset var html = '' />
