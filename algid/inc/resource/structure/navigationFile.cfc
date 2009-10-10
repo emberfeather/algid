@@ -241,10 +241,17 @@
 		<cfargument name="authUser" type="component" required="false" />
 		
 		<cfset var navigation = '' />
+		<cfset var permission = '' />
+		<cfset var permissions = '' />
+		
+		<!--- Retrieve user permissions --->
+		<cfif structKeyExists(arguments, 'authUser')>
+			<cfset permissions = arguments.authUser.getPermissions('*') />
+		</cfif>
 		
 		<!--- Query the navigation query for the page information --->
 		<cfquery name="navigation" dbtype="query">
-			SELECT pageID, level, path, title, navTitle, navPosition, description, ids, vars, attribute, attributeValue, allow, deny, defaults, orderBy
+			SELECT pageID, level, path, title, navTitle, navPosition, description, ids, vars, attribute, attributeValue, allow, deny, secureOrder, defaults, orderBy
 			FROM variables.navigation
 			WHERE level = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.level#" />
 				AND path LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.parentPath#%" />
@@ -256,7 +263,52 @@
 					AND navTitle <> <cfqueryparam cfsqltype="cf_sql_varchar" value="" />
 				</cfif>
 				
-				<!--- TODO add in authUser type permission checking --->
+				<!--- Permission checking --->
+				AND (
+					1 = 0 <!--- One of the others has to be true --->
+					OR (
+						secureOrder = 'allow,deny'
+						AND (
+							<!--- Everyone is allowed --->
+							allow = '*'
+							
+							<!--- Has explicit permission --->
+							<cfloop array="#permissions#" index="permission">
+								OR <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> IN allow
+							</cfloop>
+							
+							OR (
+								<!--- Everyone is not blocked --->
+								deny <> '*'
+								
+								<!--- Is not explicitly blocked --->
+								<cfloop array="#permissions#" index="permission">
+									AND <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> NOT IN deny
+								</cfloop>
+							)
+						)
+					) OR (
+						secureOrder = 'deny,allow'
+						AND (
+							<!--- Everyone is not blocked --->
+							deny <> '*'
+							
+							<!--- Is not explicitly blocked --->
+							<cfloop array="#permissions#" index="permission">
+								AND <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> NOT IN deny
+							</cfloop>
+						)
+						AND (
+							<!--- Everyone is allowed --->
+							allow = '*'
+							
+							<!--- Has explicit permission --->
+							<cfloop array="#permissions#" index="permission">
+								OR <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> IN allow
+							</cfloop>
+						)
+					)
+				)
 				
 				ORDER BY orderBy ASC, navTitle ASC
 		</cfquery>
