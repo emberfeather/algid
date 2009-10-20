@@ -260,7 +260,12 @@
 		
 		<cfset arguments.newApplication.managers.singleton.setI18N(temp) />
 		
-		<!--- Set the factory for tokens --->
+		<!--- Set the transient factory items --->
+		<cfset arguments.newApplication.factories.transient.setDatagrid('cf-compendium.inc.resource.structure.datagrid') />
+		<cfset arguments.newApplication.factories.transient.setFormExtended('cf-compendium.inc.resource.structure.formExtended') />
+		<cfset arguments.newApplication.factories.transient.setFormStandard('cf-compendium.inc.resource.structure.formStandard') />
+		<cfset arguments.newApplication.factories.transient.setManagerSingleton('algid.inc.resource.manager.singleton') />
+		<cfset arguments.newApplication.factories.transient.setFactoryTransient('algid.inc.resource.factory.transient') />
 		<cfset arguments.newApplication.factories.transient.setTokens('cf-compendium.inc.resource.security.tokens') />
 	</cffunction>
 	

@@ -1,38 +1,12 @@
 <cfcomponent extends="cf-compendium.inc.resource.base.base" output="false">
 	<cffunction name="init" access="public" returnType="component" output="false">
-		<cfargument name="theUrl" type="component" required="true" />
+		<cfargument name="transport" type="struct" required="true" />
 		
 		<cfset super.init() />
 		
-		<cfset variables.theUrl = arguments.theUrl />
+		<cfset variables.transport = arguments.transport />
 		
 		<cfreturn this />
-	</cffunction>
-	
-	<cffunction name="list" access="public" returntype="string" output="false">
-		<cfargument name="items" type="query" required="true" />
-		<cfargument name="filter" type="struct" required="true" />
-		<cfargument name="options" type="struct" default="#{}#" />
-		
-		<cfset var html = '' />
-		
-		<!--- TODO Use the datagrid --->
-		
-		<!--- TODO Remove --->
-		<cfsavecontent variable="html">
-			<cfdump var="#arguments.items#" />
-		</cfsavecontent>
-		
-		<cfreturn html />
-	</cffunction>
-	
-	<cffunction name="toDatagrid" access="public" returntype="string" output="false">
-		<cfargument name="data" type="any" required="true" />
-		<cfargument name="options" type="struct" default="#{}#" />
-		
-		<cfset var html = '' />
-		
-		<cfreturn html />
 	</cffunction>
 	
 	<cffunction name="toForm" access="public" returntype="string" output="false">
@@ -42,9 +16,6 @@
 		
 		<cfset var attribute = '' />
 		<cfset var defaults = {
-				attributes = arguments.object.getAttributeList(),
-				id = 'objectForm',
-				formComponent = 'cf-compendium.inc.resource.structure.formExtended'
 			} />
 		<cfset var theForm = '' />
 		<cfset var html = '' />
@@ -54,7 +25,7 @@
 		<cfset arguments.options = extend(defaults, arguments.options)>
 		
 		<!--- Create the form --->
-		<cfset theForm = createObject('component', arguments.options.formComponent).init(arguments.options.id) />
+		<cfset theForm = variables.transport.applicationTransients.getFormExtended(arguments.options.id) />
 		
 		<!--- Go through each attribute and check if has form meta --->
 		<cfloop list="#arguments.options.attributes#" index="i">

@@ -73,12 +73,12 @@
 		
 		<!--- Setup the session managers --->
 		<cfset arguments.newSession.managers = {
-				singleton = createObject('component', 'algid.inc.resource.manager.singleton').init( variables.isDevelopment )
+				singleton = arguments.theApplication.factories.transient.getManagerSingleton( variables.isDevelopment )
 			} />
 		
 		<!--- Setup the session factories --->
 		<cfset arguments.newSession.factories = {
-				transient = createObject('component', 'algid.inc.resource.factory.transient').init( variables.isDevelopment )
+				transient = arguments.theApplication.factories.transient.getFactoryTransient( variables.isDevelopment )
 			} />
 		
 		<!--- Create the defaults --->
