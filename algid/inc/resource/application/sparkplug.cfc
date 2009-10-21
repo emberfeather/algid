@@ -260,13 +260,24 @@
 		
 		<cfset arguments.newApplication.managers.singleton.setI18N(temp) />
 		
-		<!--- Set the transient factory items --->
+		<!--- Set the base transient factory items --->
+		<cfset arguments.newApplication.factories.transient.setBase62('cf-compendium.inc.resource.utility.base62') />
+		<cfset arguments.newApplication.factories.transient.setBookmark('cf-compendium.inc.resource.utility.bookmark') />
+		<cfset arguments.newApplication.factories.transient.setContrast('cf-compendium.inc.resource.utility.contrast') />
+		<cfset arguments.newApplication.factories.transient.setExtend('cf-compendium.inc.resource.utility.extend') />
 		<cfset arguments.newApplication.factories.transient.setDatagrid('cf-compendium.inc.resource.structure.datagrid') />
+		<cfset arguments.newApplication.factories.transient.setFactoryTransient('algid.inc.resource.factory.transient') />
+		<cfset arguments.newApplication.factories.transient.setFilter('cf-compendium.inc.resource.utility.filter') />
+		<cfset arguments.newApplication.factories.transient.setFormatHTML('cf-compendium.inc.resource.utility.formatHtml') />
 		<cfset arguments.newApplication.factories.transient.setFormExtended('cf-compendium.inc.resource.structure.formExtended') />
 		<cfset arguments.newApplication.factories.transient.setFormStandard('cf-compendium.inc.resource.structure.formStandard') />
 		<cfset arguments.newApplication.factories.transient.setManagerSingleton('algid.inc.resource.manager.singleton') />
-		<cfset arguments.newApplication.factories.transient.setFactoryTransient('algid.inc.resource.factory.transient') />
+		<cfset arguments.newApplication.factories.transient.setOptions('cf-compendium.inc.resource.utility.options') />
+		<cfset arguments.newApplication.factories.transient.setPaginate('cf-compendium.inc.resource.utility.paginate') />
+		<cfset arguments.newApplication.factories.transient.setQueue('cf-compendium.inc.resource.utility.queue') />
+		<cfset arguments.newApplication.factories.transient.setStack('cf-compendium.inc.resource.utility.stack') />
 		<cfset arguments.newApplication.factories.transient.setTokens('cf-compendium.inc.resource.security.tokens') />
+		<cfset arguments.newApplication.factories.transient.setURL('cf-compendium.inc.resource.utility.url') />
 	</cffunction>
 	
 	<cffunction name="start" access="public" returntype="void" output="false">
