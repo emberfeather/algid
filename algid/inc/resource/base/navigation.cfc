@@ -246,6 +246,9 @@
 			<cfreturn '' />
 		</cfif>
 		
+		<!--- Clean the URL instance --->
+		<cfset arguments.theURL.cleanCurrentPage() />
+		
 		<cfreturn generateHTML(argumentCollection = arguments) />
 	</cffunction>
 </cfcomponent>
