@@ -4,6 +4,8 @@
 	<cfparam name="pathRoot" default="" />
 	<cfparam name="basePath" default="/root" />
 	<cfparam name="file" default="" />
+	<cfparam name="filter" default="*.cfm" />
+	<cfparam name="isUnitTest" default="false" />
 	
 	<cfset theURL = createObject('component', 'cf-compendium.inc.resource.utility.url').init(URL) />
 </cfsilent>
@@ -36,7 +38,7 @@
 						
 						<cfloop list="#paths#" index="path">
 							<!--- Get the list of files --->
-							<cfdirectory action="list" directory="#expandPath(path)#" name="files" recurse="true" filter="*.cfm" />
+							<cfdirectory action="list" directory="#expandPath(path)#" name="files" recurse="true" filter="#filter#" />
 							
 							<cfoutput query="files" group="directory">
 								<cfset shortDirectory = right(files.directory, len(files.directory) - pathLen) />
@@ -58,7 +60,18 @@
 						<cfset incFile = theURL.search('file') />
 						
 						<cfif incFile NEQ ''>
-							<cfinclude template="#basePath#/#incFile#">
+							<cfif NOT isUnitTest>
+								<cfinclude template="#basePath#/#incFile#">
+							<cfelse>
+								<!--- Create a test suite --->
+								<cfset testSuite = createObject("component","mxunit.framework.TestSuite").TestSuite() />
+								<cfset testSuite.addAll("test." & replace(incFile, '/', '.', 'all')) />
+								<cfset results = testSuite.run() />
+								
+								<cfoutput>
+									#results.getResultsOutput('html')#
+								</cfoutput>
+							</cfif>
 						<cfelse>
 							<p>
 								Please select a file from the left.
@@ -97,7 +110,7 @@
 								are on your engine.
 							</dd>
 							<dt>
-								<a href="<cfoutput>#pathRoot#</cfoutput>profile/">
+								<a href="<cfoutput>#pathRoot#</cfoutput>test/">
 									Unit Tests
 								</a>
 							</dt>
