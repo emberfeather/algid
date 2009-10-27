@@ -64,7 +64,7 @@
 								<cfinclude template="#basePath#/#incFile#">
 							<cfelse>
 								<!--- Remove slashes --->
-								<cfset incFile = replaceList(, '/,\', '.,.') />
+								<cfset incFile = replaceList(incFile, '/,\', '.,.') />
 								
 								<!--- Remove file extension --->
 								<cfset incFile = left(incFile, len(incFile) - len('.cfc')) />
