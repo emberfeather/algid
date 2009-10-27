@@ -63,9 +63,15 @@
 							<cfif NOT isUnitTest>
 								<cfinclude template="#basePath#/#incFile#">
 							<cfelse>
+								<!--- Remove slashes --->
+								<cfset incFile = replaceList(, '/,\', '.,.') />
+								
+								<!--- Remove file extension --->
+								<cfset incFile = left(incFile, len(incFile) - len('.cfc')) />
+								
 								<!--- Create a test suite --->
 								<cfset testSuite = createObject("component","mxunit.framework.TestSuite").TestSuite() />
-								<cfset testSuite.addAll("test." & replaceList(incFile, '/,\', '.,.')) />
+								<cfset testSuite.addAll("test." & incFile) />
 								<cfset results = testSuite.run() />
 								
 								<cfoutput>
