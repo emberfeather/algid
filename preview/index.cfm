@@ -72,10 +72,22 @@
 								<!--- Create a test suite --->
 								<cfset testSuite = createObject("component","mxunit.framework.TestSuite").TestSuite() />
 								<cfset testSuite.addAll("test." & incFile) />
-								<cfset results = testSuite.run() />
+								<cfset results = testSuite.run().getResultsOutput('array') />
 								
 								<cfoutput>
-									#results.getResultsOutput('html')#
+									<cfif arrayLen(results)>
+										<h2>#results[1].component#</h2>
+										
+										<cfloop array="#results#" index="test">
+											<h3 style="color: ##<cfif test.testStatus EQ 'Passed'>090<cfelse>900</cfif>">#test.testStatus# - #test.testName# ( #test.time# ms )</h3>
+											
+											<cfif isStruct(test.error)>
+												<cfdump var="#test.error#" />
+											</cfif>
+										</cfloop>
+									<cfelse>
+										<strong>No tests found.</strong>
+									</cfif>
 								</cfoutput>
 							</cfif>
 						<cfelse>
