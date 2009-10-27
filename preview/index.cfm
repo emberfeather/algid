@@ -55,9 +55,10 @@
 					</div>
 					
 					<div class="grid_9">
-						<cfset file = theURL.search('file') />
-						<cfif file NEQ ''>
-							<cfinclude template="#basePath#/#file#">
+						<cfset incFile = theURL.search('file') />
+						
+						<cfif incFile NEQ ''>
+							<cfinclude template="#basePath#/#incFile#">
 						<cfelse>
 							<p>
 								Please select a file from the left.
