@@ -81,8 +81,8 @@
 										<cfloop array="#results#" index="test">
 											<h3 style="color: ##<cfif test.testStatus EQ 'Passed'>090<cfelse>900</cfif>">#test.testStatus# - #test.testName# ( #test.time# ms )</h3>
 											
-											<cfif test.testStatus NEQ 'Passed'>
-												<cfdump var="#test.error#" />
+											<cfif test.error NEQ ''>
+												<cfdump var="#test.error#" expand="false" />
 											</cfif>
 										</cfloop>
 									<cfelse>
