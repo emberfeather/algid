@@ -96,6 +96,14 @@
 								Test out just how fast the Algid components 
 								are on your engine.
 							</dd>
+							<dt>
+								<a href="<cfoutput>#pathRoot#</cfoutput>profile/">
+									Unit Tests
+								</a>
+							</dt>
+							<dd>
+								Run the MXUnit Tests in your browser.
+							</dd>
 						</dl>
 					</div>
 				</cfif>
