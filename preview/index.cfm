@@ -65,7 +65,7 @@
 							<cfelse>
 								<!--- Create a test suite --->
 								<cfset testSuite = createObject("component","mxunit.framework.TestSuite").TestSuite() />
-								<cfset testSuite.addAll("test." & replace(incFile, '/', '.', 'all')) />
+								<cfset testSuite.addAll("test." & replaceList(incFile, '/,\', '.,.')) />
 								<cfset results = testSuite.run() />
 								
 								<cfoutput>
