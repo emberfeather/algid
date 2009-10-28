@@ -19,12 +19,12 @@
 		<cfset variables.i18n = {
 				i18n = arguments.i18n,
 				locale = arguments.locale,
-				bundlePath = '/cf-compendium/i18n/resource/base',
+				bundlePath = '/cf-compendium/i18n/inc/resource/base',
 				bundleName = 'object'
 			} />
 		
 		<cfset variables.validation = {
-				bundlePath = '/cf-compendium/i18n/resource/utility',
+				bundlePath = '/cf-compendium/i18n/inc/resource/utility',
 				bundleName = 'validation',
 				componentPath = 'cf-compendium.inc.resource.utility.validation'
 			} />
