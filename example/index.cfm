@@ -1,3 +1,4 @@
+<cfset project = 'Algid' />
 <cfset basePath = '/example' />
 <cfset pathRoot = '../' />
 <cfset paths = '/root/example/inc/resource' />
