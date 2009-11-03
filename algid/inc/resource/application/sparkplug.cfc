@@ -268,6 +268,7 @@
 		<cfset arguments.newApplication.factories.transient.setDatagrid('cf-compendium.inc.resource.structure.datagrid') />
 		<cfset arguments.newApplication.factories.transient.setFactoryTransient('algid.inc.resource.factory.transient') />
 		<cfset arguments.newApplication.factories.transient.setFilter('cf-compendium.inc.resource.utility.filter') />
+		<cfset arguments.newApplication.factories.transient.setFilterActive('cf-compendium.inc.resource.utility.filterActive') />
 		<cfset arguments.newApplication.factories.transient.setFormatHTML('cf-compendium.inc.resource.utility.formatHtml') />
 		<cfset arguments.newApplication.factories.transient.setFormExtended('cf-compendium.inc.resource.structure.formExtended') />
 		<cfset arguments.newApplication.factories.transient.setFormStandard('cf-compendium.inc.resource.structure.formStandard') />
