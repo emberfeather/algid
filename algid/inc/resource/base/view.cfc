@@ -25,7 +25,7 @@
 		<cfset arguments.options = extend(defaults, arguments.options)>
 		
 		<!--- Create the form --->
-		<cfset theForm = variables.transport.applicationTransients.getFormExtended(arguments.options.id) />
+		<cfset theForm = variables.transport.theApplication.factories.transient.getFormExtended(arguments.options.id) />
 		
 		<!--- Go through each attribute and check if has form meta --->
 		<cfloop list="#arguments.options.attributes#" index="i">
