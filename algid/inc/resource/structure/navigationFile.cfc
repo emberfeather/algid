@@ -163,30 +163,30 @@
 		<cfargument name="prefix" type="string" required="true" />
 		
 		<cfset var i = '' />
-		<cfset var contentPath = '' />
+		<cfset var currentPath = '' />
 		<cfset var levels = '' />
 		<cfset var numLevels = '' />
 		<cfset var pageName = '' />
 		
 		<!--- Get the content path --->
-		<cfset contentPath = right(arguments.path, len(arguments.path) - 1) />
+		<cfset currentPath = right(arguments.path, len(arguments.path) - 1) />
 		
-		<cfset pageName = listLast(contentPath, '.') />
+		<cfset pageName = listLast(currentPath, '.') />
 		
-		<!--- Remove the pagename from the contentPath --->
-		<cfif len(contentPath) GT len(pageName)>
-			<cfset contentPath = left(contentPath, len(contentPath) - len(pageName)) />
+		<!--- Remove the pagename from the currentPath --->
+		<cfif len(currentPath) GT len(pageName)>
+			<cfset currentPath = left(currentPath, len(currentPath) - len(pageName)) />
 		<cfelse>
-			<cfset contentPath = '' />
+			<cfset currentPath = '' />
 		</cfif>
 		
 		<!--- Replace the periods with slashes --->
-		<cfset contentPath = replace(contentPath, '.', '/', 'all') />
+		<cfset currentPath = replace(currentPath, '.', '/', 'all') />
 		
 		<!--- Convert the pageName to have the prefix and postfix --->
 		<cfset pageName = lCase(arguments.prefix) & uCase(left(pageName, 1)) & right(pageName, len(pageName) - 1) & '.cfm' />
 		
-		<cfreturn arguments.contentPath & contentPath & pageName />
+		<cfreturn arguments.contentPath & currentPath & pageName />
 	</cffunction>
 	
 	<!---
