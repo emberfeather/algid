@@ -251,7 +251,7 @@
 		
 		<!--- Query the navigation query for the page information --->
 		<cfquery name="navigation" dbtype="query">
-			SELECT pageID, level, path, title, navTitle, navPosition, description, ids, vars, attribute, attributeValue, allow, deny, secureOrder, defaults, orderBy
+			SELECT pageID, [level], path, title, navTitle, navPosition, description, ids, vars, attribute, attributeValue, allow, deny, secureOrder, defaults, orderBy
 			FROM variables.navigation
 			WHERE level = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.level#" />
 				AND path LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.parentPath#%" />
@@ -338,7 +338,7 @@
 		
 		<!--- Query for the exact pages that match the paths --->
 		<cfquery name="navigation" dbtype="query">
-			SELECT pageID, level, path, title, navTitle, navPosition, description, ids, vars, attribute, attributeValue, allow, deny, defaults, contentPath, orderBy
+			SELECT pageID, [level], path, title, navTitle, navPosition, description, ids, vars, attribute, attributeValue, allow, deny, defaults, contentPath, orderBy
 			FROM variables.navigation
 			WHERE path IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#arrayToList(paths)#" list="true" />)
 				AND locale = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.locale#" />
