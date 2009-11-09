@@ -86,21 +86,21 @@
 		<cfargument name="precedence" type="string" required="true" />
 		
 		<cfset var i = '' />
-		<cfset var plugin = '' />
+		<cfset var currPlugin = '' />
 		
 		<!--- Check if the plugin is already in the precedence list --->
 		<cfif listFind(arguments.precedence, arguments.plugin)>
 			<cfreturn arguments.precedence />
 		</cfif>
 		
-		<cfset plugin = arguments.plugins.get(arguments.plugin) />
+		<cfset currPlugin = arguments.plugins.get(arguments.plugin) />
 		
 		<!--- Make sure that all the prerequisites are added --->
-		<cfloop list="#structKeyList(plugin.getPrerequisites())#" index="i">
+		<cfloop list="#structKeyList(currPlugin.getPrerequisites())#" index="i">
 			<cfset arguments.precedence = determinePrecedencePlugin(arguments.plugins, i, arguments.precedence) />
 		</cfloop>
 		
-		<cfset arguments.precedence = listAppend(arguments.precedence, plugin.getKey()) />
+		<cfset arguments.precedence = listAppend(arguments.precedence, currPlugin.getKey()) />
 		
 		<cfreturn arguments.precedence />
 	</cffunction>
