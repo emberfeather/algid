@@ -6,7 +6,7 @@
 		<cfset super.init(arguments.i18n, arguments.locale) />
 		
 		<!--- First Name --->
-		<cfset addAttribute(argumentCollection = {
+		<cfset addAttribute(
 				attribute = 'firstName',
 				form = {
 					type = 'text'
@@ -15,15 +15,15 @@
 					minLength = 1,
 					maxLength = 45
 				}
-			}) />
+			) />
 		
 		<!--- Last Name --->
-		<cfset addAttribute(argumentCollection = {
+		<cfset addAttribute(
 				attribute = 'lastName',
 				form = {
 					type = 'text'
 				}
-			}) />
+			) />
 		
 		<!--- Set the bundle information for translation --->
 		<cfset setI18NBundle('/i18n/inc/resource/base', 'modelWithValidation') />
