@@ -150,6 +150,7 @@
 		<cfset var defaults = {
 				separator = ' : ',
 				showMultiple = true,
+				topLevel = 1,
 				useNavTitle = true
 			} />
 		<cfset var i = '' />
@@ -160,7 +161,7 @@
 		<cfset arguments.options = extend(defaults, arguments.options) />
 		
 		<!--- Check if there are page titles --->
-		<cfif NOT numLevels>
+		<cfif NOT numLevels OR numLevels LT arguments.options.topLevel>
 			<cfreturn '' />
 		</cfif>
 		
@@ -174,7 +175,7 @@
 		
 		<!--- If we are showing multiples --->
 		<cfif arguments.options.showMultiple>
-			<cfloop from="#numLevels - 1#" to="1" index="i" step="-1">
+			<cfloop from="#numLevels - 1#" to="#arguments.options.topLevel#" index="i" step="-1">
 				<cfif NOT arguments.options.useNavTitle OR levels[i].navTitle NEQ ''>
 					<cfset breadcrumb = '<a href="' & levels[i].link & '" title="' & levels[i].title & '">' & (arguments.options.useNavTitle ? levels[i].navTitle : levels[i].title) & '</a>' & ( len(breadcrumb) ? arguments.options.separator : '' ) & breadcrumb />
 				</cfif>

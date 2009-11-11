@@ -19,16 +19,25 @@
 	<!---
 		Test that the getAttribute function works without the attribute being set.
 	--->
-	<cffunction name="testGetAttributeSansAttribute" access="public" returntype="void" output="false">
+	<cffunction name="testGetAttribute_SansAttribute" access="public" returntype="void" output="false">
 		<cfset var template = createObject('component', 'algid.inc.resource.structure.template').init(variables.navigation, variables.theURL, 'en_US') />
 		
 		<cfset assertEquals('', template.getAttribute('testing')) />
 	</cffunction>
 	
 	<!---
+		Test that the getBreadcrumb function works
+	--->
+	<cffunction name="testGetBreadcrumb_SansLevels" access="public" returntype="void" output="false">
+		<cfset var template = createObject('component', 'algid.inc.resource.structure.template').init(variables.navigation, variables.theURL, 'en_US') />
+		
+		<cfset assertEquals('', template.getBreadcrumb()) />
+	</cffunction>
+	
+	<!---
 		Test that the getMeta function with a http-equiv.
 	--->
-	<cffunction name="testGetMetaHttpEquiv" access="public" returntype="void" output="false">
+	<cffunction name="testGetMeta_HttpEquiv" access="public" returntype="void" output="false">
 		<cfset var template = createObject('component', 'algid.inc.resource.structure.template').init(variables.navigation, variables.theURL, 'en_US') />
 		
 		<cfset template.setMeta('refresh', 5) />
@@ -39,7 +48,7 @@
 	<!---
 		Test that the getMeta function with a name.
 	--->
-	<cffunction name="testGetMetaName" access="public" returntype="void" output="false">
+	<cffunction name="testGetMeta_Name" access="public" returntype="void" output="false">
 		<cfset var template = createObject('component', 'algid.inc.resource.structure.template').init(variables.navigation, variables.theURL, 'en_US') />
 		
 		<cfset template.setMeta('description', 'Awesome') />
@@ -62,7 +71,7 @@
 	<!---
 		Test that the getStyles function works when you have not added a stylesheet.
 	--->
-	<cffunction name="testGetStylesSanScript" access="public" returntype="void" output="false">
+	<cffunction name="testGetStyles_SanScript" access="public" returntype="void" output="false">
 		<cfset var template = createObject('component', 'algid.inc.resource.structure.template').init(variables.navigation, variables.theURL, 'en_US') />
 		
 		<cfset assertEquals('', template.getStyles()) />
@@ -71,7 +80,7 @@
 	<!---
 		Test that the hasAttribute function works.
 	--->
-	<cffunction name="testHasAttributeFalse" access="public" returntype="void" output="false">
+	<cffunction name="testHasAttribute_False" access="public" returntype="void" output="false">
 		<cfset var template = createObject('component', 'algid.inc.resource.structure.template').init(variables.navigation, variables.theURL, 'en_US') />
 		
 		<cfset assertFalse(template.hasAttribute('testing')) />
@@ -80,7 +89,7 @@
 	<!---
 		Test that the hasAttribute function works.
 	--->
-	<cffunction name="testHasAttributeTrue" access="public" returntype="void" output="false">
+	<cffunction name="testHasAttribute_True" access="public" returntype="void" output="false">
 		<cfset var template = createObject('component', 'algid.inc.resource.structure.template').init(variables.navigation, variables.theURL, 'en_US') />
 		
 		<cfset template.setAttribute('testing', 'yippee') />
