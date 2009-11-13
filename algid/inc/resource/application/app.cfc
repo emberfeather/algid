@@ -35,6 +35,6 @@
 		
 		<cfset var pluginList = arrayToList(this.getPlugins()) />
 		
-		<cfreturn listFindNoCase(pluginList, arguments.plugin) />
+		<cfreturn listFindNoCase(pluginList, arguments.plugin) GT 0 />
 	</cffunction>
 </cfcomponent>
