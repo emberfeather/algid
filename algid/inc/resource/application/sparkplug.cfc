@@ -108,6 +108,9 @@
 	<cffunction name="end" access="public" returntype="void" output="false">
 		<cfargument name="theApplication" type="struct" required="true" />
 		
+		<cfset var i = '' />
+		<cfset var plugin = '' />
+		
 		<!---
 			Finish up the application.
 		--->
