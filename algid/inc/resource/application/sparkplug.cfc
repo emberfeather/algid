@@ -105,6 +105,20 @@
 		<cfreturn arguments.precedence />
 	</cffunction>
 	
+	<cffunction name="end" access="public" returntype="void" output="false">
+		<cfargument name="theApplication" type="struct" required="true" />
+		
+		<!---
+			Finish up the application.
+		--->
+		<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
+			<cfset plugin = arguments.theApplication.managers.plugins.get(i) />
+			
+			<!--- Configure the application for the plugin --->
+			<cfset plugin.getConfigure().onApplicationEnd(argumentCollection = arguments) />
+		</cfloop>
+	</cffunction>
+	
 	<cffunction name="loadAll" access="public" returntype="void" output="false">
 		<cfargument name="plugins" type="component" required="true" />
 		<cfargument name="enabledPlugins" type="array" required="true" />
@@ -251,39 +265,39 @@
 	</cffunction>
 	
 	<cffunction name="setDefaults" access="private" returntype="void" output="false">
-		<cfargument name="newApplication" type="struct" required="true" />
+		<cfargument name="theApplication" type="struct" required="true" />
 		
 		<cfset var temp = '' />
 		
 		<!--- Create the i18n singleton --->
-		<cfset temp = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath(arguments.newApplication.app.getI18n().base)) />
+		<cfset temp = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath(arguments.theApplication.app.getI18n().base)) />
 		
-		<cfset arguments.newApplication.managers.singleton.setI18N(temp) />
+		<cfset arguments.theApplication.managers.singleton.setI18N(temp) />
 		
 		<!--- Set the base transient factory items --->
-		<cfset arguments.newApplication.factories.transient.setBase62('cf-compendium.inc.resource.utility.base62') />
-		<cfset arguments.newApplication.factories.transient.setBookmark('cf-compendium.inc.resource.utility.bookmark') />
-		<cfset arguments.newApplication.factories.transient.setContrast('cf-compendium.inc.resource.utility.contrast') />
-		<cfset arguments.newApplication.factories.transient.setExtend('cf-compendium.inc.resource.utility.extend') />
-		<cfset arguments.newApplication.factories.transient.setDatagrid('cf-compendium.inc.resource.structure.datagrid') />
-		<cfset arguments.newApplication.factories.transient.setFactoryTransient('algid.inc.resource.factory.transient') />
-		<cfset arguments.newApplication.factories.transient.setFilter('cf-compendium.inc.resource.utility.filter') />
-		<cfset arguments.newApplication.factories.transient.setFilterActive('cf-compendium.inc.resource.utility.filterActive') />
-		<cfset arguments.newApplication.factories.transient.setFilterVertical('cf-compendium.inc.resource.utility.filterVertical') />
-		<cfset arguments.newApplication.factories.transient.setFormatHTML('cf-compendium.inc.resource.utility.formatHtml') />
-		<cfset arguments.newApplication.factories.transient.setFormExtended('cf-compendium.inc.resource.structure.formExtended') />
-		<cfset arguments.newApplication.factories.transient.setFormStandard('cf-compendium.inc.resource.structure.formStandard') />
-		<cfset arguments.newApplication.factories.transient.setManagerSingleton('algid.inc.resource.manager.singleton') />
-		<cfset arguments.newApplication.factories.transient.setOptions('cf-compendium.inc.resource.utility.options') />
-		<cfset arguments.newApplication.factories.transient.setPaginate('cf-compendium.inc.resource.utility.paginate') />
-		<cfset arguments.newApplication.factories.transient.setQueue('cf-compendium.inc.resource.utility.queue') />
-		<cfset arguments.newApplication.factories.transient.setStack('cf-compendium.inc.resource.utility.stack') />
-		<cfset arguments.newApplication.factories.transient.setTokens('cf-compendium.inc.resource.security.tokens') />
-		<cfset arguments.newApplication.factories.transient.setURL('cf-compendium.inc.resource.utility.url') />
+		<cfset arguments.theApplication.factories.transient.setBase62('cf-compendium.inc.resource.utility.base62') />
+		<cfset arguments.theApplication.factories.transient.setBookmark('cf-compendium.inc.resource.utility.bookmark') />
+		<cfset arguments.theApplication.factories.transient.setContrast('cf-compendium.inc.resource.utility.contrast') />
+		<cfset arguments.theApplication.factories.transient.setExtend('cf-compendium.inc.resource.utility.extend') />
+		<cfset arguments.theApplication.factories.transient.setDatagrid('cf-compendium.inc.resource.structure.datagrid') />
+		<cfset arguments.theApplication.factories.transient.setFactoryTransient('algid.inc.resource.factory.transient') />
+		<cfset arguments.theApplication.factories.transient.setFilter('cf-compendium.inc.resource.utility.filter') />
+		<cfset arguments.theApplication.factories.transient.setFilterActive('cf-compendium.inc.resource.utility.filterActive') />
+		<cfset arguments.theApplication.factories.transient.setFilterVertical('cf-compendium.inc.resource.utility.filterVertical') />
+		<cfset arguments.theApplication.factories.transient.setFormatHTML('cf-compendium.inc.resource.utility.formatHtml') />
+		<cfset arguments.theApplication.factories.transient.setFormExtended('cf-compendium.inc.resource.structure.formExtended') />
+		<cfset arguments.theApplication.factories.transient.setFormStandard('cf-compendium.inc.resource.structure.formStandard') />
+		<cfset arguments.theApplication.factories.transient.setManagerSingleton('algid.inc.resource.manager.singleton') />
+		<cfset arguments.theApplication.factories.transient.setOptions('cf-compendium.inc.resource.utility.options') />
+		<cfset arguments.theApplication.factories.transient.setPaginate('cf-compendium.inc.resource.utility.paginate') />
+		<cfset arguments.theApplication.factories.transient.setQueue('cf-compendium.inc.resource.utility.queue') />
+		<cfset arguments.theApplication.factories.transient.setStack('cf-compendium.inc.resource.utility.stack') />
+		<cfset arguments.theApplication.factories.transient.setTokens('cf-compendium.inc.resource.security.tokens') />
+		<cfset arguments.theApplication.factories.transient.setURL('cf-compendium.inc.resource.utility.url') />
 	</cffunction>
 	
 	<cffunction name="start" access="public" returntype="void" output="false">
-		<cfargument name="newApplication" type="struct" required="true" />
+		<cfargument name="theApplication" type="struct" required="true" />
 		
 		<cfset var configurer = '' />
 		<cfset var i = '' />
@@ -298,41 +312,41 @@
 		<!--- Increase the page timeout so that it won't timeout in the middle of install/update --->
 		<cfsetting requesttimeout="60" />
 		
-		<cfset arguments.newApplication.app = readApplication() />
+		<cfset arguments.theApplication.app = readApplication() />
 		
-		<cfset isDevelopment = arguments.newApplication.app.getEnvironment() NEQ 'production' />
+		<cfset isDevelopment = arguments.theApplication.app.getEnvironment() NEQ 'production' />
 		
 		<!--- Setup the application managers --->
-		<cfset arguments.newApplication.managers = {
+		<cfset arguments.theApplication.managers = {
 				plugins = createObject('component', 'algid.inc.resource.manager.singleton').init( isDevelopment ),
 				singleton = createObject('component', 'algid.inc.resource.manager.singleton').init( isDevelopment )
 			} />
 		
 		<!--- Setup the application factories --->
-		<cfset arguments.newApplication.factories = {
+		<cfset arguments.theApplication.factories = {
 				transient = createObject('component', 'algid.inc.resource.factory.transient').init( isDevelopment )
 			} />
 		
 		<!--- Create the defaults --->
-		<cfset setDefaults(arguments.newApplication) />
+		<cfset setDefaults(arguments.theApplication) />
 		
 		<!--- Load all plugins and projects configurations --->
-		<cfset loadAll( arguments.newApplication.managers.plugins, arguments.newApplication.app.getPlugins() ) />
+		<cfset loadAll( arguments.theApplication.managers.plugins, arguments.theApplication.app.getPlugins() ) />
 		
 		<!--- Check prerequisites --->
-		<cfset checkPrerequisites( arguments.newApplication.managers.plugins, arguments.newApplication.app.getPlugins() )>
+		<cfset checkPrerequisites( arguments.theApplication.managers.plugins, arguments.theApplication.app.getPlugins() )>
 		
 		<!--- Determine the install precedence --->
-		<cfset precedence = determinePrecedence( arguments.newApplication.managers.plugins, arguments.newApplication.app.getPlugins() ) />
+		<cfset precedence = determinePrecedence( arguments.theApplication.managers.plugins, arguments.theApplication.app.getPlugins() ) />
 		
-		<cfset arguments.newApplication.app.setPrecedence( precedence ) />
+		<cfset arguments.theApplication.app.setPrecedence( precedence ) />
 		
 		<!--- Update the plugins and setup the transient and singleton information --->
-		<cfloop array="#arguments.newApplication.app.getPrecedence()#" index="i">
-			<cfset plugin = arguments.newApplication.managers.plugins.get(i) />
+		<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
+			<cfset plugin = arguments.theApplication.managers.plugins.get(i) />
 			
 			<!--- Create the configure utility for the plugin --->
-			<cfset configurer = createObject('component', 'plugins.' & i & '.config.configure').init(variables.appBaseDirectory, arguments.newApplication.app.getDSAlter()) />
+			<cfset configurer = createObject('component', 'plugins.' & i & '.config.configure').init(variables.appBaseDirectory, arguments.theApplication.app.getDSAlter()) />
 			
 			<!--- Store the configure utility --->
 			<cfset plugin.setConfigure( configurer ) />
@@ -351,7 +365,7 @@
 			<cfloop collection="#singletons#" item="j">
 				<!--- Create the singleton and set it to the singleton manager --->
 				<!--- Overrides any pre-existing singletons of the same name --->
-				<cfinvoke component="#arguments.newApplication.managers.singleton#" method="set#j#">
+				<cfinvoke component="#arguments.theApplication.managers.singleton#" method="set#j#">
 					<cfinvokeargument name="singleton" value="#createObject('component', singletons[j]).init()#" />
 				</cfinvoke>
 			</cfloop>
@@ -362,7 +376,7 @@
 			<cfloop collection="#transients#" item="j">
 				<!--- Set the transient path in the transient manager --->
 				<!--- Overrides any pre-existing transient paths --->
-				<cfinvoke component="#arguments.newApplication.factories.transient#" method="set#j#">
+				<cfinvoke component="#arguments.theApplication.factories.transient#" method="set#j#">
 					<cfinvokeargument name="path" value="#transients[j]#" />
 				</cfinvoke>
 			</cfloop>
@@ -373,11 +387,11 @@
 			Gives the plugins power to manipulate the application
 			AFTER everything else is said and done
 		--->
-		<cfloop array="#arguments.newApplication.app.getPrecedence()#" index="i">
-			<cfset plugin = arguments.newApplication.managers.plugins.get(i) />
+		<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
+			<cfset plugin = arguments.theApplication.managers.plugins.get(i) />
 			
 			<!--- Configure the application for the plugin --->
-			<cfset plugin.getConfigure().configureApplication(arguments.newApplication) />
+			<cfset plugin.getConfigure().onApplicationStart(argumentCollection = arguments) />
 		</cfloop>
 	</cffunction>
 	

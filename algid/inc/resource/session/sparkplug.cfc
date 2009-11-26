@@ -6,42 +6,60 @@
 		<cfreturn this />
 	</cffunction>
 	
+	<cffunction name="end" access="public" returntype="void" output="false">
+		<cfargument name="theApplication" type="struct" required="true" />
+		<cfargument name="theSession" type="struct" required="true" />
+		
+		<cfset var i = '' />
+		<cfset var plugin = '' />
+		
+		<!---
+			Finish up the session.
+		--->
+		<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
+			<cfset plugin = arguments.theApplication.managers.plugins.get(i) />
+			
+			<!--- Configure the application for the plugin --->
+			<cfset plugin.getConfigure().onSessionEnd(argumentCollection = arguments) />
+		</cfloop>
+	</cffunction>
+	
 	<cffunction name="setDefaults" access="private" returntype="void" output="false">
 		<cfargument name="theApplication" type="struct" required="true" />
-		<cfargument name="newSession" type="struct" required="true" />
+		<cfargument name="theSession" type="struct" required="true" />
 		
 		<cfset var temp = '' />
 		
 		<!--- Create the message notification object --->
 		<cfset temp = createObject('component', 'algid.inc.resource.base.message').init() />
 		
-		<cfset arguments.newSession.managers.singleton.setMessage(temp) />
+		<cfset arguments.theSession.managers.singleton.setMessage(temp) />
 		
 		<!--- Create the error notification object --->
 		<cfset temp = createObject('component', 'algid.inc.resource.base.message').init( { class='error' } ) />
 		
-		<cfset arguments.newSession.managers.singleton.setError(temp) />
+		<cfset arguments.theSession.managers.singleton.setError(temp) />
 		
 		<!--- Create the success notification object --->
 		<cfset temp = createObject('component', 'algid.inc.resource.base.message').init( { class='success' } ) />
 		
-		<cfset arguments.newSession.managers.singleton.setSuccess(temp) />
+		<cfset arguments.theSession.managers.singleton.setSuccess(temp) />
 		
 		<!--- Create the tokens objects --->
 		<cfset temp = arguments.theApplication.factories.transient.getTokens() />
 		
-		<cfset arguments.newSession.managers.singleton.setTokens(temp) />
+		<cfset arguments.theSession.managers.singleton.setTokens(temp) />
 	</cffunction>
 	
 	<cffunction name="restart" access="public" returntype="void" output="false">
 		<cfargument name="theApplication" type="struct" required="true" />
-		<cfargument name="newSession" type="struct" required="true" />
+		<cfargument name="theSession" type="struct" required="true" />
 		
 		<cfset var i = '' />
 		
 		<!--- Clear out all the session information --->
-		<cfloop list="#structKeyList(arguments.newSession)#" index="i">
-			<cfset structDelete(arguments.newSession, i) />
+		<cfloop list="#structKeyList(arguments.theSession)#" index="i">
+			<cfset structDelete(arguments.theSession, i) />
 		</cfloop>
 		
 		<!--- Start with the fresh session --->
@@ -50,7 +68,7 @@
 	
 	<cffunction name="start" access="public" returntype="void" output="false">
 		<cfargument name="theApplication" type="struct" required="true" />
-		<cfargument name="newSession" type="struct" required="true" />
+		<cfargument name="theSession" type="struct" required="true" />
 		
 		<cfset var i = '' />
 		<cfset var j = '' />
@@ -62,27 +80,27 @@
 		<cfsetting requesttimeout="60" />
 		
 		<!--- Determine the locale for the session --->
-		<cfset arguments.newSession.locale = left(CGI.HTTP_ACCEPT_LANGUAGE, 4) />
+		<cfset arguments.theSession.locale = left(CGI.HTTP_ACCEPT_LANGUAGE, 4) />
 		
 		<!--- If its not in the available locales use the default --->
-		<cfif NOT listFindNoCase( arrayToList(arguments.theApplication.app.getI18n().locales), arguments.newSession.locale )>
-			<cfset arguments.newSession.locale = arguments.theApplication.app.getI18n().default />
+		<cfif NOT listFindNoCase( arrayToList(arguments.theApplication.app.getI18n().locales), arguments.theSession.locale )>
+			<cfset arguments.theSession.locale = arguments.theApplication.app.getI18n().default />
 		</cfif>
 		
 		<cfset variables.isDevelopment = arguments.theApplication.app.getEnvironment() NEQ 'production' />
 		
 		<!--- Setup the session managers --->
-		<cfset arguments.newSession.managers = {
+		<cfset arguments.theSession.managers = {
 				singleton = arguments.theApplication.factories.transient.getManagerSingleton( variables.isDevelopment )
 			} />
 		
 		<!--- Setup the session factories --->
-		<cfset arguments.newSession.factories = {
+		<cfset arguments.theSession.factories = {
 				transient = arguments.theApplication.factories.transient.getFactoryTransient( variables.isDevelopment )
 			} />
 		
 		<!--- Create the defaults --->
-		<cfset setDefaults(arguments.theApplication, arguments.newSession) />
+		<cfset setDefaults(arguments.theApplication, arguments.theSession) />
 		
 		<!--- Update the plugins and setup the transient and singleton information --->
 		<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
@@ -94,7 +112,7 @@
 			<cfloop collection="#singletons#" item="j">
 				<!--- Create the singleton and set it to the singleton manager --->
 				<!--- Overrides any pre-existing singletons of the same name --->
-				<cfinvoke component="#arguments.newSession.managers.singleton#" method="set#j#">
+				<cfinvoke component="#arguments.theSession.managers.singleton#" method="set#j#">
 					<cfinvokeargument name="singleton" value="#createObject('component', singletons[j]).init()#" />
 				</cfinvoke>
 			</cfloop>
@@ -105,7 +123,7 @@
 			<cfloop collection="#transients#" item="j">
 				<!--- Set the transient path in the transient manager --->
 				<!--- Overrides any pre-existing transient paths --->
-				<cfinvoke component="#arguments.newSession.factories.transient#" method="set#j#">
+				<cfinvoke component="#arguments.theSession.factories.transient#" method="set#j#">
 					<cfinvokeargument name="path" value="#transients[j]#" />
 				</cfinvoke>
 			</cfloop>
@@ -120,7 +138,7 @@
 			<cfset plugin = arguments.theApplication.managers.plugins.get(i) />
 			
 			<!--- Configure the application for the plugin --->
-			<cfset plugin.getConfigure().configureSession(arguments.theApplication, arguments.newSession) />
+			<cfset plugin.getConfigure().onSessionStart(argumentCollection = arguments) />
 		</cfloop>
 	</cffunction>
 </cfcomponent>
