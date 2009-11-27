@@ -11,6 +11,10 @@
 	"key": "@key@",
 	"prerequisites": {
 	},
+	"requestSingletons": {
+	},
+	"requestTransients": {
+	},
 	"sessionSingletons": {
 	},
 	"sessionTransients": {
