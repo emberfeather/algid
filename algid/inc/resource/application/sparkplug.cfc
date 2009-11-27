@@ -331,7 +331,7 @@
 			} />
 		
 		<!--- Create the defaults --->
-		<cfset setDefaults(arguments.theApplication) />
+		<cfset setDefaults(argumentCollection = arguments) />
 		
 		<!--- Load all plugins and projects configurations --->
 		<cfset loadAll( arguments.theApplication.managers.plugins, arguments.theApplication.app.getPlugins() ) />

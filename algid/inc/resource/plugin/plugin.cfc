@@ -10,6 +10,8 @@
 				},
 				key = 'undefined',
 				prerequisites = {},
+				requestSingletons = {},
+				requestTransients = {},
 				sessionSingletons = {},
 				sessionTransients = {},
 				version = ''

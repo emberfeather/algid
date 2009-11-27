@@ -3,6 +3,8 @@
 		
 		<cfset super.init() />
 		
+		<cfset variables.isDevelopment = false />
+		
 		<cfreturn this />
 	</cffunction>
 	
@@ -100,7 +102,7 @@
 			} />
 		
 		<!--- Create the defaults --->
-		<cfset setDefaults(arguments.theApplication, arguments.theSession) />
+		<cfset setDefaults(argumentCollection = arguments) />
 		
 		<!--- Update the plugins and setup the transient and singleton information --->
 		<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
