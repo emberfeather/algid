@@ -263,6 +263,7 @@
 		<cfset args.versionedFiles = 'trunk/Application.cfc,trunk/build.xml,trunk/releaseNotes.txt,trunk/version.json' />
 		<cfset args.versionedFiles &= ',trunk/dist/settings/build.properties,trunk/dist/settings/project.properties,trunk/dist/settings/statSVN.properties,trunk/dist/settings/test.properties,trunk/dist/settings/user.properties.example,trunk/dist/settings/version.properties' />
 		<cfset args.versionedFiles &= ',trunk/dist/templates/config/plugin.json.cfm,trunk/dist/templates/version.json' />
+		<cfset args.versionedFiles &= ',trunk/test/notATest.cfc' />
 		<cfset args.versionedFiles &= ',wiki/ReleaseNotes.wiki' />
 		
 		<!--- The unversioned files --->
