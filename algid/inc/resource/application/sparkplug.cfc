@@ -161,27 +161,33 @@
 		<cfset var configPath = variables.appBaseDirectory & 'config/' />
 		<cfset var contents = '' />
 		<cfset var settingsFile = 'settings.json.cfm' />
-		<cfset var settingsExampleFile = 'settings.example.json.cfm' />
+		<cfset var settingsDefaultFile = 'defaults.json.cfm' />
 		
 		<cfif NOT fileExists(configPath & configFile)>
 			<cfthrow message="Could not find the application configuration" detail="The application could not be detected at #variables.appBaseDirectory#" />
 		</cfif>
 		
-		<!--- Read the application config file --->
-		<cffile action="read" file="#configPath & configFile#" variable="contents" />
-		
 		<!--- Create the application singleton --->
 		<cfset app = createObject('component', 'algid.inc.resource.application.app').init() />
+		
+		<!--- Read the application config file --->
+		<cffile action="read" file="#configPath & configFile#" variable="contents" />
 		
 		<!--- Deserialize the Configuration --->
 		<cfset app.deserialize( deserializeJSON(contents) ) />
 		
+		<!--- Read the application default settings file --->
+		<cffile action="read" file="#configPath & settingsDefaultFile#" variable="contents" />
+		
+		<!--- Deserialize the default settings --->
+		<cfset app.deserialize( deserializeJSON(contents) ) />
+		
 		<!--- Check for installation specific file --->
 		<cfif NOT fileExists(configPath & settingsFile)>
-			<cffile action="copy" source="#configPath & settingsExampleFile#" destination="#configPath & settingsFile#">
+			<cffile action="write" file="#configPath & settingsFile#" output="{}" addnewline="false" />
 		</cfif>
 		
-		<!--- Read the application config file --->
+		<!--- Read the application settings file --->
 		<cffile action="read" file="#configPath & settingsFile#" variable="contents" />
 		
 		<!--- Deserialize the settings --->
@@ -199,29 +205,36 @@
 		<cfset var contents = '' />
 		<cfset var plugin = '' />
 		<cfset var settingsFile = 'settings.json.cfm' />
-		<cfset var settingsExampleFile = 'settings.example.json.cfm' />
+		<cfset var settingsDefaultFile = 'defaults.json.cfm' />
 		
 		<cfif NOT fileExists(configPath & configFile)>
 			<cfthrow message="Could not find the plugin configuration" detail="The plugin could not be detected at #variables.appBaseDirectory# for #arguments.pluginKey#" />
 		</cfif>
 		
-		<!--- Read the application config file --->
-		<cffile action="read" file="#configPath & configFile#" variable="contents" />
-		
+		<!--- Create the plugin singleton --->
 		<cfset plugin = createObject('component', 'algid.inc.resource.plugin.plugin').init() />
+		
+		<!--- Read the plugin config file --->
+		<cffile action="read" file="#configPath & configFile#" variable="contents" />
 		
 		<!--- Deserialize the plugin config --->
 		<cfset plugin.deserialize(deserializeJSON(contents)) />
 		
-		<!--- Read in the non-required settings --->
+		<!--- Read the plugin default settings file --->
+		<cffile action="read" file="#configPath & settingsDefaultFile#" variable="contents" />
+		
+		<!--- Deserialize the plugin default settings --->
+		<cfset plugin.deserialize(deserializeJSON(contents)) />
+		
+		<!--- Check if there is not a settings file yet --->
 		<cfif NOT fileExists(configPath & settingsFile)>
-			<cffile action="copy" source="#configPath & settingsExampleFile#" destination="#configPath & settingsFile#">
+			<cffile action="write" file="#configPath & settingsFile#" output="{}" addnewline="false" />
 		</cfif>
 		
-		<!--- Read the application config file --->
+		<!--- Read the plugin settings file --->
 		<cffile action="read" file="#configPath & settingsFile#" variable="contents" />
 		
-		<!--- Deserialize the plugin config --->
+		<!--- Deserialize the plugin settings --->
 		<cfset plugin.deserialize(deserializeJSON(contents)) />
 		
 		<cfreturn plugin />
