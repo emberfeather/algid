@@ -1,7 +1,8 @@
 <cfsilent>
 	<cfset thresholds = {
-			executionTotal = 250,
-			executionAverage = 75,
+			executionTotal = 500,
+			itemTotal = 250,
+			itemAverage = 75,
 			query = 150,
 			timer = 150
 		} />
@@ -40,7 +41,7 @@
 		<cfif debugging.pages.currentRow LTE 5>
 			<cfset page = {
 					avg = debugging.pages.avg,
-					bad = debugging.pages.avg GT thresholds.executionAverage,
+					bad = debugging.pages.avg GT thresholds.itemAverage,
 					count = debugging.pages.count,
 					execution = debugging.pages.total-debugging.pages.load,
 					load = debugging.pages.load,
