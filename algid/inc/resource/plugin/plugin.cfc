@@ -56,6 +56,7 @@
 				</cftry>
 			</cfloop>
 		<cfelse>
+			<!--- Anything not a struct defaults to the parent object --->
 			<cfset super.deserialize(argumentCollection = arguments) />
 		</cfif>
 		
