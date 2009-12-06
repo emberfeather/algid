@@ -293,6 +293,7 @@
 		<!--- Set the base transient factory items --->
 		<cfset arguments.theApplication.factories.transient.setBase62('cf-compendium.inc.resource.utility.base62') />
 		<cfset arguments.theApplication.factories.transient.setBookmark('cf-compendium.inc.resource.utility.bookmark') />
+		<cfset arguments.theApplication.factories.transient.setCfcParse('cf-compendium.inc.resource.utility.cfcParse') />
 		<cfset arguments.theApplication.factories.transient.setContrast('cf-compendium.inc.resource.utility.contrast') />
 		<cfset arguments.theApplication.factories.transient.setExtend('cf-compendium.inc.resource.utility.extend') />
 		<cfset arguments.theApplication.factories.transient.setDatagrid('cf-compendium.inc.resource.structure.datagrid') />
