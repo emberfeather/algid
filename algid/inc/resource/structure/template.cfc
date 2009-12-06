@@ -44,6 +44,27 @@
 	</cffunction>
 	
 	<!---
+		Passes through the ability to add a level to the current page
+	--->
+	<cffunction name="addLevel" access="public" returntype="void" output="false">
+		<cfargument name="title" type="string" required="true" />
+		<cfargument name="navTitle" type="string" required="true" />
+		<cfargument name="link" type="string" required="true" />
+		
+		<cfset var currLevel = '' />
+		
+		<cfset currLevel = variables.currentPage.getLastLevel() />
+		
+		<cfset arguments.path = currLevel.path />
+		
+		<cfif structKeyExists(currLevel, 'contentPath')>
+			<cfset arguments.contentPath = currLevel.contentPath />
+		</cfif>
+		
+		<cfset variables.currentPage.addLevel(argumentCollection = arguments) />
+	</cffunction>
+	
+	<!---
 		Uses the unique to add the scripts
 	--->
 	<cffunction name="addScripts" access="public" returntype="void" output="false">
