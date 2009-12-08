@@ -42,6 +42,11 @@
 		
 		<cfset arguments.theSession.managers.singleton.setError(temp) />
 		
+		<!--- Create the warning notification object --->
+		<cfset temp = createObject('component', 'algid.inc.resource.base.message').init( { class='warning' } ) />
+		
+		<cfset arguments.theSession.managers.singleton.setWarning(temp) />
+		
 		<!--- Create the success notification object --->
 		<cfset temp = createObject('component', 'algid.inc.resource.base.message').init( { class='success' } ) />
 		
