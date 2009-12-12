@@ -26,12 +26,12 @@
 				<div class="grid_3">
 					<cfswitch expression="#arguments.type#">
 						<cfcase value="checkbox">
-							<input type="checkbox" id="ele_#arguments.name#" name="#arguments.name#" value="true"<cfif arguments.value EQ true> checked="checked"</cfif> />
+							<input type="checkbox" id="ele_#arguments.name#" name="#arguments.name#" value="true"<cfif arguments.value eq true> checked="checked"</cfif> />
 						</cfcase>
 						<cfcase value="radio">
 							<cfloop array="#arguments.options#" index="option">
 								<label>
-									<input type="radio" id="ele_#arguments.name#_#option#" name="#arguments.name#" value="#option#"<cfif arguments.value EQ option> checked="checked"</cfif> />
+									<input type="radio" id="ele_#arguments.name#_#option#" name="#arguments.name#" value="#option#"<cfif arguments.value eq option> checked="checked"</cfif> />
 									#option#
 								</label>
 							</cfloop>

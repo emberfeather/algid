@@ -26,7 +26,7 @@
 	
 	<!---
 		When using the singleton manager and the singleton exists
-		and is NOT a stub it should return true for the has
+		and is not a stub it should return true for the has
 		functionality.
 	--->
 	<cffunction name="testHasSingletonStub" access="public" returntype="void" output="false">

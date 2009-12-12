@@ -22,7 +22,7 @@
 		<cfset view = createObject('component', 'view').init() />
 		
 		<!--- Check for a submission --->
-		<cfif CGI.REQUEST_METHOD EQ 'POST'>
+		<cfif cgi.request_method eq 'POST'>
 			<cfset setup = createObject('component', 'setup').init(expandPath('.')) />
 			
 			<cftry>

@@ -14,11 +14,11 @@
 	<cfadmin action="getDebugData" returnVariable="debugging" />
 	
 	<!--- Check for variables that may not exist in the return --->
-	<cfif NOT structKeyExists(debugging, 'timers')>
+	<cfif not structKeyExists(debugging, 'timers')>
 		<cfset debugging.timers = queryNew('label,time,template') />
 	</cfif>
 	
-	<cfif NOT structKeyExists(debugging, 'traces')>
+	<cfif not structKeyExists(debugging, 'traces')>
 		<cfset debugging.traces = queryNew('type,category,text,template,line,var,total,trace') />
 	</cfif>
 	
@@ -38,10 +38,10 @@
 		<cfset execution.total += debugging.pages.total />
 		<cfset execution.query += debugging.pages.query />
 		
-		<cfif debugging.pages.currentRow LTE 5>
+		<cfif debugging.pages.currentRow lte 5>
 			<cfset page = {
 					avg = debugging.pages.avg,
-					bad = debugging.pages.avg GT thresholds.itemAverage,
+					bad = debugging.pages.avg gt thresholds.itemAverage,
 					count = debugging.pages.count,
 					execution = debugging.pages.total-debugging.pages.load,
 					load = debugging.pages.load,
@@ -64,11 +64,11 @@
 		<cfset var i = '' />
 		
 		<!--- Remove extra spacing before the code. --->
-		<cfif tabCount.pos[1] GT 0>
+		<cfif tabCount.pos[1] gt 0>
 			<cfloop list="#arguments.code#" index="i" delimiters="#chr(13)##chr(10)#">
 				<cfset i = ReReplace(i, "[	]{1,#tabCount.len[2]#}", "") />
 				
-				<cfif trim(i) NEQ ''>
+				<cfif trim(i) neq ''>
 					<cfset returnFormat &= i & chr(13) & chr(10) />
 				</cfif>
 			</cfloop>
@@ -98,7 +98,7 @@
 				</div>
 			</div>
 			
-			<div class="grid_1" style="<cfif execution.total GT thresholds.executionTotal>color: red;</cfif>">
+			<div class="grid_1" style="<cfif execution.total gt thresholds.executionTotal>color: red;</cfif>">
 				<div>
 					<strong>#execution.total# ms</strong>
 				</div>
@@ -116,7 +116,7 @@
 				</div>
 			</div>
 			
-			<div class="grid_8" style="<cfif execution.total GT thresholds.executionTotal>color: red;</cfif>">
+			<div class="grid_8" style="<cfif execution.total gt thresholds.executionTotal>color: red;</cfif>">
 				<div>
 					<strong>Total Execution</strong>
 				</div>
@@ -207,7 +207,7 @@
 					<strong>Count</strong>
 					
 					<cfloop query="tickers">
-						<div style="<cfif tickers.average GT thresholds.timer>color: red;</cfif>">
+						<div style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
 							#tickers.count#
 						</div>
 					</cfloop>
@@ -217,7 +217,7 @@
 					<strong>Total</strong>
 					
 					<cfloop query="tickers">
-						<div style="<cfif tickers.average GT thresholds.timer>color: red;</cfif>">
+						<div style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
 							#tickers.total# ms
 						</div>
 					</cfloop>
@@ -227,7 +227,7 @@
 					<strong>Average</strong>
 					
 					<cfloop query="tickers">
-						<div style="<cfif tickers.average GT thresholds.timer>color: red;</cfif>">
+						<div style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
 							#numberFormat(tickers.average, '0.__')# ms
 						</div>
 					</cfloop>
@@ -237,7 +237,7 @@
 					<strong>Percent</strong>
 					
 					<cfloop query="tickers">
-						<div style="<cfif tickers.average GT thresholds.timer>color: red;</cfif>">
+						<div style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
 							#numberFormat(( tickers.total ? (tickers.total/execution.total) * 100 : 0 ), '0.__')#%
 						</div>
 					</cfloop>
@@ -247,7 +247,7 @@
 					<strong>Ticker</strong>
 					
 					<cfloop query="tickers">
-						<div style="<cfif tickers.average GT thresholds.timer>color: red;</cfif>">
+						<div style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
 							#tickers.ticker#
 						</div>
 					</cfloop>
@@ -264,7 +264,7 @@
 					<strong>Label</strong>
 					
 					<cfloop query="debugging.timers">
-						<div style="<cfif debugging.timers.time GT thresholds.timer>color: red;</cfif>">
+						<div style="<cfif debugging.timers.time gt thresholds.timer>color: red;</cfif>">
 							#debugging.timers.label#
 						</div>
 					</cfloop>
@@ -274,7 +274,7 @@
 					<strong>Time</strong>
 					
 					<cfloop query="debugging.timers">
-						<div style="<cfif debugging.timers.time GT thresholds.timer>color: red;</cfif>">
+						<div style="<cfif debugging.timers.time gt thresholds.timer>color: red;</cfif>">
 							#debugging.timers.time# ms
 						</div>
 					</cfloop>
@@ -284,7 +284,7 @@
 					<strong>Percent</strong>
 					
 					<cfloop query="debugging.timers">
-						<div style="<cfif debugging.timers.time GT thresholds.timer>color: red;</cfif>">
+						<div style="<cfif debugging.timers.time gt thresholds.timer>color: red;</cfif>">
 							#numberFormat((debugging.timers.time/execution.total) * 100, '0.00')#%
 						</div>
 					</cfloop>
@@ -294,7 +294,7 @@
 					<strong>Template</strong>
 					
 					<cfloop query="debugging.timers">
-						<div style="<cfif debugging.timers.time GT thresholds.timer>color: red;</cfif>">
+						<div style="<cfif debugging.timers.time gt thresholds.timer>color: red;</cfif>">
 							#debugging.timers.template#
 						</div>
 					</cfloop>
@@ -307,7 +307,7 @@
 		<!--- Queries --->
 		<div class="section">
 			<cfloop query="debugging.queries">
-				<div style="<cfif debugging.queries.time GT thresholds.query>color: red;</cfif>">
+				<div style="<cfif debugging.queries.time gt thresholds.query>color: red;</cfif>">
 					<div class="grid_3">
 						<div>
 							<strong>#debugging.queries.name#</strong>
@@ -326,7 +326,7 @@
 						</div>
 						
 						<div>
-							#debugging.queries.count# record<cfif debugging.queries.count GT 1>s</cfif>
+							#debugging.queries.count# record<cfif debugging.queries.count gt 1>s</cfif>
 						</div>
 					</div>
 					

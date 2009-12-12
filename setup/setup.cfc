@@ -23,7 +23,7 @@
 		<cfset arguments.destPath = normalizePath(arguments.destPath) />
 		
 		<cfloop list="#arguments.files#" index="fileName">
-			<cfif NOT fileExists(arguments.destPath & fileName)>
+			<cfif not fileExists(arguments.destPath & fileName)>
 				<cffile action="read" file="#arguments.srcPath##fileName#" variable="fileContents" />
 				
 				<!--- Replace with wizard settings --->
@@ -53,7 +53,7 @@
 		<cfset arguments.destPath = normalizePath(arguments.destPath) />
 		
 		<cfloop list="#arguments.files#" index="fileName">
-			<cfif NOT fileExists(arguments.destPath & fileName)>
+			<cfif not fileExists(arguments.destPath & fileName)>
 				<cffile action="copy" source="#arguments.srcPath##fileName#" destination="#arguments.destPath##fileName#" />
 				
 				<cfset newFiles = listAppend( newFiles, fileName ) />
@@ -75,7 +75,7 @@
 		
 		<!--- Create each directory listed in the directories list --->
 		<cfloop list="#arguments.directories#" index="directory">
-			<cfif NOT directoryExists(arguments.destPath & directory)>
+			<cfif not directoryExists(arguments.destPath & directory)>
 				<cfdirectory action="create" directory="#arguments.destPath##directory#" />
 				
 				<cfset newDirectories = listAppend(newDirectories, directory) />
@@ -95,7 +95,7 @@
 		
 		<!--- Check if there are any blank fields --->
 		<cfloop list="#structKeyList(arguments.request)#" index="i">
-			<cfif trim(arguments.request[i]) EQ ''>
+			<cfif trim(arguments.request[i]) eq ''>
 				<cfthrow type="validation" message="Missing required field" detail="The #i# field is blank" extendedinfo="Please fill in all fields of the form!" />
 			</cfif>
 		</cfloop>
@@ -128,7 +128,7 @@
 		
 		<cfset arguments.path = trim(arguments.path) />
 		
-		<cfif right(arguments.path, 1) NEQ '/'>
+		<cfif right(arguments.path, 1) neq '/'>
 			<cfreturn arguments.path & '/' />
 		</cfif>
 		

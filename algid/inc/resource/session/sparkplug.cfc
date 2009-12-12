@@ -87,7 +87,7 @@
 		<cfsetting requesttimeout="60" />
 		
 		<!--- Determine the locale for the session --->
-		<cfset arguments.theSession.locale = left(CGI.HTTP_ACCEPT_LANGUAGE, 4) />
+		<cfset arguments.theSession.locale = left(cgi.http_accept_language, 4) />
 		
 		<!--- If its not in the available locales use the default --->
 		<cfif not listFindNoCase( arrayToList(arguments.theApplication.app.getI18n().locales), arguments.theSession.locale )>

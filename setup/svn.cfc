@@ -10,7 +10,7 @@
 	<cffunction name="addFiles" access="public" returntype="void" output="false">
 		<cfargument name="files" type="string" required="true" />
 		
-		<cfif NOT len(arguments.files)>
+		<cfif not len(arguments.files)>
 			<cfreturn />
 		</cfif>
 		
@@ -44,7 +44,7 @@
 		
 		<cfset arguments.path = trim(arguments.path) />
 		
-		<cfif right(arguments.path, 1) NEQ '/'>
+		<cfif right(arguments.path, 1) neq '/'>
 			<cfreturn arguments.path & '/' />
 		</cfif>
 		

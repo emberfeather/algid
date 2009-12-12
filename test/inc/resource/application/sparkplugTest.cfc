@@ -79,10 +79,10 @@
 		<cfset positions['orange'] = listFind(precedence, 'orange') />
 		
 		<!--- Make assertions about the positions of the plugins --->
-		<cfset assertTrue(positions['grape'] GT positions['kiwi'], 'The grape plugin should be after the kiwi plugin : ' & precedence) />
-		<cfset assertTrue(positions['kiwi'] GT positions['lime'], 'The kiwi plugin should be after the lime plugin : ' & precedence) />
-		<cfset assertTrue(positions['lime'] GT positions['orange'], 'The lime plugin should be after the orange plugin : ' & precedence) />
-		<cfset assertTrue(positions['orange'] GT positions['banana'], 'The orange plugin should be after the bananage plugin : ' & precedence) />
+		<cfset assertTrue(positions['grape'] gt positions['kiwi'], 'The grape plugin should be after the kiwi plugin : ' & precedence) />
+		<cfset assertTrue(positions['kiwi'] gt positions['lime'], 'The kiwi plugin should be after the lime plugin : ' & precedence) />
+		<cfset assertTrue(positions['lime'] gt positions['orange'], 'The lime plugin should be after the orange plugin : ' & precedence) />
+		<cfset assertTrue(positions['orange'] gt positions['banana'], 'The orange plugin should be after the bananage plugin : ' & precedence) />
 	</cffunction>
 	
 	<cffunction name="testDeterminePrecedenceIgnored" access="public" returntype="void" output="false">
@@ -155,8 +155,8 @@
 		<cfset precedence = arrayToList(sparkplug.determinePrecedence(plugins, enabledPlugins)) />
 		
 		<!--- Should not find reserved project names in the precedence --->
-		<cfset assertTrue(listFind(precedence, 'cf-compendium') EQ 0, 'Projects should be ignored in the precedence -- found cf-compendium : ' & precedence) />
-		<cfset assertTrue(listFind(precedence, 'algid') EQ 0, 'Projects should be ignored in the precedence -- found algid : ' & precedence) />
+		<cfset assertTrue(listFind(precedence, 'cf-compendium') eq 0, 'Projects should be ignored in the precedence -- found cf-compendium : ' & precedence) />
+		<cfset assertTrue(listFind(precedence, 'algid') eq 0, 'Projects should be ignored in the precedence -- found algid : ' & precedence) />
 	</cffunction>
 	
 	<cffunction name="testDeterminePrecedenceSimple" access="public" returntype="void" output="false">
@@ -237,9 +237,9 @@
 		<cfset positions['orange'] = listFind(precedence, 'orange') />
 		
 		<!--- Make assertions about the positions of the plugins --->
-		<cfset assertTrue(positions['grape'] GT positions['kiwi'], 'The grape plugin should be after the kiwi plugin : ' & precedence) />
-		<cfset assertTrue(positions['kiwi'] GT positions['lime'], 'The kiwi plugin should be after the lime plugin : ' & precedence) />
-		<cfset assertTrue(positions['lime'] GT positions['orange'], 'The lime plugin should be after the orange plugin : ' & precedence) />
-		<cfset assertTrue(positions['orange'] GT positions['banana'], 'The orange plugin should be after the bananage plugin : ' & precedence) />
+		<cfset assertTrue(positions['grape'] gt positions['kiwi'], 'The grape plugin should be after the kiwi plugin : ' & precedence) />
+		<cfset assertTrue(positions['kiwi'] gt positions['lime'], 'The kiwi plugin should be after the lime plugin : ' & precedence) />
+		<cfset assertTrue(positions['lime'] gt positions['orange'], 'The lime plugin should be after the orange plugin : ' & precedence) />
+		<cfset assertTrue(positions['orange'] gt positions['banana'], 'The orange plugin should be after the bananage plugin : ' & precedence) />
 	</cffunction>
 </cfcomponent>
