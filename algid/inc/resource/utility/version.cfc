@@ -16,7 +16,7 @@
 		<cfset var version2Len = '' />
 		
 		<!--- If they are the same return a 0 --->
-		<cfif arguments.version1 EQ arguments.version2>
+		<cfif arguments.version1 eq arguments.version2>
 			<cfreturn 0 />
 		</cfif>
 		
@@ -25,13 +25,13 @@
 		<cfset version2Len = listLen(arguments.version2,  arguments.delimiter) />
 		
 		<!--- Make the versions the same length by padding the end with delimited 0s --->
-		<cfloop condition="version1Len LT version2Len">
+		<cfloop condition="version1Len lt version2Len">
 			<cfset arguments.version1 = listAppend(arguments.version1, '0', arguments.delimiter) />
 			
 			<cfset version1Len = listLen(arguments.version1,  arguments.delimiter) />
 		</cfloop>
 		
-		<cfloop condition="version2Len LT version1Len">
+		<cfloop condition="version2Len lt version1Len">
 			<cfset arguments.version2 = listAppend(arguments.version2, '0', arguments.delimiter) />
 			
 			<cfset version2Len = listLen(arguments.version2,  arguments.delimiter) />
@@ -39,7 +39,7 @@
 		
 		<cfloop from="1" to="#version1Len#" index="level">
 			<!--- Check if the version information at the level is greater --->
-			<cfif listGetAt(arguments.version1, level,  arguments.delimiter) GT listGetAt(arguments.version2, level,  arguments.delimiter)>
+			<cfif listGetAt(arguments.version1, level,  arguments.delimiter) gt listGetAt(arguments.version2, level,  arguments.delimiter)>
 				<cfreturn 1 />
 			</cfif>
 		</cfloop>

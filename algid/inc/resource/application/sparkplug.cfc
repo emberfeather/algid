@@ -33,16 +33,16 @@
 			<!--- Go through each prerequisite to see if we don't have one or if the version is wrong --->
 			<cfloop list="#structKeyList(prerequisites)#" index="j">
 				<!--- Check for a completely missing plugin --->
-				<cfif NOT arguments.plugins.has(j)>
+				<cfif not arguments.plugins.has(j)>
 					<cfthrow message="Missing required dependency" detail="#j# with a version at least #prerequisites[j]# is required by #i#" />
 				</cfif>
 				
 				<!--- Check that the version of the current plugin meets the prerequisite version --->
 				<cfset comparedVersion = version.compareVersions(arguments.plugins.get(j).getVersion(), prerequisites[j]) />
 				
-				<cfif comparedVersion LT 0>
+				<cfif comparedVersion lt 0>
 					<cfthrow message="Dependency too old" detail="#j# with a version at least #prerequisites[j]# is required by #i#" />
-				<cfelseif comparedVersion GT 0>
+				<cfelseif comparedVersion gt 0>
 					<cflog type="information" application="true" log="application" text="#j# is at version #plugin.getVersion()# when the #i# is expecting version #prerequisites[j]#" />
 				</cfif>
 			</cfloop>
@@ -148,7 +148,7 @@
 	<cffunction name="normalizePath" access="private" returntype="string" output="false">
 		<cfargument name="path" type="string" required="true" />
 		
-		<cfif right(arguments.path, 1) NEQ '/'>
+		<cfif right(arguments.path, 1) neq '/'>
 			<cfreturn arguments.path & '/' />
 		</cfif>
 		
@@ -163,7 +163,7 @@
 		<cfset var settingsFile = 'settings.json.cfm' />
 		<cfset var settingsDefaultFile = 'defaults.json.cfm' />
 		
-		<cfif NOT fileExists(configPath & configFile)>
+		<cfif not fileExists(configPath & configFile)>
 			<cfthrow message="Could not find the application configuration" detail="The application could not be detected at #variables.appBaseDirectory#" />
 		</cfif>
 		
@@ -183,7 +183,7 @@
 		<cfset app.deserialize( deserializeJSON(contents) ) />
 		
 		<!--- Check for installation specific file --->
-		<cfif NOT fileExists(configPath & settingsFile)>
+		<cfif not fileExists(configPath & settingsFile)>
 			<cffile action="write" file="#configPath & settingsFile#" output="{}" addnewline="false" />
 		</cfif>
 		
@@ -207,7 +207,7 @@
 		<cfset var settingsFile = 'settings.json.cfm' />
 		<cfset var settingsDefaultFile = 'defaults.json.cfm' />
 		
-		<cfif NOT fileExists(configPath & configFile)>
+		<cfif not fileExists(configPath & configFile)>
 			<cfthrow message="Could not find the plugin configuration" detail="The plugin could not be detected at #variables.appBaseDirectory# for #arguments.pluginKey#" />
 		</cfif>
 		
@@ -227,7 +227,7 @@
 		<cfset plugin.deserialize(deserializeJSON(contents)) />
 		
 		<!--- Check if there is not a settings file yet --->
-		<cfif NOT fileExists(configPath & settingsFile)>
+		<cfif not fileExists(configPath & settingsFile)>
 			<cffile action="write" file="#configPath & settingsFile#" output="{}" addnewline="false" />
 		</cfif>
 		
@@ -251,7 +251,7 @@
 		
 		<cfset configPath = expandPath(configPath) />
 		
-		<cfif NOT fileExists(configPath & configFile)>
+		<cfif not fileExists(configPath & configFile)>
 			<cfthrow message="Could not find the #arguments.project# configuration" detail="The #arguments.project# could not be detected at #variables.configPath#" />
 		</cfif>
 		
@@ -331,7 +331,7 @@
 		
 		<cfset arguments.theApplication.app = readApplication() />
 		
-		<cfset isDevelopment = arguments.theApplication.app.getEnvironment() NEQ 'production' />
+		<cfset isDevelopment = arguments.theApplication.app.getEnvironment() neq 'production' />
 		
 		<!--- Setup the application managers --->
 		<cfset arguments.theApplication.managers = {

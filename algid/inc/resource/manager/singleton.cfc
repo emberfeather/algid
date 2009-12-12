@@ -12,7 +12,7 @@
 		<cfargument name="singleton" type="string" required="true" />
 		
 		<!--- Check if we are missing the singleton --->
-		<cfif NOT structKeyExists(variables.instance, arguments.singleton)>
+		<cfif not structKeyExists(variables.instance, arguments.singleton)>
 			<!--- If not required create a stub --->
 			<cfset variables.instance[arguments.singleton] = createObject('component', 'algid.inc.resource.base.stub').init(arguments.singleton, variables.isDebugMode) />
 		</cfif>
@@ -24,7 +24,7 @@
 		<cfargument name="singleton" type="string" required="true" />
 		
 		<!--- Check if we have the singleton defined --->
-		<cfreturn structKeyExists(variables.instance, arguments.singleton) AND NOT isInstanceOf(variables.instance[arguments.singleton], 'algid.inc.resource.base.stub') />
+		<cfreturn structKeyExists(variables.instance, arguments.singleton) and not isInstanceOf(variables.instance[arguments.singleton], 'algid.inc.resource.base.stub') />
 	</cffunction>
 	
 	<cffunction name="onMissingMethod" access="public" returntype="any" output="false">
@@ -39,7 +39,7 @@
 		<cfset result = reFindNoCase('^(get|has|set)(.+)', arguments.missingMethodName, 1, true) />
 		
 		<!--- If we find don't find anything --->
-		<cfif NOT result.pos[1]>
+		<cfif not result.pos[1]>
 			<cfthrow message="Function not found" detail="The component has no function with name the name #arguments.missingMethodName#" />
 		</cfif>
 		
@@ -61,7 +61,7 @@
 			</cfcase>
 			
 			<cfcase value="set">
-				<cfif arrayLen(arguments.missingMethodArguments) EQ 0>
+				<cfif arrayLen(arguments.missingMethodArguments) eq 0>
 					<cfthrow message="Setting singleton requires an argument" detail="Singletons need one argument." />
 				</cfif>
 				

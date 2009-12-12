@@ -102,7 +102,7 @@
 		
 		<!--- Check if it is already in the array --->
 		<cfloop array="#variables.instance.styles#" index="j">
-			<cfif j.href EQ arguments.href>
+			<cfif j.href eq arguments.href>
 				<cfreturn />
 			</cfif>
 		</cfloop>
@@ -129,7 +129,7 @@
 			
 			<!--- Check if it is already in the array --->
 			<cfloop array="#variables.instance.styles#" index="j">
-				<cfif j.href EQ i>
+				<cfif j.href eq i>
 					<cfset isUnique = false />
 					
 					<cfbreak />
@@ -154,7 +154,7 @@
 		<cfargument name="attributeName" type="string" required="true" />
 		
 		<!--- Check if it doesn't exist --->
-		<cfif NOT structKeyExists(variables.instance.attributes, arguments.attributeName)>
+		<cfif not structKeyExists(variables.instance.attributes, arguments.attributeName)>
 			<cfreturn '' />
 		</cfif>
 		
@@ -182,7 +182,7 @@
 		<cfset arguments.options = extend(defaults, arguments.options) />
 		
 		<!--- Check if there are page titles --->
-		<cfif NOT numLevels OR numLevels LT arguments.options.topLevel>
+		<cfif not numLevels or numLevels lt arguments.options.topLevel>
 			<cfreturn '' />
 		</cfif>
 		
@@ -190,14 +190,14 @@
 		<cfset levels = variables.currentPage.getLevels() />
 		
 		<!--- Don't try and make the link if there is no navigation title to use --->
-		<cfif NOT arguments.options.useNavTitle OR levels[numLevels].navTitle NEQ ''>
+		<cfif not arguments.options.useNavTitle or levels[numLevels].navTitle neq ''>
 			<cfset breadcrumb = '<a href="' & levels[numLevels].link & '" title="' & levels[numLevels].title & '">' & (arguments.options.useNavTitle ? levels[numLevels].navTitle : levels[numLevels].title) & '</a>' />
 		</cfif>
 		
 		<!--- If we are showing multiples --->
 		<cfif arguments.options.showMultiple>
 			<cfloop from="#numLevels - 1#" to="#arguments.options.topLevel#" index="i" step="-1">
-				<cfif NOT arguments.options.useNavTitle OR levels[i].navTitle NEQ ''>
+				<cfif not arguments.options.useNavTitle or levels[i].navTitle neq ''>
 					<cfset breadcrumb = '<a href="' & levels[i].link & '" title="' & levels[i].title & '">' & (arguments.options.useNavTitle ? levels[i].navTitle : levels[i].title) & '</a>' & ( len(breadcrumb) ? arguments.options.separator : '' ) & breadcrumb />
 				</cfif>
 			</cfloop>
@@ -223,7 +223,7 @@
 		<cfset var numLevels = this.getLevel() />
 		
 		<!--- Check if there are page titles --->
-		<cfif NOT numLevels>
+		<cfif not numLevels>
 			<cfreturn '' />
 		</cfif>
 		
@@ -238,7 +238,7 @@
 		<!--- If we are showing multiples --->
 		<cfif arguments.options.showMultiple>
 			<cfloop from="#numLevels - 1#" to="1" index="i" step="-1">
-				<cfif NOT arguments.options.useNavTitle OR levels[i].navTitle NEQ ''>
+				<cfif not arguments.options.useNavTitle or levels[i].navTitle neq ''>
 					<cfset htmlTitle &= arguments.options.separator & (arguments.options.useNavTitle ? levels[i].navTitle : levels[i].title) />
 				</cfif>
 			</cfloop>
@@ -321,12 +321,12 @@
 		<cfset var numLevels = this.getLevel() />
 		
 		<!--- Check if there are page titles --->
-		<cfif NOT numLevels>
+		<cfif not numLevels>
 			<cfreturn '' />
 		</cfif>
 		
 		<!--- Check that we are requesting a level that exists --->
-		<cfif arguments.level GT numLevels OR arguments.level LT 1>
+		<cfif arguments.level gt numLevels or arguments.level lt 1>
 			<cfthrow message="Invalid Level" detail="The #arguments.level# has not been defined" />
 		</cfif>
 		

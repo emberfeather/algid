@@ -90,11 +90,11 @@
 		<cfset arguments.theSession.locale = left(CGI.HTTP_ACCEPT_LANGUAGE, 4) />
 		
 		<!--- If its not in the available locales use the default --->
-		<cfif NOT listFindNoCase( arrayToList(arguments.theApplication.app.getI18n().locales), arguments.theSession.locale )>
+		<cfif not listFindNoCase( arrayToList(arguments.theApplication.app.getI18n().locales), arguments.theSession.locale )>
 			<cfset arguments.theSession.locale = arguments.theApplication.app.getI18n().default />
 		</cfif>
 		
-		<cfset variables.isDevelopment = arguments.theApplication.app.getEnvironment() NEQ 'production' />
+		<cfset variables.isDevelopment = arguments.theApplication.app.getEnvironment() neq 'production' />
 		
 		<!--- Setup the session managers --->
 		<cfset arguments.theSession.managers = {

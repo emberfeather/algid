@@ -20,7 +20,7 @@
 		<cfset result = reFindNoCase('^(get|has|set)(.+)', arguments.missingMethodName, 1, true) />
 		
 		<!--- If we find don't find anything --->
-		<cfif NOT result.pos[1]>
+		<cfif not result.pos[1]>
 			<cfthrow message="Function not found" detail="The component has no function with name the name #arguments.missingMethodName#" />
 		</cfif>
 		
@@ -42,12 +42,12 @@
 			</cfcase>
 			
 			<cfcase value="set">
-				<cfif arrayLen(arguments.missingMethodArguments) EQ 0>
+				<cfif arrayLen(arguments.missingMethodArguments) eq 0>
 					<cfthrow message="Setting definitions requires the component path" detail="Transient definitions need arguments." />
 				</cfif>
 				
 				<!--- Check for a simple value for the component path --->
-				<cfif NOT isSimpleValue(arguments.missingMethodArguments[1])>
+				<cfif not isSimpleValue(arguments.missingMethodArguments[1])>
 					<cfthrow message="Transient definition needs to be a string" detail="The transient definiton was not a simple value" />
 				</cfif>
 				

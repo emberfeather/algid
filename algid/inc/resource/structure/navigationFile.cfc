@@ -52,7 +52,7 @@
 			<cfset fullPath = locale & '.' & plainPath />
 			
 			<!--- Find out if need to insert as a new row --->
-			<cfif NOT structKeyExists(variables.pathIndex, fullPath)>
+			<cfif not structKeyExists(variables.pathIndex, fullPath)>
 				<cfset addNavRow() />
 				
 				<!--- Shortcut to the row index --->
@@ -136,7 +136,7 @@
 		<cfif isXML(fileContents)>
 			<cfset fileContents = xmlParse(fileContents).xmlRoot />
 			
-			<cfif structKeyExists(fileContents.xmlAttributes, 'override') AND fileContents.xmlAttributes.override EQ true>
+			<cfif structKeyExists(fileContents.xmlAttributes, 'override') and fileContents.xmlAttributes.override eq true>
 				<!--- TODO Remove --->
 				<cfdump var="#fileContents#" />
 				<cfabort />
@@ -174,7 +174,7 @@
 		<cfset pageName = listLast(currentPath, '.') />
 		
 		<!--- Remove the pagename from the currentPath --->
-		<cfif len(currentPath) GT len(pageName)>
+		<cfif len(currentPath) gt len(pageName)>
 			<cfset currentPath = left(currentPath, len(currentPath) - len(pageName)) />
 		<cfelse>
 			<cfset currentPath = '' />
@@ -254,63 +254,63 @@
 			SELECT pageID, [level], path, title, navTitle, navPosition, description, ids, vars, attribute, attributeValue, allow, deny, secureOrder, defaults, orderBy
 			FROM variables.navigation
 			WHERE level = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.level#" />
-				AND path LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.parentPath#%" />
-				AND locale = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.locale#" />
-				AND navPosition = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.navPosition#" />
+				and path LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.parentPath#%" />
+				and locale = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.locale#" />
+				and navPosition = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.navPosition#" />
 				
 				<!--- Check if we want to return blank nav titles --->
-				<cfif structKeyExists(arguments.options, 'hideBlankNavTitles') and arguments.options.hideBlankNavTitles EQ true>
-					AND navTitle <> <cfqueryparam cfsqltype="cf_sql_varchar" value="" />
+				<cfif structKeyExists(arguments.options, 'hideBlankNavTitles') and arguments.options.hideBlankNavTitles eq true>
+					and navTitle <> <cfqueryparam cfsqltype="cf_sql_varchar" value="" />
 				</cfif>
 				
 				<!--- Permission checking --->
-				AND (
+				and (
 					1 = 0 <!--- One of the others has to be true --->
-					OR (
+					or (
 						secureOrder = 'allow,deny'
-						AND (
+						and (
 							<!--- Everyone is allowed --->
 							allow = '*'
 							
 							<!--- Has explicit permission --->
 							<cfloop array="#permissions#" index="permission">
-								OR <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> IN allow
+								or <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> IN allow
 							</cfloop>
 							
-							OR (
+							or (
 								<!--- Everyone is not blocked --->
 								deny <> '*'
 								
 								<!--- Is not explicitly blocked --->
 								<cfloop array="#permissions#" index="permission">
-									AND <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> NOT IN deny
+									and <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> not IN deny
 								</cfloop>
 							)
 						)
-					) OR (
+					) or (
 						secureOrder = 'deny,allow'
-						AND (
+						and (
 							<!--- Everyone is not blocked --->
 							deny <> '*'
 							
 							<!--- Is not explicitly blocked --->
 							<cfloop array="#permissions#" index="permission">
-								AND <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> NOT IN deny
+								and <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> not IN deny
 							</cfloop>
 						)
-						AND (
+						and (
 							<!--- Everyone is allowed --->
 							allow = '*'
 							
 							<!--- Has explicit permission --->
 							<cfloop array="#permissions#" index="permission">
-								OR <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> IN allow
+								or <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> IN allow
 							</cfloop>
 						)
 					)
 				)
 				
-				ORDER BY orderBy ASC, navTitle ASC
+				orDER BY orderBy ASC, navTitle ASC
 		</cfquery>
 		
 		<cfreturn navigation />
@@ -334,18 +334,18 @@
 		<cfset currentPath = arguments.theURL.search('_base') />
 		
 		<!--- Explode the current path --->
-		<cfset paths = explodePath(currentPath EQ '' ? variables.defaultRoot : currentPath) />
+		<cfset paths = explodePath(currentPath eq '' ? variables.defaultRoot : currentPath) />
 		
 		<!--- Query for the exact pages that match the paths --->
 		<cfquery name="navigation" dbtype="query">
 			SELECT pageID, [level], path, title, navTitle, navPosition, description, ids, vars, attribute, attributeValue, allow, deny, defaults, contentPath, orderBy
 			FROM variables.navigation
 			WHERE path IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#arrayToList(paths)#" list="true" />)
-				AND locale = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.locale#" />
+				and locale = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.locale#" />
 				
 				<!--- TODO add in authUser type permission checking --->
 				
-				ORDER BY path ASC
+				orDER BY path ASC
 		</cfquery>
 		
 		<!--- Prime the URL --->
@@ -368,10 +368,10 @@
 		<cfset var maskFileContents = '' />
 		<cfset var maskFileName = arguments.filename />
 		
-		<cfif NOT fileExists(maskFileName)>
+		<cfif not fileExists(maskFileName)>
 			<cfset maskFileName = expandPath(maskFileName) />
 			
-			<cfif NOT fileExists(maskFileName)>
+			<cfif not fileExists(maskFileName)>
 				<cfthrow message="Mask file was not found" detail="The mask file was not found at #arguments.filename#" />
 			</cfif>
 		</cfif>
@@ -407,7 +407,7 @@
 		
 		<!--- Check for a logged-in user -- NO caching --->
 		<!--- TODO Fix the unique ID --->
-		<cfif structKeyExists(arguments, 'authUser') OR 1 EQ 1>
+		<cfif structKeyExists(arguments, 'authUser') or 1 eq 1>
 			<cfreturn super.toHTML(argumentCollection = arguments) />
 		</cfif>
 		
@@ -415,7 +415,7 @@
 		<cfset uniquePageID = createUniquePageID(argumentCollection = arguments) />
 		
 		<!--- Do we need to create and cache the HTML? --->
-		<cfif NOT structKeyExists(variables.cachedHTML, uniquePageID)>
+		<cfif not structKeyExists(variables.cachedHTML, uniquePageID)>
 			<cfset variables.cachedHTML[uniquePageID] = super.toHTML(argumentCollection = arguments) />
 		</cfif>
 		
@@ -435,7 +435,7 @@
 		<cfquery name="navigation" dbtype="query">
 			SELECT DISTINCT path, contentPath
 			FROM variables.navigation
-			ORDER BY path ASC
+			orDER BY path ASC
 		</cfquery>
 		
 		<cfloop list="#arguments.prefixes#" index="prefix">
@@ -445,12 +445,12 @@
 				<cfset directoryPath = listDeleteAt(filePath, listLen(filePath, '/'), '/') />
 				
 				<!--- Create the file if it doesn't exist --->
-				<cfif NOT directoryExists(directoryPath)>
+				<cfif not directoryExists(directoryPath)>
 					<cfdirectory action="create" directory="#directoryPath#" />
 				</cfif>
 				
 				<!--- Create the file if it doesn't exist --->
-				<cfif NOT fileExists(filePath)>
+				<cfif not fileExists(filePath)>
 					<cffile action="write" file="#filePath#" output="" addNewLine="false" />
 				</cfif>
 			</cfloop>

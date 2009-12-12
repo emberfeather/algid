@@ -3,7 +3,7 @@
 		<cfargument name="basePath" type="string" default="/" />
 		
 		<!--- Set the base Path --->
-		<cfif left(arguments.basePath, 1)  EQ '.' OR left(arguments.basePath, 1)  EQ '/'>
+		<cfif left(arguments.basePath, 1)  eq '.' or left(arguments.basePath, 1)  eq '/'>
 			<cfset variables.basePath = expandPath(arguments.basePath) />
 		<cfelse>
 			<cfset variables.basePath = arguments.basePath />
@@ -19,7 +19,7 @@
 		<cfargument name="fileName" type="string" required="true" />
 		<cfargument name="defaultName" type="string" required="true" />
 		
-		<cfif NOT fileExists(variables.basePath & arguments.fileName)>
+		<cfif not fileExists(variables.basePath & arguments.fileName)>
 			<cffile action="copy" source="#variables.basePath & arguments.defaultName#" destination="#variables.basePath & arguments.fileName#" />
 		</cfif>
 	</cffunction>
@@ -34,13 +34,13 @@
 		
 		<cfset arguments.filePath = variables.basePath & arguments.filePath />
 		
-		<cfif NOT fileExists(arguments.filePath)>
+		<cfif not fileExists(arguments.filePath)>
 			<cfthrow message="Documentation file not found." detail="The documentation file was not found." />
 		</cfif>
 		
 		<cffile action="read" file="#arguments.filePath#" variable="parsed" />
 		
-		<cfif NOT isXML(parsed)>
+		<cfif not isXML(parsed)>
 			<cfthrow message="Documentation file not XML." detail="The documentation file was not found to be an XML document." />
 		</cfif>
 		

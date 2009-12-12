@@ -101,7 +101,7 @@
 		<cfargument name="attribute" type="string" required="true" />
 		
 		<!--- Make sure that we have a bundle object --->
-		<cfif NOT structKeyExists(variables.i18n, 'bundle')>
+		<cfif not structKeyExists(variables.i18n, 'bundle')>
 			<cfset variables.i18n.bundle = variables.i18n.i18n.getResourceBundle(variables.i18n.bundlePath, variables.i18n.bundleName, variables.i18n.locale) />
 		</cfif>
 		
@@ -146,7 +146,7 @@
 		<cfset result = reFindNoCase('^(set)(.+)', arguments.missingMethodName, 1, true) />
 		
 		<!--- If we find don't find anything --->
-		<cfif NOT result.pos[1]>
+		<cfif not result.pos[1]>
 			<cfreturn super.onMissingMethod(argumentCollection = arguments) />
 		</cfif>
 		
@@ -160,9 +160,9 @@
 		<cfswitch expression="#prefix#">
 			<cfcase value="set">
 				<!--- Check for any validation given in the attribute meta --->
-				<cfif structKeyExists(variables.attributes, attribute) AND NOT structIsEmpty(variables.attributes[attribute].validation)>
+				<cfif structKeyExists(variables.attributes, attribute) and not structIsEmpty(variables.attributes[attribute].validation)>
 					<!--- Make sure that we have a validator object --->
-					<cfif NOT structKeyExists(variables, 'validator')>
+					<cfif not structKeyExists(variables, 'validator')>
 						<cfset createValidator() />
 					</cfif>
 					

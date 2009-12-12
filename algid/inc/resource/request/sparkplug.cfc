@@ -49,11 +49,11 @@
 		<cfset var transients = '' />
 		
 		<!--- Check for locale change --->
-		<cfif structKeyExists(URL, 'locale') AND listFindNoCase(arrayToList(arguments.theApplication.settings.i18n.locales), URL.locale)>
+		<cfif structKeyExists(URL, 'locale') and listFindNoCase(arrayToList(arguments.theApplication.settings.i18n.locales), URL.locale)>
 			<cfset arguments.theSession.locale = URL.locale />
 		</cfif>
 		
-		<cfset variables.isDevelopment = arguments.theApplication.app.getEnvironment() NEQ 'production' />
+		<cfset variables.isDevelopment = arguments.theApplication.app.getEnvironment() neq 'production' />
 		
 		<!--- Setup the request managers --->
 		<cfset arguments.theRequest.managers = {

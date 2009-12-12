@@ -13,9 +13,9 @@
 		
 		<cfset search = find('.', arguments.path, search) />
 		
-		<cfloop condition="search GT 0">
+		<cfloop condition="search gt 0">
 			<!--- Make sure that only the root will end with a period --->
-			<cfset partLen = (search GT 1 ? search - 1 : search) />
+			<cfset partLen = (search gt 1 ? search - 1 : search) />
 			
 			<!--- Retrieve the part of the path --->
 			<cfset part = left(arguments.path, partLen) />
@@ -56,7 +56,7 @@
 		<cfset currentPathAtLevel = getBasePathForLevel(arguments.level + 1, arguments.theURL.search('_base')) />
 		
 		<!--- Trim the trailing period --->
-		<cfif currentPathAtLevel NEQ ''>
+		<cfif currentPathAtLevel neq ''>
 			<cfset currentPathAtLevel = left(currentPathAtLevel, len(currentPathAtLevel) - 1) />
 		</cfif>
 		
@@ -71,7 +71,7 @@
 		
 		<!--- Check if we are dealing with an array of positions or not --->
 		<cfif isArray(arguments.navPosition)>
-			<cfif NOT arrayLen(arguments.navPosition)>
+			<cfif not arrayLen(arguments.navPosition)>
 				<cfthrow message="Missing nav position" detail="No nav position was provided for level #arguments.level#" />
 			</cfif>
 			
@@ -82,7 +82,7 @@
 		<cfset navigation = this.getNav(argumentCollection = arguments) />
 		
 		<!--- Check for blank navigation --->
-		<cfif NOT navigation.recordCount>
+		<cfif not navigation.recordCount>
 			<cfreturn html />
 		</cfif>
 		
@@ -104,7 +104,7 @@
 			<!--- Discover the attributes for the page --->
 			<cfset attributes = {} />
 			
-			<cfif navigation.attribute NEQ ''>
+			<cfif navigation.attribute neq ''>
 				<cfoutput>
 					<cfset attributes[navigation.attribute] = navigation.attributeValue />
 				</cfoutput>
@@ -114,7 +114,7 @@
 			<cfset arguments.theURL.setCurrentPage('_base', navigation.path) />
 			
 			<!--- Check if the page is selected --->
-			<cfset isSelected = currentPathAtLevel EQ navigation.path />
+			<cfset isSelected = currentPathAtLevel eq navigation.path />
 			
 			<cfset html &= '<li>' />
 			
@@ -145,11 +145,11 @@
 				 - option to only create navigation for the current navigation path
 			--->
 			<cfif structKeyExists(arguments.options, 'depth')
-				AND arguments.options.depth NEQ 1
-				AND (
-					NOT structKeyExists(arguments.options, 'selectedOnly')
-					OR arguments.options.selectedOnly EQ false
-					OR isSelected
+				and arguments.options.depth neq 1
+				and (
+					not structKeyExists(arguments.options, 'selectedOnly')
+					or arguments.options.selectedOnly eq false
+					or isSelected
 				)>
 				<cfset html  &= chr(10) />
 				
@@ -197,12 +197,12 @@
 		<cfset var position = 0 />
 		
 		<!--- Check for no base path --->
-		<cfif arguments.basePath EQ ''>
+		<cfif arguments.basePath eq ''>
 			<cfset arguments.basePath = '.' />
 		</cfif>
 		
 		<!--- Want to make sure it ends in a period for searching --->
-		<cfif right(arguments.basePath, 1) NEQ '.'>
+		<cfif right(arguments.basePath, 1) neq '.'>
 			<cfset arguments.basePath &= '.' />
 		</cfif>
 		
@@ -212,14 +212,14 @@
 			<cfset position = find('.', arguments.basePath, position + 1) />
 			
 			<!--- If we can't find it stop looking --->
-			<cfif position EQ 0>
+			<cfif position eq 0>
 				<cfbreak />
 			</cfif>
 		</cfloop>
 		
 		<!--- If not found, lower in levels that we have --->
 		<!--- EX: looking for level 3 when only on level 1 --->
-		<cfif position EQ 0>
+		<cfif position eq 0>
 			<cfreturn '' />
 		</cfif>
 		
@@ -242,7 +242,7 @@
 			If we can't find a parent path for the level we are looking
 			then we shouldn't have a navigation to generate.
 		--->
-		<cfif arguments.parentPath EQ ''>
+		<cfif arguments.parentPath eq ''>
 			<cfreturn '' />
 		</cfif>
 		
