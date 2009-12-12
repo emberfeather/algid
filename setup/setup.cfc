@@ -518,7 +518,7 @@
 		<!--- The versioned directories --->
 		<cfset args.directories = 'config' />
 		<cfset args.directories &= ',extend' />
-		<cfset args.directories &= ',i18n,i18n/config,i18n/extend,i18n/inc,i18n/inc/model' />
+		<cfset args.directories &= ',i18n,i18n/config,i18n/extend,i18n/inc,i18n/inc/model,i18n/inc/view' />
 		<cfset args.directories &= ',img' />
 		<cfset args.directories &= ',inc,inc/model,inc/resource,inc/service,inc/view' />
 		<cfset args.directories &= ',script' />
