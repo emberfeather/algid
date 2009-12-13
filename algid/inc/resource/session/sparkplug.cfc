@@ -58,21 +58,6 @@
 		<cfset arguments.theSession.managers.singleton.setTokens(temp) />
 	</cffunction>
 	
-	<cffunction name="restart" access="public" returntype="void" output="false">
-		<cfargument name="theApplication" type="struct" required="true" />
-		<cfargument name="theSession" type="struct" required="true" />
-		
-		<cfset var i = '' />
-		
-		<!--- Clear out all the session information --->
-		<cfloop list="#structKeyList(arguments.theSession)#" index="i">
-			<cfset structDelete(arguments.theSession, i) />
-		</cfloop>
-		
-		<!--- Start with the fresh session --->
-		<cfset start( argumentCollection = arguments ) />
-	</cffunction>
-	
 	<cffunction name="start" access="public" returntype="void" output="false">
 		<cfargument name="theApplication" type="struct" required="true" />
 		<cfargument name="theSession" type="struct" required="true" />
@@ -81,33 +66,31 @@
 		<cfset var j = '' />
 		<cfset var plugin = '' />
 		<cfset var singletons = '' />
+		<cfset var tempSession = {} />
 		<cfset var transients = '' />
 		
-		<!--- Increase the page timeout so that it won't timeout on session start --->
-		<cfsetting requesttimeout="60" />
-		
 		<!--- Determine the locale for the session --->
-		<cfset arguments.theSession.locale = left(cgi.http_accept_language, 4) />
+		<cfset tempSession.locale = left(cgi.http_accept_language, 4) />
 		
 		<!--- If its not in the available locales use the default --->
-		<cfif not listFindNoCase( arrayToList(arguments.theApplication.app.getI18n().locales), arguments.theSession.locale )>
-			<cfset arguments.theSession.locale = arguments.theApplication.app.getI18n().default />
+		<cfif not listFindNoCase( arrayToList(arguments.theApplication.app.getI18n().locales), tempSession.locale )>
+			<cfset tempSession.locale = arguments.theApplication.app.getI18n().default />
 		</cfif>
 		
 		<cfset variables.isDevelopment = arguments.theApplication.app.getEnvironment() neq 'production' />
 		
 		<!--- Setup the session managers --->
-		<cfset arguments.theSession.managers = {
+		<cfset tempSession.managers = {
 				singleton = arguments.theApplication.factories.transient.getManagerSingleton( variables.isDevelopment )
 			} />
 		
 		<!--- Setup the session factories --->
-		<cfset arguments.theSession.factories = {
+		<cfset tempSession.factories = {
 				transient = arguments.theApplication.factories.transient.getFactoryTransient( variables.isDevelopment )
 			} />
 		
 		<!--- Create the defaults --->
-		<cfset setDefaults(argumentCollection = arguments) />
+		<cfset setDefaults(arguments.theApplication, tempSession) />
 		
 		<!--- Update the plugins and setup the transient and singleton information --->
 		<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
@@ -119,7 +102,7 @@
 			<cfloop collection="#singletons#" item="j">
 				<!--- Create the singleton and set it to the singleton manager --->
 				<!--- Overrides any pre-existing singletons of the same name --->
-				<cfinvoke component="#arguments.theSession.managers.singleton#" method="set#j#">
+				<cfinvoke component="#tempSession.managers.singleton#" method="set#j#">
 					<cfinvokeargument name="singleton" value="#createObject('component', singletons[j]).init()#" />
 				</cfinvoke>
 			</cfloop>
@@ -130,7 +113,7 @@
 			<cfloop collection="#transients#" item="j">
 				<!--- Set the transient path in the transient manager --->
 				<!--- Overrides any pre-existing transient paths --->
-				<cfinvoke component="#arguments.theSession.factories.transient#" method="set#j#">
+				<cfinvoke component="#tempSession.factories.transient#" method="set#j#">
 					<cfinvokeargument name="path" value="#transients[j]#" />
 				</cfinvoke>
 			</cfloop>
@@ -145,7 +128,19 @@
 			<cfset plugin = arguments.theApplication.managers.plugins.get(i) />
 			
 			<!--- Configure the application for the plugin --->
-			<cfset plugin.getConfigure().onSessionStart(argumentCollection = arguments) />
+			<cfset plugin.getConfigure().onSessionStart(arguments.theApplication, tempSession) />
+		</cfloop>
+		
+		<!---
+			Avoid race conditions by having fully formed variables replace
+			the current session information.
+			
+			Using the struct key list to determine what to pull over since
+			the plugins can modify the session and want those custom variables
+			to be pulled into the actual session from the temp session.
+		--->
+		<cfloop list="#structKeyList(tempSession)#" index="i">
+			<cfset arguments.theSession[i] = tempSession[i] />
 		</cfloop>
 	</cffunction>
 </cfcomponent>

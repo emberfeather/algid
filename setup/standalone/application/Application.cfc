@@ -21,16 +21,13 @@
 		
 		<cfset application.sparkplug = createObject('component', 'algid.inc.resource.application.sparkplug').init( this.mappings['/root'] ) />
 		
-		<!--- Lock the application scope --->
-		<cflock scope="application" type="exclusive" timeout="5">
-			<!--- Start the application --->
-			<cfset application.sparkplug.start(application) />
-		</cflock>
+		<!--- Start the application --->
+		<cfset application.sparkplug.start(application) />
 		
 		<cfreturn true />
 	</cffunction>
 	
-	<cffunction name="onRequestStart" access="public" returntype="void" output="true">
+	<cffunction name="onRequestEnd" access="public" returntype="void" output="true">
 		<cfargument name="targetPage" type="string" required="true" />
 		
 		<!--- End the request --->
@@ -65,10 +62,7 @@
 	<cffunction name="onSessionStart" access="public" returntype="void" output="false">
 		<cfset session.sparkplug = createObject('component', 'algid.inc.resource.session.sparkplug').init() />
 		
-		<!--- Lock the session scope --->
-		<cflock scope="session" type="exclusive" timeout="5">
-			<!--- Start the session --->
-			<cfset session.sparkplug.start( application, session ) />
-		</cflock>
+		<!--- Start the session --->
+		<cfset session.sparkplug.start( application, session ) />
 	</cffunction>
 </cfcomponent>

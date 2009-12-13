@@ -317,53 +317,54 @@
 		<cfargument name="theApplication" type="struct" required="true" />
 		
 		<cfset var configurer = '' />
+		<cfset var factories = '' />
 		<cfset var i = '' />
 		<cfset var isDevelopment = '' />
 		<cfset var j = '' />
+		<cfset var managers = '' />
 		<cfset var plugin = '' />
 		<cfset var pluginVersion = '' />
 		<cfset var precedence = '' />
 		<cfset var singletons = '' />
+		<cfset var tempApplication = {} />
 		<cfset var transients = '' />
 		
-		<!--- Increase the page timeout so that it won't timeout in the middle of install/update --->
-		<cfsetting requesttimeout="60" />
+		<!--- Read in the application object --->
+		<cfset tempApplication.app = readApplication() />
 		
-		<cfset arguments.theApplication.app = readApplication() />
+		<cfset isDevelopment = tempApplication.app.getEnvironment() neq 'production' />
 		
-		<cfset isDevelopment = arguments.theApplication.app.getEnvironment() neq 'production' />
-		
-		<!--- Setup the application managers --->
-		<cfset arguments.theApplication.managers = {
+		<!--- Setup the managers --->
+		<cfset tempApplication.managers = {
 				plugins = createObject('component', 'algid.inc.resource.manager.singleton').init( isDevelopment ),
 				singleton = createObject('component', 'algid.inc.resource.manager.singleton').init( isDevelopment )
 			} />
 		
-		<!--- Setup the application factories --->
-		<cfset arguments.theApplication.factories = {
+		<!--- Setup the factories --->
+		<cfset tempApplication.factories = {
 				transient = createObject('component', 'algid.inc.resource.factory.transient').init( isDevelopment )
 			} />
 		
 		<!--- Create the defaults --->
-		<cfset setDefaults(argumentCollection = arguments) />
+		<cfset setDefaults(tempApplication) />
 		
 		<!--- Load all plugins and projects configurations --->
-		<cfset loadAll( arguments.theApplication.managers.plugins, arguments.theApplication.app.getPlugins() ) />
+		<cfset loadAll( tempApplication.managers.plugins, tempApplication.app.getPlugins() ) />
 		
 		<!--- Check prerequisites --->
-		<cfset checkPrerequisites( arguments.theApplication.managers.plugins, arguments.theApplication.app.getPlugins() )>
+		<cfset checkPrerequisites( tempApplication.managers.plugins, tempApplication.app.getPlugins() )>
 		
 		<!--- Determine the install precedence --->
-		<cfset precedence = determinePrecedence( arguments.theApplication.managers.plugins, arguments.theApplication.app.getPlugins() ) />
+		<cfset precedence = determinePrecedence( tempApplication.managers.plugins, tempApplication.app.getPlugins() ) />
 		
-		<cfset arguments.theApplication.app.setPrecedence( precedence ) />
+		<cfset tempApplication.app.setPrecedence( precedence ) />
 		
 		<!--- Update the plugins and setup the transient and singleton information --->
-		<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
-			<cfset plugin = arguments.theApplication.managers.plugins.get(i) />
+		<cfloop array="#tempApplication.app.getPrecedence()#" index="i">
+			<cfset plugin = tempApplication.managers.plugins.get(i) />
 			
 			<!--- Create the configure utility for the plugin --->
-			<cfset configurer = createObject('component', 'plugins.' & i & '.config.configure').init(variables.appBaseDirectory, arguments.theApplication.app.getDSAlter()) />
+			<cfset configurer = createObject('component', 'plugins.' & i & '.config.configure').init(variables.appBaseDirectory, tempApplication.app.getDSAlter()) />
 			
 			<!--- Store the configure utility --->
 			<cfset plugin.setConfigure( configurer ) />
@@ -382,7 +383,7 @@
 			<cfloop collection="#singletons#" item="j">
 				<!--- Create the singleton and set it to the singleton manager --->
 				<!--- Overrides any pre-existing singletons of the same name --->
-				<cfinvoke component="#arguments.theApplication.managers.singleton#" method="set#j#">
+				<cfinvoke component="#tempApplication.managers.singleton#" method="set#j#">
 					<cfinvokeargument name="singleton" value="#createObject('component', singletons[j]).init()#" />
 				</cfinvoke>
 			</cfloop>
@@ -393,7 +394,7 @@
 			<cfloop collection="#transients#" item="j">
 				<!--- Set the transient path in the transient manager --->
 				<!--- Overrides any pre-existing transient paths --->
-				<cfinvoke component="#arguments.theApplication.factories.transient#" method="set#j#">
+				<cfinvoke component="#tempApplication.factories.transient#" method="set#j#">
 					<cfinvokeargument name="path" value="#transients[j]#" />
 				</cfinvoke>
 			</cfloop>
@@ -404,11 +405,23 @@
 			Gives the plugins power to manipulate the application
 			AFTER everything else is said and done
 		--->
-		<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
-			<cfset plugin = arguments.theApplication.managers.plugins.get(i) />
+		<cfloop array="#tempApplication.app.getPrecedence()#" index="i">
+			<cfset plugin = tempApplication.managers.plugins.get(i) />
 			
 			<!--- Configure the application for the plugin --->
-			<cfset plugin.getConfigure().onApplicationStart(argumentCollection = arguments) />
+			<cfset plugin.getConfigure().onApplicationStart(tempApplication) />
+		</cfloop>
+		
+		<!---
+			Avoid race conditions by having fully formed variables replace
+			the current application information
+			
+			Using the struct key list to determine what to pull over since
+			the plugins can modify the application and want those custom variables
+			to be pulled into the actual application from the temp application.
+		--->
+		<cfloop list="#structKeyList(tempApplication)#" index="i">
+			<cfset arguments.theApplication[i] = tempApplication[i] />
 		</cfloop>
 	</cffunction>
 	
