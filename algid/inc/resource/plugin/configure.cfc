@@ -11,6 +11,15 @@
 		<cfreturn this />
 	</cffunction>
 	
+	<cffunction name="canReinitialize" access="public" returntype="boolean" output="false">
+		<cfargument name="theApplication" type="struct" required="true" />
+		<cfargument name="theSession" type="struct" required="true" />
+		<cfargument name="theForm" type="struct" required="true" />
+		
+		<!--- By default can initialize --->
+		<cfreturn true />
+	</cffunction>
+	
 	<cffunction name="onApplicationEnd" access="public" returntype="void" output="false">
 		<cfargument name="theApplication" type="struct" required="true" />
 		

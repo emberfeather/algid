@@ -77,7 +77,7 @@
 			<cfset tempSession.locale = arguments.theApplication.app.getI18n().default />
 		</cfif>
 		
-		<cfset variables.isDevelopment = arguments.theApplication.app.getEnvironment() neq 'production' />
+		<cfset variables.isDevelopment = not arguments.theApplication.app.isProduction() />
 		
 		<!--- Setup the session managers --->
 		<cfset tempSession.managers = {

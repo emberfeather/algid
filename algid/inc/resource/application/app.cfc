@@ -17,7 +17,9 @@
 					]
 				},
 				plugins = [],
-				precedence = []
+				precedence = [],
+				startedOn = now(),
+				token = createUUID()
 			} />
 		
 		<cfset super.init() />
@@ -36,5 +38,9 @@
 		<cfset var pluginList = arrayToList(this.getPlugins()) />
 		
 		<cfreturn listFindNoCase(pluginList, arguments.plugin) gt 0 />
+	</cffunction>
+	
+	<cffunction name="isProduction" access="public" returntype="boolean" output="false">
+		<cfreturn this.getEnvironment() eq 'production' />
 	</cffunction>
 </cfcomponent>

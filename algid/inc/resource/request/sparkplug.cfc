@@ -8,6 +8,38 @@
 		<cfreturn this />
 	</cffunction>
 	
+	<cffunction name="canReinitialize" access="public" returntype="boolean" output="false">
+		<cfargument name="theApplication" type="struct" required="true" />
+		<cfargument name="theSession" type="struct" required="true" />
+		<cfargument name="theForm" type="struct" required="true" />
+		
+		<cfset var hasPermission = false />
+		<cfset var plugin = '' />
+		
+		<!--- Check for a submitted reinit --->
+		<cfif not arguments.theApplication.app.isProduction()>
+			<cfset hasPermission = true />
+		<cfelseif cgi.request_method eq 'post'>
+			<!--- Check the posted token value against the application token for a standard token reinit --->
+			<cfif structKeyExists(arguments.theForm, 'token') and arguments.theForm.token EQ arguments.theApplication.app.getToken()>
+				<cfset hasPermission = true />
+			</cfif>
+		<cfelse>
+			<!--- Check all of the plugins to see if they approve of the reinitialization --->
+			<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
+				<cfset plugin = arguments.theApplication.managers.plugins.get(i) />
+				
+				<cfset hasPermission = plugin.getConfigure().canReinitialize(argumentCollection = arguments) />
+				
+				<cfif not hasPermission>
+					<cfbreak />
+				</cfif>
+			</cfloop>
+		</cfif>
+		
+		<cfreturn hasPermission />
+	</cffunction>
+	
 	<cffunction name="setDefaults" access="private" returntype="void" output="false">
 		<cfargument name="theApplication" type="struct" required="true" />
 		<cfargument name="theSession" type="struct" required="true" />
@@ -53,7 +85,7 @@
 			<cfset arguments.theSession.locale = URL.locale />
 		</cfif>
 		
-		<cfset variables.isDevelopment = arguments.theApplication.app.getEnvironment() neq 'production' />
+		<cfset variables.isDevelopment = not arguments.theApplication.app.isProduction() />
 		
 		<!--- Setup the request managers --->
 		<cfset arguments.theRequest.managers = {

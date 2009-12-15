@@ -162,6 +162,7 @@
 		<cfset var contents = '' />
 		<cfset var settingsFile = 'settings.json.cfm' />
 		<cfset var settingsDefaultFile = 'defaults.json.cfm' />
+		<cfset var token = '' />
 		
 		<cfif not fileExists(configPath & configFile)>
 			<cfthrow message="Could not find the application configuration" detail="The application could not be detected at #variables.appBaseDirectory#" />
@@ -184,7 +185,11 @@
 		
 		<!--- Check for installation specific file --->
 		<cfif not fileExists(configPath & settingsFile)>
-			<cffile action="write" file="#configPath & settingsFile#" output="{}" addnewline="false" />
+			<!--- Create a random server token --->
+			<cfset token = createUUID() & '-' & createUUID() & '-' & createUUID() & '-' & createUUID() />
+			
+			<!--- Write the new settings file --->
+			<cffile action="write" file="#configPath & settingsFile#" output="{#chr(10)##chr(9)#""token"": ""#token#""#chr(10)#}" addnewline="false" />
 		</cfif>
 		
 		<!--- Read the application settings file --->
@@ -332,7 +337,7 @@
 		<!--- Read in the application object --->
 		<cfset tempApplication.app = readApplication() />
 		
-		<cfset isDevelopment = tempApplication.app.getEnvironment() neq 'production' />
+		<cfset isDevelopment = not tempApplication.app.isProduction() />
 		
 		<!--- Setup the managers --->
 		<cfset tempApplication.managers = {
