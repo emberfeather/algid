@@ -40,7 +40,7 @@
 		<cfset request.sparkplug = createObject('component', 'algid.inc.resource.request.sparkplug').init() />
 		
 		<!--- Check for reinit --->
-		<cfif structKeyExists(URL, 'reinit')>
+		<cfif structKeyExists(URL, 'reinit') and request.sparkplug.canReinitialize( application, session, form )>
 			<cfset onApplicationStart() />
 			
 			<!--- Remove the reinit --->
