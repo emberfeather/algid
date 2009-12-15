@@ -15,6 +15,7 @@
 		
 		<cfset var hasPermission = false />
 		<cfset var plugin = '' />
+		<cfset var i = '' />
 		
 		<!--- Check for a submitted reinit --->
 		<cfif not arguments.theApplication.app.isProduction()>
