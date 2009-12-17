@@ -39,16 +39,8 @@
 		
 		<cfset request.sparkplug = createObject('component', 'algid.inc.resource.request.sparkplug').init() />
 		
-		<!--- Check for reinit --->
-		<cfif structKeyExists(URL, 'reinit') and request.sparkplug.canReinitialize( application, session, form )>
-			<cfset onApplicationStart() />
-			
-			<!--- Remove the reinit --->
-			<cfset structDelete(URL, 'reinit') />
-		</cfif>
-		
 		<!--- Start the request --->
-		<cfreturn request.sparkplug.start( application, session, request, arguments.targetPage ) />
+		<cfreturn request.sparkplug.start( application, session, request, url, form, arguments.targetPage ) />
 	</cffunction>
 	
 	<cffunction name="onSessionEnd" access="public" returntype="void" output="false">
