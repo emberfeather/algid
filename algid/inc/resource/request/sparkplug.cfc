@@ -18,17 +18,17 @@
 		<cfset var i = '' />
 		
 		<!--- Check for a submitted reinit --->
-		<cfif not arguments.theApplication.app.isProduction()>
+		<cfif not arguments.theApplication.managers.singleton.getApplication().isProduction()>
 			<cfset hasPermission = true />
 		<cfelseif cgi.request_method eq 'post'>
 			<!--- Check the posted token value against the application token for a standard token reinit --->
-			<cfif structKeyExists(arguments.theForm, 'token') and arguments.theForm.token EQ arguments.theApplication.app.getToken()>
+			<cfif structKeyExists(arguments.theForm, 'token') and arguments.theForm.token EQ arguments.theApplication.managers.singleton.getApplication().getToken()>
 				<cfset hasPermission = true />
 			</cfif>
 		<cfelse>
 			<!--- Check all of the plugins to see if they approve of the reinitialization --->
-			<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
-				<cfset plugin = arguments.theApplication.managers.plugins.get(i) />
+			<cfloop array="#arguments.theApplication.managers.singleton.getApplication().getPrecedence()#" index="i">
+				<cfset plugin = arguments.theApplication.managers.plugin.get(i) />
 				
 				<cfset hasPermission = plugin.getConfigure().canReinitialize(argumentCollection = arguments) />
 				
@@ -61,8 +61,8 @@
 		<!---
 			Finish up the request.
 		--->
-		<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
-			<cfset plugin = arguments.theApplication.managers.plugins.get(i) />
+		<cfloop array="#arguments.theApplication.managers.singleton.getApplication().getPrecedence()#" index="i">
+			<cfset plugin = arguments.theApplication.managers.plugin.get(i) />
 			
 			<!--- Configure the application for the plugin --->
 			<cfset plugin.getConfigure().onRequestEnd(argumentCollection = arguments) />
@@ -97,10 +97,10 @@
 		
 		<!--- Check for locale change --->
 		<cfif structKeyExists(URL, 'locale') and listFindNoCase(arrayToList(arguments.theApplication.settings.i18n.locales), URL.locale)>
-			<cfset arguments.theSession.locale = URL.locale />
+			<cfset arguments.theSession.managers.singleton.getSession().setLocale(URL.locale) />
 		</cfif>
 		
-		<cfset variables.isDevelopment = not arguments.theApplication.app.isProduction() />
+		<cfset variables.isDevelopment = not arguments.theApplication.managers.singleton.getApplication().isProduction() />
 		
 		<!--- Setup the request managers --->
 		<cfset arguments.theRequest.managers = {
@@ -116,8 +116,8 @@
 		<cfset setDefaults(argumentCollection = arguments) />
 		
 		<!--- Update the plugins and setup the transient and singleton information --->
-		<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
-			<cfset plugin = arguments.theApplication.managers.plugins.get(i) />
+		<cfloop array="#arguments.theApplication.managers.singleton.getApplication().getPrecedence()#" index="i">
+			<cfset plugin = arguments.theApplication.managers.plugin.get(i) />
 			
 			<!--- Check for singleton information --->
 			<cfset singletons = plugin.getRequestSingletons() />
@@ -149,8 +149,8 @@
 			Gives the plugins power to manipulate the request
 			AFTER everything else is said and done
 		--->
-		<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
-			<cfset plugin = arguments.theApplication.managers.plugins.get(i) />
+		<cfloop array="#arguments.theApplication.managers.singleton.getApplication().getPrecedence()#" index="i">
+			<cfset plugin = arguments.theApplication.managers.plugin.get(i) />
 			
 			<!--- Configure the application for the plugin --->
 			<cfset plugin.getConfigure().onRequestStart(argumentCollection = arguments) />

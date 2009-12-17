@@ -18,8 +18,8 @@
 		<!---
 			Finish up the session.
 		--->
-		<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
-			<cfset plugin = arguments.theApplication.managers.plugins.get(i) />
+		<cfloop array="#arguments.theApplication.managers.singleton.getApplication().getPrecedence()#" index="i">
+			<cfset plugin = arguments.theApplication.managers.plugin.get(i) />
 			
 			<!--- Configure the application for the plugin --->
 			<cfset plugin.getConfigure().onSessionEnd(argumentCollection = arguments) />
@@ -64,20 +64,28 @@
 		
 		<cfset var i = '' />
 		<cfset var j = '' />
+		<cfset var locale = '' />
 		<cfset var plugin = '' />
+		<cfset var objSession = '' />
 		<cfset var singletons = '' />
 		<cfset var tempSession = {} />
 		<cfset var transients = '' />
 		
+		<!--- Create the application singleton --->
+		<cfset objSession = createObject('component', 'algid.inc.resource.session.session').init() />
+		
 		<!--- Determine the locale for the session --->
-		<cfset tempSession.locale = left(cgi.http_accept_language, 4) />
+		<cfset locale = left(cgi.http_accept_language, 4) />
 		
 		<!--- If its not in the available locales use the default --->
-		<cfif not listFindNoCase( arrayToList(arguments.theApplication.app.getI18n().locales), tempSession.locale )>
-			<cfset tempSession.locale = arguments.theApplication.app.getI18n().default />
+		<cfif not listFindNoCase( arrayToList(arguments.theApplication.managers.singleton.getApplication().getI18n().locales), locale )>
+			<cfset locale = arguments.theApplication.managers.singleton.getApplication().getI18n().default />
 		</cfif>
 		
-		<cfset variables.isDevelopment = not arguments.theApplication.app.isProduction() />
+		<!--- Store the locale --->
+		<cfset objSession.setLocale(locale) />
+		
+		<cfset variables.isDevelopment = not arguments.theApplication.managers.singleton.getApplication().isProduction() />
 		
 		<!--- Setup the session managers --->
 		<cfset tempSession.managers = {
@@ -89,12 +97,15 @@
 				transient = arguments.theApplication.factories.transient.getFactoryTransient( variables.isDevelopment )
 			} />
 		
+		<!--- Store the session object as a singleton --->
+		<cfset tempSession.managers.singleton.setSession(objSession) />
+		
 		<!--- Create the defaults --->
 		<cfset setDefaults(arguments.theApplication, tempSession) />
 		
 		<!--- Update the plugins and setup the transient and singleton information --->
-		<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
-			<cfset plugin = arguments.theApplication.managers.plugins.get(i) />
+		<cfloop array="#arguments.theApplication.managers.singleton.getApplication().getPrecedence()#" index="i">
+			<cfset plugin = arguments.theApplication.managers.plugin.get(i) />
 			
 			<!--- Check for singleton information --->
 			<cfset singletons = plugin.getSessionSingletons() />
@@ -124,8 +135,8 @@
 			Gives the plugins power to manipulate the session
 			AFTER everything else is said and done
 		--->
-		<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
-			<cfset plugin = arguments.theApplication.managers.plugins.get(i) />
+		<cfloop array="#arguments.theApplication.managers.singleton.getApplication().getPrecedence()#" index="i">
+			<cfset plugin = arguments.theApplication.managers.plugin.get(i) />
 			
 			<!--- Configure the application for the plugin --->
 			<cfset plugin.getConfigure().onSessionStart(arguments.theApplication, tempSession) />

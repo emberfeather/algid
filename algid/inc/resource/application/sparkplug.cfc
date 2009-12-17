@@ -114,8 +114,8 @@
 		<!---
 			Finish up the application.
 		--->
-		<cfloop array="#arguments.theApplication.app.getPrecedence()#" index="i">
-			<cfset plugin = arguments.theApplication.managers.plugins.get(i) />
+		<cfloop array="#arguments.theApplication.managers.singleton.getApplication().getPrecedence()#" index="i">
+			<cfset plugin = arguments.theApplication.managers.plugin.get(i) />
 			
 			<!--- Configure the application for the plugin --->
 			<cfset plugin.getConfigure().onApplicationEnd(argumentCollection = arguments) />
@@ -160,10 +160,10 @@
 	</cffunction>
 	
 	<cffunction name="readApplication" access="private" returntype="struct" output="false">
-		<cfset var app = '' />
 		<cfset var configFile = 'application.json.cfm' />
 		<cfset var configPath = variables.appBaseDirectory & 'config/' />
 		<cfset var contents = '' />
+		<cfset var objApplication = '' />
 		<cfset var settingsFile = 'settings.json.cfm' />
 		<cfset var settingsDefaultFile = 'defaults.json.cfm' />
 		<cfset var token = '' />
@@ -173,19 +173,19 @@
 		</cfif>
 		
 		<!--- Create the application singleton --->
-		<cfset app = createObject('component', 'algid.inc.resource.application.app').init() />
+		<cfset objApplication = createObject('component', 'algid.inc.resource.application.app').init() />
 		
 		<!--- Read the application config file --->
 		<cffile action="read" file="#configPath & configFile#" variable="contents" />
 		
 		<!--- Deserialize the Configuration --->
-		<cfset app.deserialize( deserializeJSON(contents) ) />
+		<cfset objApplication.deserialize( deserializeJSON(contents) ) />
 		
 		<!--- Read the application default settings file --->
 		<cffile action="read" file="#configPath & settingsDefaultFile#" variable="contents" />
 		
 		<!--- Deserialize the default settings --->
-		<cfset app.deserialize( deserializeJSON(contents) ) />
+		<cfset objApplication.deserialize( deserializeJSON(contents) ) />
 		
 		<!--- Check for installation specific file --->
 		<cfif not fileExists(configPath & settingsFile)>
@@ -200,9 +200,9 @@
 		<cffile action="read" file="#configPath & settingsFile#" variable="contents" />
 		
 		<!--- Deserialize the settings --->
-		<cfset app.deserialize( deserializeJSON(contents) ) />
+		<cfset objApplication.deserialize( deserializeJSON(contents) ) />
 		
-		<cfreturn app />
+		<cfreturn objApplication />
 	</cffunction>
 	
 	<cffunction name="readPlugin" access="private" returntype="component" output="false">
@@ -295,7 +295,7 @@
 		<cfset var temp = '' />
 		
 		<!--- Create the i18n singleton --->
-		<cfset temp = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath(arguments.theApplication.app.getI18n().base)) />
+		<cfset temp = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath(arguments.theApplication.managers.singleton.getApplication().getI18n().base)) />
 		
 		<cfset arguments.theApplication.managers.singleton.setI18N(temp) />
 		
@@ -331,21 +331,27 @@
 		<cfset var isDevelopment = '' />
 		<cfset var j = '' />
 		<cfset var managers = '' />
+		<cfset var objApplication = '' />
 		<cfset var plugin = '' />
 		<cfset var pluginVersion = '' />
+		<cfset var plugins = '' />
 		<cfset var precedence = '' />
 		<cfset var singletons = '' />
 		<cfset var tempApplication = {} />
 		<cfset var transients = '' />
 		
 		<!--- Read in the application object --->
-		<cfset tempApplication.app = readApplication() />
+		<cfset objApplication = readApplication() />
 		
-		<cfset isDevelopment = not tempApplication.app.isProduction() />
+		<!--- Determine if is in production mode --->
+		<cfset isDevelopment = not objApplication.isProduction() />
+		
+		<!--- Get the list of plugins --->
+		<cfset plugins = objApplication.getPlugins() />
 		
 		<!--- Setup the managers --->
 		<cfset tempApplication.managers = {
-				plugins = createObject('component', 'algid.inc.resource.manager.singleton').init( isDevelopment ),
+				plugin = createObject('component', 'algid.inc.resource.manager.singleton').init( isDevelopment ),
 				singleton = createObject('component', 'algid.inc.resource.manager.singleton').init( isDevelopment )
 			} />
 		
@@ -354,26 +360,29 @@
 				transient = createObject('component', 'algid.inc.resource.factory.transient').init( isDevelopment )
 			} />
 		
+		<!--- Store the application object --->
+		<cfset tempApplication.managers.singleton.setApplication(objApplication) />
+		
 		<!--- Create the defaults --->
 		<cfset setDefaults(tempApplication) />
 		
 		<!--- Load all plugins and projects configurations --->
-		<cfset loadAll( tempApplication.managers.plugins, tempApplication.app.getPlugins() ) />
+		<cfset loadAll( tempApplication.managers.plugin, plugins ) />
 		
 		<!--- Check prerequisites --->
-		<cfset checkPrerequisites( tempApplication.managers.plugins, tempApplication.app.getPlugins() )>
+		<cfset checkPrerequisites( tempApplication.managers.plugin, plugins )>
 		
 		<!--- Determine the install precedence --->
-		<cfset precedence = determinePrecedence( tempApplication.managers.plugins, tempApplication.app.getPlugins() ) />
+		<cfset precedence = determinePrecedence( tempApplication.managers.plugin, plugins ) />
 		
-		<cfset tempApplication.app.setPrecedence( precedence ) />
+		<cfset objApplication.setPrecedence( precedence ) />
 		
 		<!--- Update the plugins and setup the transient and singleton information --->
-		<cfloop array="#tempApplication.app.getPrecedence()#" index="i">
-			<cfset plugin = tempApplication.managers.plugins.get(i) />
+		<cfloop array="#objApplication.getPrecedence()#" index="i">
+			<cfset plugin = tempApplication.managers.plugin.get(i) />
 			
 			<!--- Create the configure utility for the plugin --->
-			<cfset configurer = createObject('component', 'plugins.' & i & '.config.configure').init(variables.appBaseDirectory, tempApplication.app.getDSAlter()) />
+			<cfset configurer = createObject('component', 'plugins.' & i & '.config.configure').init(variables.appBaseDirectory, objApplication.getDSAlter()) />
 			
 			<!--- Store the configure utility --->
 			<cfset plugin.setConfigure( configurer ) />
@@ -414,8 +423,8 @@
 			Gives the plugins power to manipulate the application
 			AFTER everything else is said and done
 		--->
-		<cfloop array="#tempApplication.app.getPrecedence()#" index="i">
-			<cfset plugin = tempApplication.managers.plugins.get(i) />
+		<cfloop array="#objApplication.getPrecedence()#" index="i">
+			<cfset plugin = tempApplication.managers.plugin.get(i) />
 			
 			<!--- Configure the application for the plugin --->
 			<cfset plugin.getConfigure().onApplicationStart(tempApplication) />
