@@ -122,6 +122,10 @@
 		</cfloop>
 	</cffunction>
 	
+	<cffunction name="getAppBaseDirectory" access="public" returntype="string" output="false">
+		<cfreturn variables.appBaseDirectory />
+	</cffunction>
+	
 	<cffunction name="loadAll" access="public" returntype="void" output="false">
 		<cfargument name="plugins" type="component" required="true" />
 		<cfargument name="enabledPlugins" type="array" required="true" />

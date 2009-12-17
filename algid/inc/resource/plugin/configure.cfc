@@ -44,6 +44,9 @@
 		<cfargument name="theApplication" type="struct" required="true" />
 		<cfargument name="theSession" type="struct" required="true" />
 		<cfargument name="theRequest" type="struct" required="true" />
+		<cfargument name="theUrl" type="struct" required="true" />
+		<cfargument name="theForm" type="struct" required="true" />
+		<cfargument name="targetPage" type="string" required="true" />
 		
 		<!--- Base does nothing --->
 	</cffunction>

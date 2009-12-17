@@ -73,6 +73,8 @@
 		<cfargument name="theApplication" type="struct" required="true" />
 		<cfargument name="theSession" type="struct" required="true" />
 		<cfargument name="theRequest" type="struct" required="true" />
+		<cfargument name="theUrl" type="struct" required="true" />
+		<cfargument name="theForm" type="struct" required="true" />
 		<cfargument name="targetPage" type="string" required="true" />
 		
 		<cfset var i = '' />
@@ -80,6 +82,18 @@
 		<cfset var plugin = '' />
 		<cfset var singletons = '' />
 		<cfset var transients = '' />
+		
+		<!--- Check for an application reinitialization --->
+		<cfif structKeyExists(arguments.theUrl, 'reinit') and canReinitialize( arguments.theApplication, arguments.theSession, arguments.theForm )>
+			<!--- Create a new sparkplug --->
+			<cfset arguments.theApplication.sparkplug = createObject('component', 'algid.inc.resource.application.sparkplug').init( arguments.theApplication.sparkplug.getAppBaseDirectory() ) />
+			
+			<!--- Start the application --->
+			<cfset arguments.theApplication.sparkplug.start(application) />
+			
+			<!--- Remove the reinit --->
+			<cfset structDelete(arguments.theUrl, 'reinit') />
+		</cfif>
 		
 		<!--- Check for locale change --->
 		<cfif structKeyExists(URL, 'locale') and listFindNoCase(arrayToList(arguments.theApplication.settings.i18n.locales), URL.locale)>
