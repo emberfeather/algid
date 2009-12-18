@@ -10,6 +10,7 @@
 				},
 				key = 'undefined',
 				prerequisites = {},
+				replaces = {},
 				requestSingletons = {},
 				requestTransients = {},
 				sessionSingletons = {},
@@ -64,5 +65,11 @@
 		<cfif arrayLen(messages)>
 			<cfthrow type="validation" message="#arrayToList(messages, '|')#" />
 		</cfif>
+	</cffunction>
+	
+	<cffunction name="isReplacementFor" access="public" returntype="boolean" output="false">
+		<cfargument name="plugin" type="string" required="true" />
+		
+		<cfreturn structKeyExists(variables.instance.replaces, arguments.plugin) />
 	</cffunction>
 </cfcomponent>

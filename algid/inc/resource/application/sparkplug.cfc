@@ -15,6 +15,7 @@
 		<cfargument name="enabledPlugins" type="array" required="true" />
 		
 		<cfset var comparedVersion = '' />
+		<cfset var currVersion = '' />
 		<cfset var i = '' />
 		<cfset var j = '' />
 		<cfset var plugin = '' />
@@ -32,13 +33,17 @@
 			
 			<!--- Go through each prerequisite to see if we don't have one or if the version is wrong --->
 			<cfloop list="#structKeyList(prerequisites)#" index="j">
-				<!--- Check for a completely missing plugin --->
-				<cfif not arguments.plugins.has(j)>
+				<!--- Check that the plugin exists or has a replacement plugin --->
+				<cfif arguments.plugins.has(j)>
+					<cfset currVersion = arguments.plugins.get(j).getVersion() />
+				<cfelseif arguments.plugins.hasReplacement(j)>
+					<cfset currVersion = arguments.plugins.getReplacementFor(j).getVersion() />
+				<cfelse>
 					<cfthrow message="Missing required dependency" detail="#j# with a version at least #prerequisites[j]# is required by #i#" />
 				</cfif>
 				
 				<!--- Check that the version of the current plugin meets the prerequisite version --->
-				<cfset comparedVersion = version.compareVersions(arguments.plugins.get(j).getVersion(), prerequisites[j]) />
+				<cfset comparedVersion = version.compareVersions(currVersion, prerequisites[j]) />
 				
 				<cfif comparedVersion lt 0>
 					<cfthrow message="Dependency too old" detail="#j# with a version at least #prerequisites[j]# is required by #i#" />
