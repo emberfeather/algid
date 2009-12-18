@@ -37,7 +37,7 @@
 				<cfif arguments.plugins.has(j)>
 					<cfset currVersion = arguments.plugins.get(j).getVersion() />
 				<cfelseif arguments.plugins.hasReplacement(j)>
-					<cfset currVersion = arguments.plugins.getReplacementFor(j).getVersion() />
+					<cfset currVersion = arguments.plugins.getReplacementFor(j).getReplaces()[j] />
 				<cfelse>
 					<cfthrow message="Missing required dependency" detail="#j# with a version at least #prerequisites[j]# is required by #i#" />
 				</cfif>
