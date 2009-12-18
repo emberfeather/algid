@@ -20,6 +20,7 @@
 		<cfset var j = '' />
 		<cfset var plugin = '' />
 		<cfset var prerequisites = '' />
+		<cfset var replacementPlugin = '' />
 		<cfset var version = '' />
 		
 		<!--- Create the version object --->
@@ -37,7 +38,11 @@
 				<cfif arguments.plugins.has(j)>
 					<cfset currVersion = arguments.plugins.get(j).getVersion() />
 				<cfelseif arguments.plugins.hasReplacement(j)>
-					<cfset currVersion = arguments.plugins.getReplacementFor(j).getReplaces()[j] />
+					<cfset replacementPlugin = arguments.plugins.getReplacementFor(j) />
+					
+					<cfset currVersion = replacementPlugin.getReplaces()[j] />
+					
+					<cflog type="information" application="true" log="application" text="#replacementPlugin.getKey()# is acting as a replacement for version #currVersion# of the #j# plugin" />
 				<cfelse>
 					<cfthrow message="Missing required dependency" detail="#j# with a version at least #prerequisites[j]# is required by #i#" />
 				</cfif>
@@ -48,7 +53,7 @@
 				<cfif comparedVersion lt 0>
 					<cfthrow message="Dependency too old" detail="#j# with a version at least #prerequisites[j]# is required by #i#" />
 				<cfelseif comparedVersion gt 0>
-					<cflog type="information" application="true" log="application" text="#j# is at version #plugin.getVersion()# when the #i# is expecting version #prerequisites[j]#" />
+					<cflog type="information" application="true" log="application" text="#j# is at version #currVersion# when the #i# is expecting version #prerequisites[j]#" />
 				</cfif>
 			</cfloop>
 		</cfloop>
