@@ -16,6 +16,7 @@
 						'en_US'
 					]
 				},
+				path = '/',
 				plugins = [],
 				precedence = [],
 				startedOn = now(),
