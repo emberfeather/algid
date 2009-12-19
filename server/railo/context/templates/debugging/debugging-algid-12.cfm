@@ -26,27 +26,65 @@
 	<cfset execution = {
 			load = 0,
 			query = 0,
-			top = [],
+			topAvg = [],
+			topTotal = [],
 			total = 0
 		} />
 	
+	<!--- Get the execution numbers --->
 	<cfloop query="debugging.pages">
 		<cfset execution.load += debugging.pages.load />
 		<cfset execution.total += debugging.pages.total />
 		<cfset execution.query += debugging.pages.query />
-		
-		<cfif debugging.pages.currentRow lte 5>
+	</cfloop>
+	
+	<!--- Reorder the pages by the total execution --->
+	<cfquery name="debugging.top" dbtype="query">
+		SELECT *
+		FROM debugging.pages
+		ORDER BY total
+	</cfquery>
+	
+	<cfloop query="debugging.top">
+		<cfif debugging.top.currentRow lte 5>
 			<cfset page = {
-					avg = debugging.pages.avg,
-					bad = debugging.pages.avg gt thresholds.itemAverage,
-					count = debugging.pages.count,
-					execution = debugging.pages.total-debugging.pages.load,
-					load = debugging.pages.load,
-					src = debugging.pages.src,
-					total = debugging.pages.total
+					avg = debugging.top.avg,
+					bad = debugging.top.avg gt thresholds.itemAverage,
+					count = debugging.top.count,
+					execution = debugging.top.total-debugging.top.load,
+					load = debugging.top.load,
+					src = debugging.top.src,
+					total = debugging.top.total
 				} />
 			
-			<cfset arrayAppend(execution.top, page) />
+			<cfset arrayAppend(execution.topTotal, page) />
+		<cfelse>
+			<cfbreak />
+		</cfif>
+	</cfloop>
+	
+	<!--- Reorder the pages by the total execution --->
+	<cfquery name="debugging.top" dbtype="query">
+		SELECT *
+		FROM debugging.pages
+		ORDER BY [avg]
+	</cfquery>
+	
+	<cfloop query="debugging.top">
+		<cfif debugging.top.currentRow lte 5>
+			<cfset page = {
+					avg = debugging.top.avg,
+					bad = debugging.top.avg gt thresholds.itemAverage,
+					count = debugging.top.count,
+					execution = debugging.top.total-debugging.top.load,
+					load = debugging.top.load,
+					src = debugging.top.src,
+					total = debugging.top.total
+				} />
+			
+			<cfset arrayAppend(execution.topAvg, page) />
+		<cfelse>
+			<cfbreak />
 		</cfif>
 	</cfloop>
 	
@@ -77,6 +115,7 @@
 		<cfreturn HTMLEditFormat(returnFormat) />
 	</cffunction>
 </cfsilent>
+
 <cfoutput>
 	<div class="container_12">
 		<!--- Server Information and Execution Times --->
@@ -91,7 +130,20 @@
 						#server.coldfusion.productname#
 						#server.railo.version#
 						#uCase(server.railo.state)#
-						host: #cgi.server_name#
+					</strong>
+				</div>
+				
+				<div>
+					host: 
+					<strong>
+						#cgi.server_name#
+					</strong>
+				</div>
+				
+				<div>
+					remote ip: 
+					<strong>
+						#cgi.remote_addr#
 					</strong>
 				</div>
 			</div>
@@ -135,8 +187,12 @@
 			<div class="clear"><!-- clear --></div>
 		</div>
 		
-		<!--- Top --->
+		<!--- Top - Total --->
 		<div class="section">
+			<div class="grid_12">
+				<h4>Top - Total Execution Time</h4>
+			</div>
+			
 			<div class="grid_1">
 				<strong>Count</strong>
 			</div>
@@ -157,7 +213,58 @@
 				<strong>Template</strong>
 			</div>
 			
-			<cfloop array="#execution.top#" index="page">
+			<cfloop array="#execution.topTotal#" index="page">
+				<div class="grid_1" style="<cfif page.bad>color: red;</cfif>">
+					#page.count#
+				</div>
+				
+				<div class="grid_1" style="<cfif page.bad>color: red;</cfif>">
+					#page.total# ms
+				</div>
+				
+				<div class="grid_1" style="<cfif page.bad>color: red;</cfif>">
+					#page.avg# ms
+				</div>
+				
+				<div class="grid_1" style="<cfif page.bad>color: red;</cfif>">
+					#numberFormat((page.total ? (page.total/execution.total) * 100 : 0), '0.__')#%
+				</div>
+				
+				<div class="grid_8" style="<cfif page.bad>color: red;</cfif>">
+					#page.src#
+				</div>
+			</cfloop>
+			
+			<div class="clear"><!-- clear --></div>
+		</div>
+		
+		<!--- Top - Average --->
+		<div class="section">
+			<div class="grid_12">
+				<h4>Top - Average Execution Time</h4>
+			</div>
+			
+			<div class="grid_1">
+				<strong>Count</strong>
+			</div>
+			
+			<div class="grid_1">
+				<strong>Total</strong>
+			</div>
+			
+			<div class="grid_1">
+				<strong>Average</strong>
+			</div>
+			
+			<div class="grid_1">
+				<strong>Percent</strong>
+			</div>
+			
+			<div class="grid_8">
+				<strong>Template</strong>
+			</div>
+			
+			<cfloop array="#execution.topAvg#" index="page">
 				<div class="grid_1" style="<cfif page.bad>color: red;</cfif>">
 					#page.count#
 				</div>
@@ -198,6 +305,10 @@
 			</cfquery>
 			
 			<div class="section">
+				<div class="grid_12">
+					<h4>Profiling</h4>
+				</div>
+				
 				<div class="grid_1">
 					<strong>Count</strong>
 				</div>
