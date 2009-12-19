@@ -42,7 +42,7 @@
 	<cfquery name="debugging.top" dbtype="query">
 		SELECT *
 		FROM debugging.pages
-		ORDER BY total
+		ORDER BY total DESC
 	</cfquery>
 	
 	<cfloop query="debugging.top">
@@ -67,7 +67,7 @@
 	<cfquery name="debugging.top" dbtype="query">
 		SELECT *
 		FROM debugging.pages
-		ORDER BY [avg]
+		ORDER BY [avg] DESC
 	</cfquery>
 	
 	<cfloop query="debugging.top">
@@ -188,11 +188,9 @@
 		</div>
 		
 		<!--- Top - Total --->
+		<h4>Top - Total Execution Time</h4>
+		
 		<div class="section">
-			<div class="grid_12">
-				<h4>Top - Total Execution Time</h4>
-			</div>
-			
 			<div class="grid_1">
 				<strong>Count</strong>
 			</div>
@@ -239,11 +237,9 @@
 		</div>
 		
 		<!--- Top - Average --->
+		<h4>Top - Average Execution Time</h4>
+		
 		<div class="section">
-			<div class="grid_12">
-				<h4>Top - Average Execution Time</h4>
-			</div>
-			
 			<div class="grid_1">
 				<strong>Count</strong>
 			</div>
@@ -304,11 +300,9 @@
 				ORDER BY total DESC
 			</cfquery>
 			
+			<h4>Profiling</h4>
+			
 			<div class="section">
-				<div class="grid_12">
-					<h4>Profiling</h4>
-				</div>
-				
 				<div class="grid_1">
 					<strong>Count</strong>
 				</div>
@@ -357,6 +351,8 @@
 		
 		<!--- Timers --->
 		<cfif debugging.timers.recordcount>
+			<h4>Timers</h4>
+			
 			<div class="section">
 				<div class="grid_2">
 					<strong>Label</strong>
@@ -397,40 +393,44 @@
 		</cfif>
 		
 		<!--- Queries --->
-		<div class="section">
-			<cfloop query="debugging.queries">
-				<div style="<cfif debugging.queries.time gt thresholds.query>color: red;</cfif>">
-					<div class="grid_3">
-						<div>
-							<strong>#debugging.queries.name#</strong>
+		<cfif debugging.queries.recordcount>
+			<h4>Queries</h4>
+			
+			<div class="section">
+				<cfloop query="debugging.queries">
+					<div style="<cfif debugging.queries.time gt thresholds.query>color: red;</cfif>">
+						<div class="grid_3">
+							<div>
+								<strong>#debugging.queries.name#</strong>
+							</div>
+							
+							<div>
+								#debugging.queries.datasource#
+							</div>
+							
+							<div>
+								#debugging.queries.time# ms
+							</div>
+							
+							<div>
+								#numberFormat((debugging.queries.time/execution.total) * 100, '0.00')#%
+							</div>
+							
+							<div>
+								#debugging.queries.count# record<cfif debugging.queries.count gt 1>s</cfif>
+							</div>
 						</div>
 						
-						<div>
-							#debugging.queries.datasource#
+						<div class="grid_9">
+							<pre style="white-space: pre-wrap;"><code>#formatCode(debugging.queries.sql)#</code></pre>
 						</div>
 						
-						<div>
-							#debugging.queries.time# ms
-						</div>
-						
-						<div>
-							#numberFormat((debugging.queries.time/execution.total) * 100, '0.00')#%
-						</div>
-						
-						<div>
-							#debugging.queries.count# record<cfif debugging.queries.count gt 1>s</cfif>
-						</div>
+						<div class="clear"><!-- clear --></div>
 					</div>
-					
-					<div class="grid_9">
-						<pre style="white-space: pre-wrap;"><code>#formatCode(debugging.queries.sql)#</code></pre>
-					</div>
-					
-					<div class="clear"><!-- clear --></div>
-				</div>
-			</cfloop>
-		</div>
-		
-		<div class="clear"><!-- clear --></div>
+				</cfloop>
+				
+				<div class="clear"><!-- clear --></div>
+			</div>
+		</cfif>
 	</div>
 </cfoutput>
