@@ -7,9 +7,6 @@
 			timer = 150
 		} />
 	
-	<!--- Start timer of the debug output --->
-	<cfset startTime = getTickCount() />
-	
 	<!--- Get the debug information from the server --->
 	<cfadmin action="getDebugData" returnVariable="debugging" />
 	
@@ -94,6 +91,7 @@
 						#server.coldfusion.productname#
 						#server.railo.version#
 						#uCase(server.railo.state)#
+						host: #cgi.server_name#
 					</strong>
 				</div>
 			</div>
@@ -141,53 +139,45 @@
 		<div class="section">
 			<div class="grid_1">
 				<strong>Count</strong>
-				
-				<cfloop array="#execution.top#" index="page">
-					<div style="<cfif page.bad>color: red;</cfif>">
-						#page.count#
-					</div>
-				</cfloop>
 			</div>
 			
 			<div class="grid_1">
 				<strong>Total</strong>
-				
-				<cfloop array="#execution.top#" index="page">
-					<div style="<cfif page.bad>color: red;</cfif>">
-						#page.total# ms
-					</div>
-				</cfloop>
 			</div>
 			
 			<div class="grid_1">
 				<strong>Average</strong>
-				
-				<cfloop array="#execution.top#" index="page">
-					<div style="<cfif page.bad>color: red;</cfif>">
-						#page.avg# ms
-					</div>
-				</cfloop>
 			</div>
 			
 			<div class="grid_1">
 				<strong>Percent</strong>
-				
-				<cfloop array="#execution.top#" index="page">
-					<div style="<cfif page.bad>color: red;</cfif>">
-						#numberFormat((page.total ? (page.total/execution.total) * 100 : 0), '0.__')#%
-					</div>
-				</cfloop>
 			</div>
 			
 			<div class="grid_8">
 				<strong>Template</strong>
-				
-				<cfloop array="#execution.top#" index="page">
-					<div style="<cfif page.bad>color: red;</cfif>">
-						#page.src#
-					</div>
-				</cfloop>
 			</div>
+			
+			<cfloop array="#execution.top#" index="page">
+				<div class="grid_1" style="<cfif page.bad>color: red;</cfif>">
+					#page.count#
+				</div>
+				
+				<div class="grid_1" style="<cfif page.bad>color: red;</cfif>">
+					#page.total# ms
+				</div>
+				
+				<div class="grid_1" style="<cfif page.bad>color: red;</cfif>">
+					#page.avg# ms
+				</div>
+				
+				<div class="grid_1" style="<cfif page.bad>color: red;</cfif>">
+					#numberFormat((page.total ? (page.total/execution.total) * 100 : 0), '0.__')#%
+				</div>
+				
+				<div class="grid_8" style="<cfif page.bad>color: red;</cfif>">
+					#page.src#
+				</div>
+			</cfloop>
 			
 			<div class="clear"><!-- clear --></div>
 		</div>
@@ -210,53 +200,45 @@
 			<div class="section">
 				<div class="grid_1">
 					<strong>Count</strong>
-					
-					<cfloop query="tickers">
-						<div style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
-							#tickers.count#
-						</div>
-					</cfloop>
 				</div>
 				
 				<div class="grid_1">
 					<strong>Total</strong>
-					
-					<cfloop query="tickers">
-						<div style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
-							#tickers.total# ms
-						</div>
-					</cfloop>
 				</div>
 				
 				<div class="grid_1">
 					<strong>Average</strong>
-					
-					<cfloop query="tickers">
-						<div style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
-							#numberFormat(tickers.average, '0.__')# ms
-						</div>
-					</cfloop>
 				</div>
 				
 				<div class="grid_1">
 					<strong>Percent</strong>
-					
-					<cfloop query="tickers">
-						<div style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
-							#numberFormat(( tickers.total ? (tickers.total/execution.total) * 100 : 0 ), '0.__')#%
-						</div>
-					</cfloop>
 				</div>
 				
 				<div class="grid_8">
 					<strong>Ticker</strong>
-					
-					<cfloop query="tickers">
-						<div style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
-							#tickers.ticker#
-						</div>
-					</cfloop>
 				</div>
+				
+				<cfloop query="tickers">
+					<div class="grid_1" style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
+						#tickers.count#
+					</div>
+					
+					<div class="grid_1" style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
+						#tickers.total# ms
+					</div>
+					
+					<div class="grid_1" style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
+						#numberFormat(tickers.average, '0.__')# ms
+					</div>
+					
+					<div class="grid_1" style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
+						#numberFormat(( tickers.total ? (tickers.total/execution.total) * 100 : 0 ), '0.__')#%
+					</div>
+					
+					<div class="grid_8" style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
+						#tickers.ticker#
+					</div>
+				</cfloop>
 				
 				<div class="clear"><!-- clear --></div>
 			</div>
@@ -267,43 +249,37 @@
 			<div class="section">
 				<div class="grid_2">
 					<strong>Label</strong>
-					
-					<cfloop query="debugging.timers">
-						<div style="<cfif debugging.timers.time gt thresholds.timer>color: red;</cfif>">
-							#debugging.timers.label#
-						</div>
-					</cfloop>
 				</div>
 				
 				<div class="grid_1">
 					<strong>Time</strong>
-					
-					<cfloop query="debugging.timers">
-						<div style="<cfif debugging.timers.time gt thresholds.timer>color: red;</cfif>">
-							#debugging.timers.time# ms
-						</div>
-					</cfloop>
 				</div>
 				
 				<div class="grid_1">
 					<strong>Percent</strong>
-					
-					<cfloop query="debugging.timers">
-						<div style="<cfif debugging.timers.time gt thresholds.timer>color: red;</cfif>">
-							#numberFormat((debugging.timers.time/execution.total) * 100, '0.00')#%
-						</div>
-					</cfloop>
 				</div>
 				
 				<div class="grid_8">
 					<strong>Template</strong>
-					
-					<cfloop query="debugging.timers">
-						<div style="<cfif debugging.timers.time gt thresholds.timer>color: red;</cfif>">
-							#debugging.timers.template#
-						</div>
-					</cfloop>
 				</div>
+				
+				<cfloop query="debugging.timers">
+					<div class="grid_2" style="<cfif debugging.timers.time gt thresholds.timer>color: red;</cfif>">
+						#debugging.timers.label#
+					</div>
+					
+					<div class="grid_1" style="<cfif debugging.timers.time gt thresholds.timer>color: red;</cfif>">
+						#debugging.timers.time# ms
+					</div>
+					
+					<div class="grid_1" style="<cfif debugging.timers.time gt thresholds.timer>color: red;</cfif>">
+						#numberFormat((debugging.timers.time/execution.total) * 100, '0.00')#%
+					</div>
+					
+					<div class="grid_8" style="<cfif debugging.timers.time gt thresholds.timer>color: red;</cfif>">
+						#debugging.timers.template#
+					</div>
+				</cfloop>
 				
 				<div class="clear"><!-- clear --></div>
 			</div>
