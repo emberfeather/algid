@@ -193,7 +193,12 @@
 		</div>
 		
 		<!--- Profiler --->
-		<cfif isDefined("profiler")>
+		<cfif structKeyExists(request, 'managers')
+			and structKeyExists(request.managers, 'singleton')
+			and request.managers.singleton.hasProfiler()>
+			
+			<cfset profiler = request.managers.singleton.getProfiler() />
+			
 			<cfset tickers = profiler.getTickers() />
 			
 			<cfquery name="tickers" dbtype="query">
