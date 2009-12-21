@@ -11,5 +11,6 @@
 		"prefix": "",
 		"type": "PostgreSQL"
 	},
-	"environment": "production"
+	"environment": "production",
+	"useThreaded": true
 }

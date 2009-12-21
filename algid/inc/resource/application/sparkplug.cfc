@@ -136,27 +136,58 @@
 		<cfreturn variables.appBaseDirectory />
 	</cffunction>
 	
-	<cffunction name="loadAll" access="public" returntype="void" output="false">
+	<cffunction name="loadAll" access="private" returntype="void" output="false">
 		<cfargument name="plugins" type="component" required="true" />
 		<cfargument name="enabledPlugins" type="array" required="true" />
+		<cfargument name="useThreaded" type="boolean" default="true" />
 		
+		<cfset var counter = 1 />
+		<cfset var currThreads = '' />
 		<cfset var i = '' />
 		<cfset var precedence = '' />
 		<cfset var plugin = '' />
 		<cfset var pluginConfig = '' />
 		<cfset var projectConfig = '' />
+		<cfset var randomPrefix = 'p-' & left(createUUID(), 8) & '-' />
 		<cfset var search = '' />
 		
 		<!--- Read in all plugin configs --->
 		<cfloop array="#arguments.enabledPlugins#" index="i">
-			<cfset arguments.plugins.set(i, readPlugin(i)) />
+			<cfif arguments.useThreaded>
+				<!--- Use a separate thread to read each plugin --->
+				<cfthread action="run" name="#randomPrefix##counter#" plugins="#plugins#" plugin="#i#">
+					<cfset plugins.set(plugin, readPlugin(plugin)) />
+				</cfthread>
+				
+				<cfset currThreads = listAppend(currThreads, '#randomPrefix##counter#') />
+				
+				<cfset counter += 1 />
+			<cfelse>
+				<cfset arguments.plugins.set(i, readPlugin(i)) />
+			</cfif>
 		</cfloop>
 		
 		<!--- Read in all project configs --->
 		<!--- This is used to help make sure that the right version of the projects are in place --->
 		<cfloop array="#variables.projects#" index="i">
-			<cfset arguments.plugins.set(i, readProject(i)) />
+			<cfif arguments.useThreaded>
+				<!--- Use a separate thread to read each plugin --->
+				<cfthread action="run" name="#randomPrefix##counter#" plugins="#plugins#" project="#i#">
+					<cfset plugins.set(project, readProject(project)) />
+				</cfthread>
+				
+				<cfset currThreads = listAppend(currThreads, '#randomPrefix##counter#') />
+				
+				<cfset counter += 1 />
+			<cfelse>
+				<cfset arguments.plugins.set(i, readProject(i)) />
+			</cfif>
 		</cfloop>
+		
+		<!--- If threading, join the threads --->
+		<cfif arguments.useThreaded>
+			<cfthread action="join" name="#currThreads#" timeout="200000" />
+		</cfif>
 	</cffunction>
 	
 	<cffunction name="normalizePath" access="private" returntype="string" output="false">
@@ -377,7 +408,7 @@
 		<cfset setDefaults(tempApplication) />
 		
 		<!--- Load all plugins and projects configurations --->
-		<cfset loadAll( tempApplication.managers.plugin, plugins ) />
+		<cfset loadAll( tempApplication.managers.plugin, plugins, objApplication.getUseThreaded() ) />
 		
 		<!--- Check prerequisites --->
 		<cfset checkPrerequisites( tempApplication.managers.plugin, plugins )>

@@ -20,7 +20,8 @@
 				plugins = [],
 				precedence = [],
 				startedOn = now(),
-				token = createUUID()
+				token = createUUID(),
+				useThreaded = true
 			} />
 		
 		<cfset super.init() />
