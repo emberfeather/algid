@@ -310,7 +310,7 @@
 					)
 				)
 				
-				orDER BY orderBy ASC, navTitle ASC
+				ORDER BY orderBy ASC, navTitle ASC
 		</cfquery>
 		
 		<cfreturn navigation />
@@ -345,7 +345,7 @@
 				
 				<!--- TODO add in authUser type permission checking --->
 				
-				orDER BY path ASC
+				ORDER BY path ASC
 		</cfquery>
 		
 		<!--- Prime the URL --->
@@ -435,7 +435,7 @@
 		<cfquery name="navigation" dbtype="query">
 			SELECT DISTINCT path, contentPath
 			FROM variables.navigation
-			orDER BY path ASC
+			ORDER BY path ASC
 		</cfquery>
 		
 		<cfloop list="#arguments.prefixes#" index="prefix">
