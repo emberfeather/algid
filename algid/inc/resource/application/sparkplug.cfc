@@ -156,7 +156,7 @@
 			<cfif arguments.useThreaded>
 				<!--- Use a separate thread to read each plugin --->
 				<cfthread action="run" name="#randomPrefix##counter#" plugins="#plugins#" plugin="#i#">
-					<cfset plugins.set(plugin, readPlugin(plugin)) />
+					<cfset attributes.plugins.set(attributes.plugin, readPlugin(attributes.plugin)) />
 				</cfthread>
 				
 				<cfset currThreads = listAppend(currThreads, '#randomPrefix##counter#') />
@@ -173,7 +173,7 @@
 			<cfif arguments.useThreaded>
 				<!--- Use a separate thread to read each plugin --->
 				<cfthread action="run" name="#randomPrefix##counter#" plugins="#plugins#" project="#i#">
-					<cfset plugins.set(project, readProject(project)) />
+					<cfset attributes.plugins.set(attributes.project, readProject(attributes.project)) />
 				</cfthread>
 				
 				<cfset currThreads = listAppend(currThreads, '#randomPrefix##counter#') />
