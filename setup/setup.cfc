@@ -396,6 +396,9 @@
 		
 		<cfset svn.addFiles( newObjects ) />
 		
+		<!--- Copy the unversioned files --->
+		<cfset copyFiles( arguments.srcPath, arguments.request.path, arguments.unversionedFiles, arguments.request ) />
+		
 		<!--- Set repository properties --->
 		<cfloop array="#arguments.svnProperties#" index="property">
 			<cfif structKeyExists(property, 'file')>
@@ -404,9 +407,6 @@
 				<cfset svn.setProperty(property.directories, property.property, property.value) />
 			</cfif>
 		</cfloop>
-		
-		<!--- Copy the unversioned files --->
-		<cfset copyFiles( arguments.srcPath, arguments.request.path, arguments.unversionedFiles, arguments.request ) />
 	</cffunction>
 	
 	<cffunction name="standaloneApplication" access="private" returntype="void" output="false">
