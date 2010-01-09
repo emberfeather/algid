@@ -20,7 +20,7 @@
 		
 		<cfset super.init() />
 		
-		<cfset properties(defaults) />
+		<cfset this.set__properties(defaults) />
 		
 		<cfreturn this />
 	</cffunction>

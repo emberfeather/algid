@@ -20,7 +20,7 @@
 		
 		<cfset super.init() />
 		
-		<cfset properties(defaults, arguments.options) />
+		<cfset this.set__properties(defaults, arguments.options) />
 		
 		<!--- Store the navigation and url objects --->
 		<cfset variables.navigation = arguments.navigation />
