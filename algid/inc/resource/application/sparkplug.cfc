@@ -266,7 +266,7 @@
 		<cfset var extender = '' />
 		<cfset var objectSerial = '' />
 		<cfset var plugin = '' />
-		<cfset var settings = {} />
+		<cfset var settings = { '__fullname' = 'algid.inc.resource.plugin.plugin' } />
 		<cfset var settingsFile = 'settings.json.cfm' />
 		<cfset var settingsDefaultFile = 'defaults.json.cfm' />
 		
