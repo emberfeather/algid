@@ -29,7 +29,7 @@
 		<!--- Make the dsUpdate the same as the dsAlter --->
 		<cfset defaults.dsUpdate = duplicate(defaults.dsAlter) />
 		
-		<cfsetthis.set__properties(defaults) />
+		<cfset this.set__properties(defaults) />
 		
 		<cfreturn this />
 	</cffunction>
