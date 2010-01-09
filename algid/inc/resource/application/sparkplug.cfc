@@ -210,7 +210,7 @@
 		<cfset var extender = '' />
 		<cfset var objApplication = '' />
 		<cfset var objectSerial = '' />
-		<cfset var settings = {} />
+		<cfset var settings = { '__fullname' = 'algid.inc.resource.application.app' } />
 		<cfset var settingsFile = 'settings.json.cfm' />
 		<cfset var settingsDefaultFile = 'defaults.json.cfm' />
 		<cfset var token = '' />
