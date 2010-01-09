@@ -360,10 +360,12 @@
 		
 		<cfset var temp = '' />
 		
-		<!--- Create the i18n singleton --->
+		<!--- Create the default singleton --->
 		<cfset temp = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath(arguments.theApplication.managers.singleton.getApplication().getI18n().base)) />
-		
 		<cfset arguments.theApplication.managers.singleton.setI18N(temp) />
+		
+		<cfset temp = createObject('component', 'cf-compendium.inc.resource.storage.objectSerial').init() />
+		<cfset arguments.theApplication.managers.singleton.setObjectSerial(temp) />
 		
 		<!--- Set the base transient factory items --->
 		<cfset arguments.theApplication.factories.transient.setBase62('cf-compendium.inc.resource.utility.base62') />
@@ -380,7 +382,6 @@
 		<cfset arguments.theApplication.factories.transient.setFormExtended('cf-compendium.inc.resource.structure.formExtended') />
 		<cfset arguments.theApplication.factories.transient.setFormStandard('cf-compendium.inc.resource.structure.formStandard') />
 		<cfset arguments.theApplication.factories.transient.setManagerSingleton('algid.inc.resource.manager.singleton') />
-		<cfset arguments.theApplication.factories.transient.setObjectSerial('cf-compendium.inc.resource.storage.objectSerial') />
 		<cfset arguments.theApplication.factories.transient.setOptions('cf-compendium.inc.resource.utility.options') />
 		<cfset arguments.theApplication.factories.transient.setPaginate('cf-compendium.inc.resource.utility.paginate') />
 		<cfset arguments.theApplication.factories.transient.setQueue('cf-compendium.inc.resource.utility.queue') />
