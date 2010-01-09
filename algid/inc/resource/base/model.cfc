@@ -159,6 +159,12 @@
 		<!--- Do the fun stuff --->
 		<cfswitch expression="#prefix#">
 			<cfcase value="set">
+				<!--- Check for UUID --->
+				<!--- TODO find a better way to do this... --->
+				<cfif right(attribute, 2) eq 'ID' and isObject(arguments.missingMethodArguments[1])>
+					<cfset arguments.missingMethodArguments[1] = arguments.missingMethodArguments[1].toString() />
+				</cfif>
+				
 				<!--- Check for any validation given in the attribute meta --->
 				<cfif structKeyExists(variables.attributes, attribute) and not structIsEmpty(variables.attributes[attribute].validation)>
 					<!--- Make sure that we have a validator object --->

@@ -44,6 +44,9 @@
 					
 					<cflog type="information" application="true" log="application" text="#replacementPlugin.getKey()# is acting as a replacement for version #currVersion# of the #j# plugin" />
 				<cfelse>
+					<!--- TODO Remove --->
+					<cfdump var="#arguments.plugins.get(j)#" />
+					<cfabort />
 					<cfthrow message="Missing required dependency" detail="#j# with a version at least #prerequisites[j]# is required by #i#" />
 				</cfif>
 				
@@ -204,7 +207,10 @@
 		<cfset var configFile = 'application.json.cfm' />
 		<cfset var configPath = variables.appBaseDirectory & 'config/' />
 		<cfset var contents = '' />
+		<cfset var extender = '' />
 		<cfset var objApplication = '' />
+		<cfset var objectSerial = '' />
+		<cfset var settings = {} />
 		<cfset var settingsFile = 'settings.json.cfm' />
 		<cfset var settingsDefaultFile = 'defaults.json.cfm' />
 		<cfset var token = '' />
@@ -213,20 +219,21 @@
 			<cfthrow message="Could not find the application configuration" detail="The application could not be detected at #variables.appBaseDirectory#" />
 		</cfif>
 		
-		<!--- Create the application singleton --->
-		<cfset objApplication = createObject('component', 'algid.inc.resource.application.app').init() />
+		<!--- Create the utility objects --->
+		<cfset objectSerial = createObject('component', 'cf-compendium.inc.resource.storage.objectSerial').init() />
+		<cfset extender = createObject('component', 'cf-compendium.inc.resource.utility.extend').init() />
 		
 		<!--- Read the application config file --->
 		<cffile action="read" file="#configPath & configFile#" variable="contents" />
 		
-		<!--- Deserialize the Configuration --->
-		<cfset objApplication.deserialize( deserializeJSON(contents) ) />
+		<!--- Extend the settings --->
+		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
 		
 		<!--- Read the application default settings file --->
 		<cffile action="read" file="#configPath & settingsDefaultFile#" variable="contents" />
 		
-		<!--- Deserialize the default settings --->
-		<cfset objApplication.deserialize( deserializeJSON(contents) ) />
+		<!--- Extend the settings --->
+		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
 		
 		<!--- Check for installation specific file --->
 		<cfif not fileExists(configPath & settingsFile)>
@@ -240,8 +247,11 @@
 		<!--- Read the application settings file --->
 		<cffile action="read" file="#configPath & settingsFile#" variable="contents" />
 		
-		<!--- Deserialize the settings --->
-		<cfset objApplication.deserialize( deserializeJSON(contents) ) />
+		<!--- Extend the settings --->
+		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
+		
+		<!--- Create the application singleton --->
+		<cfset objApplication = objectSerial.deserialize( settings ) />
 		
 		<cfreturn objApplication />
 	</cffunction>
@@ -253,7 +263,10 @@
 		<cfset var configFile = 'plugin.json.cfm' />
 		<cfset var configPath = variables.appBaseDirectory & 'plugins/' & arguments.pluginKey & '/config/' />
 		<cfset var contents = '' />
+		<cfset var extender = '' />
+		<cfset var objectSerial = '' />
 		<cfset var plugin = '' />
+		<cfset var settings = {} />
 		<cfset var settingsFile = 'settings.json.cfm' />
 		<cfset var settingsDefaultFile = 'defaults.json.cfm' />
 		
@@ -261,20 +274,21 @@
 			<cfthrow message="Could not find the plugin configuration" detail="The plugin could not be detected at #variables.appBaseDirectory# for #arguments.pluginKey#" />
 		</cfif>
 		
-		<!--- Create the plugin singleton --->
-		<cfset plugin = createObject('component', 'algid.inc.resource.plugin.plugin').init() />
+		<!--- Create the utility objects --->
+		<cfset objectSerial = createObject('component', 'cf-compendium.inc.resource.storage.objectSerial').init() />
+		<cfset extender = createObject('component', 'cf-compendium.inc.resource.utility.extend').init() />
 		
 		<!--- Read the plugin config file --->
 		<cffile action="read" file="#configPath & configFile#" variable="contents" />
 		
-		<!--- Deserialize the plugin config --->
-		<cfset plugin.deserialize(deserializeJSON(contents)) />
+		<!--- Extend the settings --->
+		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
 		
 		<!--- Read the plugin default settings file --->
 		<cffile action="read" file="#configPath & settingsDefaultFile#" variable="contents" />
 		
-		<!--- Deserialize the plugin default settings --->
-		<cfset plugin.deserialize(deserializeJSON(contents)) />
+		<!--- Extend the settings --->
+		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
 		
 		<!--- Check if there is not a settings file yet --->
 		<cfif not fileExists(configPath & settingsFile)>
@@ -284,8 +298,11 @@
 		<!--- Read the plugin settings file --->
 		<cffile action="read" file="#configPath & settingsFile#" variable="contents" />
 		
-		<!--- Deserialize the plugin settings --->
-		<cfset plugin.deserialize(deserializeJSON(contents)) />
+		<!--- Extend the settings --->
+		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
+		
+		<!--- Create the application singleton --->
+		<cfset plugin = objectSerial.deserialize( input = settings, doComplete = true ) />
 		
 		<cfreturn plugin />
 	</cffunction>
@@ -297,7 +314,10 @@
 		<cfset var configFile = arguments.project & '.json.cfm' />
 		<cfset var configPath = '/' & arguments.project & '/config/' />
 		<cfset var contents = '' />
+		<cfset var extender = '' />
+		<cfset var objectSerial = '' />
 		<cfset var plugin = '' />
+		<cfset var settings = { '__fullname' = 'algid.inc.resource.plugin.plugin' } />
 		
 		<cfset configPath = expandPath(configPath) />
 		
@@ -305,13 +325,18 @@
 			<cfthrow message="Could not find the #arguments.project# configuration" detail="The #arguments.project# could not be detected at #variables.configPath#" />
 		</cfif>
 		
+		<!--- Create the utility objects --->
+		<cfset objectSerial = createObject('component', 'cf-compendium.inc.resource.storage.objectSerial').init() />
+		<cfset extender = createObject('component', 'cf-compendium.inc.resource.utility.extend').init() />
+		
 		<!--- Read the application config file --->
 		<cffile action="read" file="#configPath & configFile#" variable="contents" />
 		
-		<cfset plugin = createObject('component', 'algid.inc.resource.plugin.plugin').init() />
+		<!--- Extend the settings --->
+		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
 		
-		<!--- Deserialize the config --->
-		<cfset plugin.deserialize(deserializeJSON(contents)) />
+		<!--- Create the application singleton --->
+		<cfset plugin = objectSerial.deserialize( input = settings, doComplete = true ) />
 		
 		<cfreturn plugin />
 	</cffunction>
