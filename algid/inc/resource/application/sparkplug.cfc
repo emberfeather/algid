@@ -380,6 +380,7 @@
 		<cfset arguments.theApplication.factories.transient.setFormExtended('cf-compendium.inc.resource.structure.formExtended') />
 		<cfset arguments.theApplication.factories.transient.setFormStandard('cf-compendium.inc.resource.structure.formStandard') />
 		<cfset arguments.theApplication.factories.transient.setManagerSingleton('algid.inc.resource.manager.singleton') />
+		<cfset arguments.theApplication.factories.transient.setObjectSerial('cf-compendium.inc.resource.storage.objectSerial') />
 		<cfset arguments.theApplication.factories.transient.setOptions('cf-compendium.inc.resource.utility.options') />
 		<cfset arguments.theApplication.factories.transient.setPaginate('cf-compendium.inc.resource.utility.paginate') />
 		<cfset arguments.theApplication.factories.transient.setQueue('cf-compendium.inc.resource.utility.queue') />
