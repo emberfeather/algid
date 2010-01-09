@@ -1,6 +1,7 @@
 <cfcomponent extends="mxunit.framework.TestCase" output="false">
 	<cffunction name="testDeterminePrecedenceComplex" access="public" returntype="void" output="false">
 		<cfset var enabledPlugins = '' />
+		<cfset var objectSerial = createObject('component', 'cf-compendium.inc.resource.storage.objectSerial').init() />
 		<cfset var plugin = '' />
 		<cfset var plugins = createObject('component', 'algid.inc.resource.manager.singleton').init() />
 		<cfset var positions = {} />
@@ -15,57 +16,57 @@
 		<!--- Create some mock plugins --->
 		<cfset plugin = createObject('component', 'algid.inc.resource.plugin.plugin').init() />
 		
-		<cfset plugin.deserialize({
+		<cfset objectSerial.deserialize({
 				key = 'grape',
 				prerequisites = {
 					kiwi = '0.1.0',
 					banana = '0.1.0'
 				}
-			}) />
+			}, plugin) />
 		
 		<cfset plugins.setGrape(plugin) />
 		
 		<cfset plugin = createObject('component', 'algid.inc.resource.plugin.plugin').init() />
 		
-		<cfset plugin.deserialize({
+		<cfset objectSerial.deserialize({
 				key = 'kiwi',
 				prerequisites = {
 					lime = '0.1.0',
 					orange = '0.1.0'
 				}
-			}) />
+			}, plugin) />
 		
 		<cfset plugins.setKiwi(plugin) />
 		
 		<cfset plugin = createObject('component', 'algid.inc.resource.plugin.plugin').init() />
 		
-		<cfset plugin.deserialize({
+		<cfset objectSerial.deserialize({
 				key = 'banana',
 				prerequisites = {
 				}
-			}) />
+			}, plugin) />
 		
 		<cfset plugins.setBanana(plugin) />
 		
 		<cfset plugin = createObject('component', 'algid.inc.resource.plugin.plugin').init() />
 		
-		<cfset plugin.deserialize({
+		<cfset objectSerial.deserialize({
 				key = 'lime',
 				prerequisites = {
 					orange = '0.1.0'
 				}
-			}) />
+			}, plugin) />
 		
 		<cfset plugins.setLime(plugin) />
 		
 		<cfset plugin = createObject('component', 'algid.inc.resource.plugin.plugin').init() />
 		
-		<cfset plugin.deserialize({
+		<cfset objectSerial.deserialize({
 				key = 'orange',
 				prerequisites = {
 					banana = '0.1.0'
 				}
-			}) />
+			}, plugin) />
 		
 		<cfset plugins.setOrange(plugin) />
 		
@@ -87,6 +88,7 @@
 	
 	<cffunction name="testDeterminePrecedenceIgnored" access="public" returntype="void" output="false">
 		<cfset var enabledPlugins = '' />
+		<cfset var objectSerial = createObject('component', 'cf-compendium.inc.resource.storage.objectSerial').init() />
 		<cfset var plugin = '' />
 		<cfset var plugins = createObject('component', 'algid.inc.resource.manager.singleton').init() />
 		<cfset var positions = {} />
@@ -101,54 +103,54 @@
 		<!--- Create some mock plugins --->
 		<cfset plugin = createObject('component', 'algid.inc.resource.plugin.plugin').init() />
 		
-		<cfset plugin.deserialize({
+		<cfset objectSerial.deserialize({
 				key = 'grape',
 				prerequisites = {
 					kiwi = '0.1.0'
 				}
-			}) />
+			}, plugin) />
 		
 		<cfset plugins.setGrape(plugin) />
 		
 		<cfset plugin = createObject('component', 'algid.inc.resource.plugin.plugin').init() />
 		
-		<cfset plugin.deserialize({
+		<cfset objectSerial.deserialize({
 				key = 'kiwi',
 				prerequisites = {
 					banana = '0.1.0'
 				}
-			}) />
+			}, plugin) />
 		
 		<cfset plugins.setKiwi(plugin) />
 		
 		<cfset plugin = createObject('component', 'algid.inc.resource.plugin.plugin').init() />
 		
-		<cfset plugin.deserialize({
+		<cfset objectSerial.deserialize({
 				key = 'banana',
 				prerequisites = {
 				}
-			}) />
+			}, plugin) />
 		
 		<cfset plugins.setBanana(plugin) />
 		
 		<cfset plugin = createObject('component', 'algid.inc.resource.plugin.plugin').init() />
 		
-		<cfset plugin.deserialize({
+		<cfset objectSerial.deserialize({
 				key = 'algid',
 				prerequisites = {
 					'cf-compendium' = '0.1.0'
 				}
-			}) />
+			}, plugin) />
 		
 		<cfset plugins.setAlgid(plugin) />
 		
 		<cfset plugin = createObject('component', 'algid.inc.resource.plugin.plugin').init() />
 		
-		<cfset plugin.deserialize({
+		<cfset objectSerial.deserialize({
 				key = 'cf-compendium',
 				prerequisites = {
 				}
-			}) />
+			}, plugin) />
 		
 		<cfset plugins.set('cf-compendium', plugin) />
 		
@@ -161,6 +163,7 @@
 	
 	<cffunction name="testDeterminePrecedenceSimple" access="public" returntype="void" output="false">
 		<cfset var enabledPlugins = '' />
+		<cfset var objectSerial = createObject('component', 'cf-compendium.inc.resource.storage.objectSerial').init() />
 		<cfset var plugin = '' />
 		<cfset var plugins = createObject('component', 'algid.inc.resource.manager.singleton').init() />
 		<cfset var positions = {} />
@@ -175,55 +178,55 @@
 		<!--- Create some mock plugins --->
 		<cfset plugin = createObject('component', 'algid.inc.resource.plugin.plugin').init() />
 		
-		<cfset plugin.deserialize({
+		<cfset objectSerial.deserialize({
 				key = 'grape',
 				prerequisites = {
 					kiwi = '0.1.0'
 				}
-			}) />
+			}, plugin) />
 		
 		<cfset plugins.setGrape(plugin) />
 		
 		<cfset plugin = createObject('component', 'algid.inc.resource.plugin.plugin').init() />
 		
-		<cfset plugin.deserialize({
+		<cfset objectSerial.deserialize({
 				key = 'kiwi',
 				prerequisites = {
 					lime = '0.1.0'
 				}
-			}) />
+			}, plugin) />
 		
 		<cfset plugins.setKiwi(plugin) />
 		
 		<cfset plugin = createObject('component', 'algid.inc.resource.plugin.plugin').init() />
 		
-		<cfset plugin.deserialize({
+		<cfset objectSerial.deserialize({
 				key = 'banana',
 				prerequisites = {
 				}
-			}) />
+			}, plugin) />
 		
 		<cfset plugins.setBanana(plugin) />
 		
 		<cfset plugin = createObject('component', 'algid.inc.resource.plugin.plugin').init() />
 		
-		<cfset plugin.deserialize({
+		<cfset objectSerial.deserialize({
 				key = 'lime',
 				prerequisites = {
 					orange = '0.1.0'
 				}
-			}) />
+			}, plugin) />
 		
 		<cfset plugins.setLime(plugin) />
 		
 		<cfset plugin = createObject('component', 'algid.inc.resource.plugin.plugin').init() />
 		
-		<cfset plugin.deserialize({
+		<cfset objectSerial.deserialize({
 				key = 'orange',
 				prerequisites = {
 					banana = '0.1.0'
 				}
-			}) />
+			}, plugin) />
 		
 		<cfset plugins.setOrange(plugin) />
 		
