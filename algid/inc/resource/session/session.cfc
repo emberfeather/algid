@@ -9,7 +9,7 @@
 		
 		<cfset super.init() />
 		
-		<cfset properties(defaults) />
+		<cfsetthis.set__properties(defaults) />
 		
 		<cfreturn this />
 	</cffunction>
