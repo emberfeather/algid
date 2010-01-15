@@ -171,7 +171,7 @@
 		<cfset args.versionedFiles &= ',trunk/dist/templates/config/application.json.cfm,trunk/dist/templates/version.json,trunk/dist/templates/externalsApp.txt,trunk/dist/templates/externalsAppDev.txt' />
 		<cfset args.versionedFiles &= ',trunk/dist/war/railo.xml,trunk/dist/war/META-INF/context.xml' />
 		<cfset args.versionedFiles &= ',trunk/test/notATest.cfc' />
-		<cfset args.versionedFiles &= ',wiki/ReleaseNotes.wiki' />
+		<cfset args.versionedFiles &= ',wiki/ReleaseNotes.wiki,wiki/Settings.wiki' />
 		
 		<!--- The unversioned files --->
 		<cfset args.unversionedFiles = 'trunk/dist/settings/user.properties' />
@@ -264,7 +264,7 @@
 		<cfset args.versionedFiles &= ',trunk/dist/settings/build.properties,trunk/dist/settings/project.properties,trunk/dist/settings/statSVN.properties,trunk/dist/settings/test.properties,trunk/dist/settings/user.properties.example,trunk/dist/settings/version.properties' />
 		<cfset args.versionedFiles &= ',trunk/dist/templates/config/plugin.json.cfm,trunk/dist/templates/version.json' />
 		<cfset args.versionedFiles &= ',trunk/test/notATest.cfc' />
-		<cfset args.versionedFiles &= ',wiki/ReleaseNotes.wiki' />
+		<cfset args.versionedFiles &= ',wiki/ReleaseNotes.wiki,wiki/Settings.wiki' />
 		
 		<!--- The unversioned files --->
 		<cfset args.unversionedFiles = 'trunk/dist/settings/user.properties' />
