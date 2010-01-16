@@ -1,4 +1,4 @@
-#summary Settings for the @key@ application.
+#summary Settings for the @title@ application.
 
 = Application Settings =
 

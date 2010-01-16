@@ -264,7 +264,7 @@
 		<cfset args.versionedFiles &= ',trunk/dist/settings/build.properties,trunk/dist/settings/project.properties,trunk/dist/settings/statSVN.properties,trunk/dist/settings/test.properties,trunk/dist/settings/user.properties.example,trunk/dist/settings/version.properties' />
 		<cfset args.versionedFiles &= ',trunk/dist/templates/config/plugin.json.cfm,trunk/dist/templates/version.json' />
 		<cfset args.versionedFiles &= ',trunk/test/notATest.cfc' />
-		<cfset args.versionedFiles &= ',wiki/ReleaseNotes.wiki,wiki/Settings.wiki' />
+		<cfset args.versionedFiles &= ',wiki/Extend.wiki,wiki/Install.wiki,wiki/ReleaseNotes.wiki,wiki/Settings.wiki,wiki/Theory.wiki' />
 		
 		<!--- The unversioned files --->
 		<cfset args.unversionedFiles = 'trunk/dist/settings/user.properties' />

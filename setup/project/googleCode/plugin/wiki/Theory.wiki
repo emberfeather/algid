@@ -1,0 +1,3 @@
+#summary Topics of @key@ theory
+
+= @title@ Theory =

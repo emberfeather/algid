@@ -1,0 +1,22 @@
+#summary Installing the @key@ plugin.
+
+= @title@ Installation =
+
+== Prerequisites ==
+
+  * [http://code.google.com/p/algid/ Algid]
+
+== Versions ==
+
+The latest version of the plugin will be available for 
+[http://code.google.com/p/@repoName@/downloads/list download] as soon as it is 
+released. Each version is also 
+[http://code.google.com/p/@repoName@/source/browse/#svn/tags tagged] in the 
+repository.
+
+== Installing ==
+
+Follow the 
+[http://code.google.com/p/algid/wiki/Install#Plugin_Installation `Algid` plugin installation process].
+
+There are no custom installation requirements for this plugin.

@@ -1,0 +1,10 @@
+#summary Extending the @key@ plugin.
+
+= @title@ Extension =
+
+The following conventions allow you to take advantage of the @key@ plugin
+functionality.
+
+== Structure Conventions ==
+
+|| *Resource* || *Description* ||

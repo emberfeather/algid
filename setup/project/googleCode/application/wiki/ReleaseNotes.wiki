@@ -1,7 +1,7 @@
-#summary Release Notes for @key@
+#summary Release Notes for @key@ plugin
 #labels Featured
 
-= @title@ Releases =
+= @title@ Release Notes =
 
 <wiki:comment>
 	The next line is used by the release target of the build file to insert the 

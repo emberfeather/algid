@@ -1,8 +1,8 @@
 #summary Settings for the @key@ plugin.
 
-= Plugin Settings =
+= @title@ Settings =
 
 The following settings are available in addition to the standard 
-[http://code.google.com/p/algid/wiki/Settings plugins settings].
+[http://code.google.com/p/algid/wiki/Settings#Plugin_Settings plugins settings].
 
 || *Setting* || *Description* || *Default* ||
