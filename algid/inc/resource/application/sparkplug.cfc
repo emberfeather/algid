@@ -145,51 +145,90 @@
 		<cfargument name="useThreaded" type="boolean" default="true" />
 		
 		<cfset var counter = 1 />
+		<cfset var counterList = 1 />
 		<cfset var currThreads = '' />
 		<cfset var i = '' />
+		<cfset var numPlugins = arrayLen(arguments.enabledPlugins) />
+		<cfset var numPluginsPerThread = 10 />
 		<cfset var precedence = '' />
 		<cfset var plugin = '' />
 		<cfset var pluginConfig = '' />
+		<cfset var pluginList = '' />
 		<cfset var projectConfig = '' />
 		<cfset var randomPrefix = 'p-' & left(createUUID(), 8) & '-' />
 		<cfset var search = '' />
 		
 		<!--- Read in all plugin configs --->
-		<cfloop array="#arguments.enabledPlugins#" index="i">
+		<cfloop from="1" to="#numPlugins#" index="i">
 			<cfif arguments.useThreaded>
-				<!--- Use a separate thread to read each plugin --->
-				<cfthread action="run" name="#randomPrefix##counter#" plugins="#plugins#" plugin="#i#">
-					<cfset attributes.plugins.set(attributes.plugin, readPlugin(attributes.plugin)) />
+				<cfset pluginList = listAppend(pluginList, arguments.enabledPlugins[i]) />
+				
+				<cfif counterList lt numPluginsPerThread and i lt numPlugins>
+					<cfset counterList++ />
+					
+					<cfcontinue />
+				</cfif>
+				
+				<!--- Use a separate thread to read each list --->
+				<cfthread action="run" name="#randomPrefix##counter#" plugins="#arguments.plugins#" pluginList="#pluginList#">
+					<cfset var i = '' />
+					
+					<cfloop list="#attributes.pluginList#" index="i">
+						<cfset attributes.plugins.set(i, readPlugin(i)) />
+					</cfloop>
 				</cfthread>
 				
 				<cfset currThreads = listAppend(currThreads, '#randomPrefix##counter#') />
-				
-				<cfset counter += 1 />
+				<cfset pluginList = '' />
+				<cfset counterList = 1 />
+				<cfset counter++ />
 			<cfelse>
-				<cfset arguments.plugins.set(i, readPlugin(i)) />
+				<cfset arguments.plugins.set(arguments.enabledPlugins[i], readPlugin(arguments.enabledPlugins[i])) />
 			</cfif>
 		</cfloop>
 		
 		<!--- Read in all project configs --->
 		<!--- This is used to help make sure that the right version of the projects are in place --->
-		<cfloop array="#variables.projects#" index="i">
+		<cfset numPlugins = arrayLen(variables.projects) />
+		
+		<cfloop from="1" to="#numPlugins#" index="i">
 			<cfif arguments.useThreaded>
-				<!--- Use a separate thread to read each plugin --->
-				<cfthread action="run" name="#randomPrefix##counter#" plugins="#plugins#" project="#i#">
-					<cfset attributes.plugins.set(attributes.project, readProject(attributes.project)) />
+				<cfset pluginList = listAppend(pluginList, variables.projects[i]) />
+				
+				<cfif counterList lt numPluginsPerThread and counterList lt numPlugins>
+					<cfset counterList++ />
+					
+					<cfcontinue />
+				</cfif>
+				
+				<!--- Use a separate thread to read each list --->
+				<cfthread action="run" name="#randomPrefix##counter#" plugins="#arguments.plugins#" pluginList="#pluginList#">
+					<cfset var i = '' />
+					
+					<cfloop list="#attributes.pluginList#" index="i">
+						<cfset attributes.plugins.set(i, readProject(i)) />
+					</cfloop>
 				</cfthread>
 				
 				<cfset currThreads = listAppend(currThreads, '#randomPrefix##counter#') />
 				
-				<cfset counter += 1 />
+				<cfset pluginList = '' />
+				<cfset counterList = 1 />
+				<cfset counter++ />
 			<cfelse>
-				<cfset arguments.plugins.set(i, readProject(i)) />
+				<cfset arguments.plugins.set(variables.projects[i], readProject(variables.projects[i])) />
 			</cfif>
 		</cfloop>
 		
 		<!--- If threading, join the threads --->
 		<cfif arguments.useThreaded>
 			<cfthread action="join" name="#currThreads#" timeout="200000" />
+			
+			<cfloop list="#currThreads#" index="i">
+				<cfif cfthread[i].status eq 'terminated'>
+					<cfthrow message="#cfthread[i].error.message#" detail="#cfthread[i].error.detail#" extendedinfo="#cfthread[i].error.stacktrace#" />
+				</cfif>
+			</cfloop>
 		</cfif>
 	</cffunction>
 	
@@ -322,7 +361,7 @@
 		<cfset configPath = expandPath(configPath) />
 		
 		<cfif not fileExists(configPath & configFile)>
-			<cfthrow message="Could not find the #arguments.project# configuration" detail="The #arguments.project# could not be detected at #variables.configPath#" />
+			<cfthrow message="Could not find the #arguments.project# configuration" detail="The #arguments.project# could not be detected at #configPath#" />
 		</cfif>
 		
 		<!--- Create the utility objects --->
