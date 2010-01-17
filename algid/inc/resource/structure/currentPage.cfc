@@ -8,7 +8,7 @@
 		
 		<cfset super.init() />
 		
-		<cfset this.set__properties(defaults, arguments.options) />
+		<cfset set__properties(defaults, arguments.options) />
 		
 		<cfreturn this />
 	</cffunction>
