@@ -1,5 +1,5 @@
 <cfcomponent extends="mxunit.framework.TestCase" output="false">
-	<cffunction name="testDeterminePrecedenceComplex" access="public" returntype="void" output="false">
+	<cffunction name="testDeterminePrecedence_complex" access="public" returntype="void" output="false">
 		<cfset var enabledPlugins = '' />
 		<cfset var objectSerial = createObject('component', 'cf-compendium.inc.resource.storage.objectSerial').init() />
 		<cfset var plugin = '' />
@@ -86,7 +86,7 @@
 		<cfset assertTrue(positions['orange'] gt positions['banana'], 'The orange plugin should be after the bananage plugin : ' & precedence) />
 	</cffunction>
 	
-	<cffunction name="testDeterminePrecedenceIgnored" access="public" returntype="void" output="false">
+	<cffunction name="testDeterminePrecedence_ignored" access="public" returntype="void" output="false">
 		<cfset var enabledPlugins = '' />
 		<cfset var objectSerial = createObject('component', 'cf-compendium.inc.resource.storage.objectSerial').init() />
 		<cfset var plugin = '' />
@@ -161,7 +161,7 @@
 		<cfset assertTrue(listFind(precedence, 'algid') eq 0, 'Projects should be ignored in the precedence -- found algid : ' & precedence) />
 	</cffunction>
 	
-	<cffunction name="testDeterminePrecedenceSimple" access="public" returntype="void" output="false">
+	<cffunction name="testDeterminePrecedence_simple" access="public" returntype="void" output="false">
 		<cfset var enabledPlugins = '' />
 		<cfset var objectSerial = createObject('component', 'cf-compendium.inc.resource.storage.objectSerial').init() />
 		<cfset var plugin = '' />
