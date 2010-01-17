@@ -6,8 +6,6 @@
 	<cffunction name="testIsReplacementFor_sansReplacement" access="public" returntype="void" output="false">
 		<cfset var plugin = createObject('component', 'algid.inc.resource.plugin.plugin').init() />
 		
-		<cfset plugin.setReplaces({ 'test' = '0.1.0' }) />
-		
 		<cfset assertFalse(plugin.isReplacementFor('testing')) />
 	</cffunction>
 	
