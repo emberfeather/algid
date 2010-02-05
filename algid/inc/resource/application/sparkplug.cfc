@@ -251,7 +251,6 @@
 		<cfset var objectSerial = '' />
 		<cfset var settings = { '__fullname' = 'algid.inc.resource.application.app' } />
 		<cfset var settingsFile = 'settings.json.cfm' />
-		<cfset var settingsDefaultFile = 'defaults.json.cfm' />
 		<cfset var token = '' />
 		
 		<cfif not fileExists(configPath & configFile)>
@@ -268,19 +267,13 @@
 		<!--- Extend the settings --->
 		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
 		
-		<!--- Read the application default settings file --->
-		<cffile action="read" file="#configPath & settingsDefaultFile#" variable="contents" />
-		
-		<!--- Extend the settings --->
-		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
-		
 		<!--- Check for installation specific file --->
 		<cfif not fileExists(configPath & settingsFile)>
 			<!--- Create a random server token --->
 			<cfset token = createUUID() & '-' & createUUID() & '-' & createUUID() & '-' & createUUID() />
 			
 			<!--- Write the new settings file --->
-			<cffile action="write" file="#configPath & settingsFile#" output="{#chr(10)##chr(9)#""token"": ""#token#""#chr(10)#}" addnewline="false" />
+			<cffile action="write" file="#configPath & settingsFile#" output="{#chr(10)##chr(9)#""environment"": ""production"",#chr(10)##chr(9)#""token"": ""#token#""#chr(10)#}" addnewline="false" />
 		</cfif>
 		
 		<!--- Read the application settings file --->
@@ -307,7 +300,6 @@
 		<cfset var plugin = '' />
 		<cfset var settings = { '__fullname' = 'algid.inc.resource.plugin.plugin' } />
 		<cfset var settingsFile = 'settings.json.cfm' />
-		<cfset var settingsDefaultFile = 'defaults.json.cfm' />
 		
 		<cfif not fileExists(configPath & configFile)>
 			<cfthrow message="Could not find the plugin configuration" detail="The plugin could not be detected at #variables.appBaseDirectory# for #arguments.pluginKey#" />
@@ -319,12 +311,6 @@
 		
 		<!--- Read the plugin config file --->
 		<cffile action="read" file="#configPath & configFile#" variable="contents" />
-		
-		<!--- Extend the settings --->
-		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
-		
-		<!--- Read the plugin default settings file --->
-		<cffile action="read" file="#configPath & settingsDefaultFile#" variable="contents" />
 		
 		<!--- Extend the settings --->
 		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
