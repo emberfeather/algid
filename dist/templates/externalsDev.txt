@@ -1,3 +1,0 @@
-mxunit					http://mxunit.googlecode.com/svn/mxunit/trunk
-varscoper				http://svn.riaforge.org/varscoper
-cf-compendium			https://cf-compendium.googlecode.com/svn/trunk/cf-compendium
