@@ -15,7 +15,7 @@
 		<cfset variables.navigation = queryNew(variables.navigationFields, variables.navigationTypes) />
 		
 		<!--- The default root is used when there is no base path given --->
-		<cfset variables.defaultRoot = '.index' />
+		<cfset variables.defaultRoot = '/index' />
 		
 		<!--- Create a cache variable for navigation html caching --->
 		<cfset variables.cachedHTML = {} />
@@ -48,8 +48,8 @@
 		
 		<cfloop array="#arguments.elements#" index="i">
 			<!--- Figure out the current path --->
-			<cfset plainPath = arguments.parentPath & (len(arguments.parentPath) ? '.' : '') & i.xmlName />
-			<cfset fullPath = locale & '.' & plainPath />
+			<cfset plainPath = arguments.parentPath & (len(arguments.parentPath) ? '/' : '') & i.xmlName />
+			<cfset fullPath = locale & '/' & plainPath />
 			
 			<!--- Find out if need to insert as a new row --->
 			<cfif not structKeyExists(variables.pathIndex, fullPath)>
@@ -60,7 +60,7 @@
 				
 				<cfset querySetCell(variables.navigation, 'contentPath', arguments.contentPath, currentRow) />
 				<cfset querySetCell(variables.navigation, 'level', arguments.level, currentRow) />
-				<cfset querySetCell(variables.navigation, 'path', '.' & plainPath, currentRow) />
+				<cfset querySetCell(variables.navigation, 'path', '/' & plainPath, currentRow) />
 				<cfset querySetCell(variables.navigation, 'locale', locale, currentRow) />
 				
 				<!--- Check for a defined sort order --->
@@ -171,7 +171,7 @@
 		<!--- Get the content path --->
 		<cfset currentPath = right(arguments.path, len(arguments.path) - 1) />
 		
-		<cfset pageName = listLast(currentPath, '.') />
+		<cfset pageName = listLast(currentPath, '/') />
 		
 		<!--- Remove the pagename from the currentPath --->
 		<cfif len(currentPath) gt len(pageName)>
@@ -179,9 +179,6 @@
 		<cfelse>
 			<cfset currentPath = '' />
 		</cfif>
-		
-		<!--- Replace the periods with slashes --->
-		<cfset currentPath = replace(currentPath, '.', '/', 'all') />
 		
 		<!--- Convert the pageName to have the prefix and postfix --->
 		<cfset pageName = lCase(arguments.prefix) & uCase(left(pageName, 1)) & right(pageName, len(pageName) - 1) & '.cfm' />
@@ -207,7 +204,7 @@
 		
 		<cfif isArray(arguments.navPosition)>
 			<cfloop array="#arguments.navPosition#" index="i">
-				<cfset position &= i & '.' />
+				<cfset position &= i & '/' />
 			</cfloop>
 			
 			<cfset position = left(position, len(position) - 1) />
@@ -235,7 +232,7 @@
 	<cffunction name="getNav" access="public" returntype="query" output="false">
 		<cfargument name="level" type="numeric" required="true" />
 		<cfargument name="navPosition" type="string" required="true" />
-		<cfargument name="parentPath" type="string" default="." />
+		<cfargument name="parentPath" type="string" default="/" />
 		<cfargument name="options" type="struct" default="#{}#" />
 		<cfargument name="locale" type="string" default="en_US" />
 		<cfargument name="authUser" type="component" required="false" />

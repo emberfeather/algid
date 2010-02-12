@@ -29,7 +29,7 @@
 <blockquote>
 	<code>
 		theURL = createObject('component', 'cf-compendium.inc.resource.utility.url').init('')<br />
-		theURL.set('_base', '.main2')<br />
+		theURL.set('_base', '/main2')<br />
 		options = {
 				depth = -1,
 				selectedOnly = false
@@ -38,7 +38,7 @@
 </blockquote>
 
 <cfset theURL = createObject('component', 'cf-compendium.inc.resource.utility.url').init('') />
-<cfset theURL.set('_base', '.main2') />
+<cfset theURL.set('_base', '/main2') />
 <cfset options = {
 		depth = -1,
 		selectedOnly = false

@@ -11,7 +11,7 @@
 		<cfset var partLen = '' />
 		<cfset var search = 0 />
 		
-		<cfset search = find('.', arguments.path, search) />
+		<cfset search = find('/', arguments.path, search) />
 		
 		<cfloop condition="search gt 0">
 			<!--- Make sure that only the root will end with a period --->
@@ -23,7 +23,7 @@
 			<!--- Add the part --->
 			<cfset arrayAppend(exploded, part) />
 			
-			<cfset search = find('.', arguments.path, search + 1) />
+			<cfset search = find('/', arguments.path, search + 1) />
 		</cfloop>
 		
 		<!--- The full path is part of the explode --->
@@ -36,7 +36,7 @@
 		<cfargument name="theURL" type="component" required="true" />
 		<cfargument name="level" type="numeric" required="true" />
 		<cfargument name="navPosition" type="any" required="true" />
-		<cfargument name="parentPath" type="string" default="." />
+		<cfargument name="parentPath" type="string" default="/" />
 		<cfargument name="options" type="struct" default="#{}#" />
 		<cfargument name="locale" type="string" default="en_US" />
 		<cfargument name="authUser" type="component" required="false" />
@@ -156,7 +156,7 @@
 				<!--- Decrement the depth so that it eventually ends --->
 				<cfset temp = duplicate(arguments) />
 				<cfset temp.level++ />
-				<cfset temp.parentPath = navigation.path & '.' />
+				<cfset temp.parentPath = navigation.path & '/' />
 				<cfset temp.options = duplicate(arguments.options) />
 				<cfset temp.options.depth-- />
 				
@@ -198,18 +198,18 @@
 		
 		<!--- Check for no base path --->
 		<cfif arguments.basePath eq ''>
-			<cfset arguments.basePath = '.' />
+			<cfset arguments.basePath = '/' />
 		</cfif>
 		
 		<!--- Want to make sure it ends in a period for searching --->
-		<cfif right(arguments.basePath, 1) neq '.'>
-			<cfset arguments.basePath &= '.' />
+		<cfif right(arguments.basePath, 1) neq '/'>
+			<cfset arguments.basePath &= '/' />
 		</cfif>
 		
 		<!--- Find the proper level we are looking for --->
 		<cfloop from="1" to="#arguments.level#" index="i">
 			<!--- Start with the next position to not get stuck --->
-			<cfset position = find('.', arguments.basePath, position + 1) />
+			<cfset position = find('/', arguments.basePath, position + 1) />
 			
 			<!--- If we can't find it stop looking --->
 			<cfif position eq 0>
