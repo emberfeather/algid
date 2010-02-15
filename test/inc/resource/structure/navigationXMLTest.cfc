@@ -21,7 +21,7 @@
 		<cfquery name="checkQuery" dbtype="query">
 			SELECT title, description, navTitle
 			FROM navQuery
-			WHERE path = <cfqueryparam cfsqltype="cf_sql_varchar" value=".main1" />
+			WHERE path = <cfqueryparam cfsqltype="cf_sql_varchar" value="/main1" />
 				AND locale = <cfqueryparam cfsqltype="cf_sql_varchar" value="en_US" />
 				AND [level] = <cfqueryparam cfsqltype="cf_sql_integer" value="1" />
 		</cfquery>
@@ -50,7 +50,7 @@
 		<cfquery name="checkQuery" dbtype="query">
 			SELECT title, description, navTitle
 			FROM navQuery
-			WHERE path = <cfqueryparam cfsqltype="cf_sql_varchar" value=".main1.sub1" />
+			WHERE path = <cfqueryparam cfsqltype="cf_sql_varchar" value="/main1/sub1" />
 				AND locale = <cfqueryparam cfsqltype="cf_sql_varchar" value="en_US" />
 				AND [level] = <cfqueryparam cfsqltype="cf_sql_integer" value="2" />
 		</cfquery>
@@ -79,7 +79,7 @@
 		<cfquery name="checkQuery" dbtype="query">
 			SELECT title, description, navTitle
 			FROM navQuery
-			WHERE path = <cfqueryparam cfsqltype="cf_sql_varchar" value=".main2.sub1.subSub2" />
+			WHERE path = <cfqueryparam cfsqltype="cf_sql_varchar" value="/main2/sub1/subSub2" />
 				AND locale = <cfqueryparam cfsqltype="cf_sql_varchar" value="en_US" />
 				AND [level] = <cfqueryparam cfsqltype="cf_sql_integer" value="3" />
 		</cfquery>
