@@ -170,11 +170,11 @@
 				</cfif>
 				
 				<!--- Use a separate thread to read each list --->
-				<cfthread action="run" name="#randomPrefix##counter#" plugins="#arguments.plugins#" pluginList="#pluginList#">
+				<cfthread action="run" name="#randomPrefix##counter#" plugins="#arguments.plugins#" pluginList="#pluginList#" enabledPlugins="#arguments.enabledPlugins#">
 					<cfset var i = '' />
 					
 					<cfloop list="#attributes.pluginList#" index="i">
-						<cfset attributes.plugins.set(i, readPlugin(i)) />
+						<cfset attributes.plugins.set(i, readPlugin(attributes.enabledPlugins, i)) />
 					</cfloop>
 				</cfthread>
 				
@@ -183,7 +183,7 @@
 				<cfset counterList = 1 />
 				<cfset counter++ />
 			<cfelse>
-				<cfset arguments.plugins.set(arguments.enabledPlugins[i], readPlugin(arguments.enabledPlugins[i])) />
+				<cfset arguments.plugins.set(arguments.enabledPlugins[i], readPlugin(arguments.enabledPlugins, arguments.enabledPlugins[i])) />
 			</cfif>
 		</cfloop>
 		
@@ -289,14 +289,22 @@
 	</cffunction>
 	
 	<cffunction name="readPlugin" access="private" returntype="component" output="false">
+		<cfargument name="enabledPlugins" type="array" required="true" />
 		<cfargument name="pluginKey" type="string" required="true" />
 		
 		<cfset var config = '' />
 		<cfset var configFile = 'plugin.json.cfm' />
 		<cfset var configPath = variables.appBaseDirectory & 'plugins/' & arguments.pluginKey & '/config/' />
 		<cfset var contents = '' />
+		<cfset var observerManager = '' />
+		<cfset var events = '' />
+		<cfset var eventsPath = '' />
 		<cfset var extender = '' />
+		<cfset var i = '' />
+		<cfset var listener = '' />
 		<cfset var objectSerial = '' />
+		<cfset var observer = '' />
+		<cfset var observerName = '' />
 		<cfset var plugin = '' />
 		<cfset var settings = { '__fullname' = 'algid.inc.resource.plugin.plugin' } />
 		<cfset var settingsFile = 'settings.json.cfm' />
@@ -328,6 +336,36 @@
 		
 		<!--- Create the application singleton --->
 		<cfset plugin = objectSerial.deserialize( input = settings, doComplete = true ) />
+		
+		<!--- Create an event manager for the plugin --->
+		<cfset observerManager = createObject('component', 'algid.inc.resource.manager.observer').init() />
+		
+		<!--- Look for all events that are defined for the plugin in any enabled plugin --->
+		<cfloop array="#arguments.enabledPlugins#" index="i">
+			<cfset eventsPath = variables.appBaseDirectory & 'plugins/' & i & '/extend/' & arguments.pluginKey & '/events/' />
+			
+			<cfif directoryExists(eventsPath)>
+				<cfdirectory action="list" directory="#eventsPath#" name="events" filter="evnt*.cfc" />
+				
+				<cfloop query="events">
+					<!--- Determine the observer to use --->
+					<cfset observerName = right(events.name, len(events.name) - len('.cfc')) />
+					<cfset observerName = left(observerName, len(observerName) - len('evnt')) />
+					
+					<!--- Get the observer from the manager --->
+					<cfset observer = observerManager.get(observerName) />
+					
+					<!--- Create the event listner --->
+					<cfset listener = createObject('component', 'plugins.' & i & '.extend.' & arguments.pluginKey & '.events.evnt' & observerName).init() />
+					
+					<!--- Register event listener with the observer --->
+					<cfset observer.register(listener) />
+				</cfloop>
+			</cfif>
+		</cfloop>
+		
+		<!--- Store the observer manager for later --->
+		<cfset plugin.setObserver(observerManager) />
 		
 		<cfreturn plugin />
 	</cffunction>
