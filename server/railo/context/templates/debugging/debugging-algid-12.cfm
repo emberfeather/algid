@@ -117,7 +117,7 @@
 </cfsilent>
 
 <cfoutput>
-	<div class="container_12">
+	<div class="container_12" style="margin-top: 1em;">
 		<!--- Server Information and Execution Times --->
 		<div class="section">
 			<div class="grid_3">
