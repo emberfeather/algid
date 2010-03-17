@@ -1,1 +1,2 @@
-<cfcomponent extends="mxunit.runner.HttpAntRunner" />
+<cfcomponent extends="mxunit.runner.HttpAntRunner">
+</cfcomponent>
