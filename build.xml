@@ -104,10 +104,6 @@
 			<directory path="${basedir}/test" componentPath="${test.mxunit.componentpath}" recurse="true" />
 		</mxunittask>
 		
-		<fail if="test.mxunit.error" message="Unit tests errored" />
-		
-		<fail if="test.mxunit.failure" message="Unit tests failed" />
-		
 		<echo message="Finished: Unit Tests"/>
 	</target>
 	
