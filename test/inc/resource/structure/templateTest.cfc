@@ -31,7 +31,43 @@
 	}
 	
 	/**
-	 * Test that the getMeta public void function with a http-equiv.
+	 * Test that the getMeta public void function with a content-type http-equiv.
+	 */
+	public void function testGetMeta_httpEquiv_contenttype() {
+		variables.template.setMeta('content-type', 'text/html;charset=utf-8');
+		
+		assertEquals('<meta http-equiv="content-type" content="text/html;charset=utf-8" />', variables.template.getMeta());
+	}
+	
+	/**
+	 * Test that the getMeta public void function with an expires http-equiv.
+	 */
+	public void function testGetMeta_httpEquiv_expires() {
+		variables.template.setMeta('expires', 'mon, 27 sep 2015 14:30:00 GMT');
+		
+		assertEquals('<meta http-equiv="expires" content="mon, 27 sep 2015 14:30:00 GMT" />', variables.template.getMeta());
+	}
+	
+	/**
+	 * Test that the getMeta public void function with a pics-label http-equiv.
+	 */
+	public void function testGetMeta_httpEquiv_picslabel() {
+		variables.template.setMeta('pics-label', 'violence');
+		
+		assertEquals('<meta http-equiv="pics-label" content="violence" />', variables.template.getMeta());
+	}
+	
+	/**
+	 * Test that the getMeta public void function with a pragma http-equiv.
+	 */
+	public void function testGetMeta_httpEquiv_pragma() {
+		variables.template.setMeta('pragma', 'no-cache');
+		
+		assertEquals('<meta http-equiv="pragma" content="no-cache" />', variables.template.getMeta());
+	}
+	
+	/**
+	 * Test that the getMeta public void function with a refresh http-equiv.
 	 */
 	public void function testGetMeta_httpEquiv_refresh() {
 		variables.template.setMeta('refresh', 5);
@@ -40,7 +76,25 @@
 	}
 	
 	/**
-	 * Test that the getMeta public void function with a http-equiv for chrome frame support.
+	 * Test that the getMeta public void function with a set-cookie http-equiv.
+	 */
+	public void function testGetMeta_httpEquiv_setcookie() {
+		variables.template.setMeta('set-cookie', 'foo=bar; path=/; expires=Thursday, 20-May-07 00:15:00 GMT');
+		
+		assertEquals('<meta http-equiv="set-cookie" content="foo=bar; path=/; expires=Thursday, 20-May-07 00:15:00 GMT" />', variables.template.getMeta());
+	}
+	
+	/**
+	 * Test that the getMeta public void function with a window target http-equiv.
+	 */
+	public void function testGetMeta_httpEquiv_windowtarget() {
+		variables.template.setMeta('window-target', '_blank');
+		
+		assertEquals('<meta http-equiv="window-target" content="_blank" />', variables.template.getMeta());
+	}
+	
+	/**
+	 * Test that the getMeta public void function with a X-UA-Compatible http-equiv for chrome frame support.
 	 */
 	public void function testGetMeta_httpEquiv_xuacompatible() {
 		variables.template.setMeta('X-UA-Compatible', 'chrome=1');
