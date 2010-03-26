@@ -37,12 +37,23 @@
 	<!---
 		Test that the getMeta function with a http-equiv.
 	--->
-	<cffunction name="testGetMeta_HttpEquiv" access="public" returntype="void" output="false">
+	<cffunction name="testGetMeta_httpEquiv_refresh" access="public" returntype="void" output="false">
 		<cfset var template = createObject('component', 'algid.inc.resource.structure.template').init(variables.navigation, variables.theURL, 'en_US') />
 		
 		<cfset template.setMeta('refresh', 5) />
 		
 		<cfset assertEquals('<meta http-equiv="refresh" content="5" />', template.getMeta()) />
+	</cffunction>
+	
+	<!---
+		Test that the getMeta function with a http-equiv for chrome frame support.
+	--->
+	<cffunction name="testGetMeta_httpEquiv_xuacompatible" access="public" returntype="void" output="false">
+		<cfset var template = createObject('component', 'algid.inc.resource.structure.template').init(variables.navigation, variables.theURL, 'en_US') />
+		
+		<cfset template.setMeta('X-UA-Compatible', 'chrome=1') />
+		
+		<cfset assertEquals('<meta http-equiv="X-UA-Compatible" content="chrome=1" />', template.getMeta()) />
 	</cffunction>
 	
 	<!---
