@@ -56,6 +56,19 @@
 		</cfif>
 	</cffunction>
 	
+<cfscript>
+	/**
+	 * Cleans the value of the given UUID to conform to the 5 segment uuid format.
+	 */
+	public string function cleanUUID(string uuid) {
+		if(len(arguments.uuid) eq 35) {
+			return insert('-', arguments.uuid, 23);
+		}
+		
+		return arguments.uuid;
+	}
+</cfscript>
+	
 	<cffunction name="createValidator" access="public" returntype="void" output="false">
 		<cfset variables.validator = variables.i18n.i18n.getValidation(variables.i18n.locale, variables.validation.bundlePath, variables.validation.bundleName, variables.validation.componentPath) />
 	</cffunction>
@@ -160,9 +173,8 @@
 		<cfswitch expression="#prefix#">
 			<cfcase value="set">
 				<!--- Check for UUID --->
-				<!--- TODO find a better way to do this... --->
-				<cfif right(attribute, 2) eq 'ID' and isObject(arguments.missingMethodArguments[1])>
-					<cfset arguments.missingMethodArguments[1] = arguments.missingMethodArguments[1].toString() />
+				<cfif right(attribute, 2) eq 'ID'>
+					<cfset arguments.missingMethodArguments[1] = cleanUUID(toString(arguments.missingMethodArguments[1])) />
 				</cfif>
 				
 				<!--- Check for any validation given in the attribute meta --->
