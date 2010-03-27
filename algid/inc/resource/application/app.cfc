@@ -20,6 +20,7 @@
 				plugins = [],
 				precedence = [],
 				startedOn = now(),
+				storagePath = '/storage',
 				token = createUUID(),
 				useThreaded = true
 			} />
@@ -45,4 +46,27 @@
 	<cffunction name="isProduction" access="public" returntype="boolean" output="false">
 		<cfreturn this.getEnvironment() eq 'production' />
 	</cffunction>
+<cfscript>
+	/**
+	 * Make sure that the storage path is an absolute path and exists
+	 */
+	/* required value */
+	public void function setStoragePath(string value) {
+		var absolutePath = '';
+		
+		absolutePath = arguments.value;
+		
+		// is it not an absolute path already?
+		if (not directoryExists(absolutePath)) {
+			absolutePath = expandPath(absolutePath);
+			
+			// if the expanded path does not exist we don't want to create crazy directories
+			if (not directoryExists(absolutePath)) {
+				throw(message='Could not find the application storage directory', detail='The #arguments.value# path was not an existing directory and needs to be created.');
+			}
+		}
+		
+		variables.instance['storagePath'] = absolutePath;
+	}
+</cfscript>
 </cfcomponent>
