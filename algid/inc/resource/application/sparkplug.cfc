@@ -285,6 +285,9 @@
 		<!--- Create the application singleton --->
 		<cfset objApplication = objectSerial.deserialize( settings ) />
 		
+		<!--- Save the storage path for the plugins to use --->
+		<cfset varables.storagePath = objApplication.getStoragePath() />
+		
 		<cfreturn objApplication />
 	</cffunction>
 	
@@ -317,6 +320,9 @@
 		<cfset objectSerial = createObject('component', 'cf-compendium.inc.resource.storage.objectSerial').init() />
 		<cfset extender = createObject('component', 'cf-compendium.inc.resource.utility.extend').init() />
 		
+		<!--- Store the default plugin storage directory --->
+		<cfset settings['storagePath'] = varables.storagePath & '/' & arguments.pluginKey />
+		
 		<!--- Read the plugin config file --->
 		<cffile action="read" file="#configPath & configFile#" variable="contents" />
 		
@@ -334,10 +340,15 @@
 		<!--- Extend the settings --->
 		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
 		
-		<!--- Create the application singleton --->
+		<!--- Create the plugin singleton --->
 		<cfset plugin = objectSerial.deserialize( input = settings, doComplete = true ) />
 		
-		<!--- Create an event manager for the plugin --->
+		<!--- Create the plugin storage directory if it does not exist --->
+		<cfif not directoryExists(plugin.getStoragePath())>
+			<cfset directoryCreate(plugin.getStoragePath()) />
+		</cfif>
+		
+		<!--- Create an observer manager for the plugin --->
 		<cfset observerManager = createObject('component', 'algid.inc.resource.manager.observer').init() />
 		
 		<!--- Look for all events that are defined for the plugin in any enabled plugin --->
@@ -349,8 +360,7 @@
 				
 				<cfloop query="events">
 					<!--- Determine the observer to use --->
-					<cfset observerName = right(events.name, len(events.name) - len('.cfc')) />
-					<cfset observerName = left(observerName, len(observerName) - len('evnt')) />
+					<cfset observerName = mid(events.name, len('evnt') + 1, len(events.name) - len('evnt.cfc')) />
 					
 					<!--- Get the observer from the manager --->
 					<cfset observer = observerManager.get(observerName) />
@@ -600,5 +610,12 @@
 		</cfif>
 		
 		<cfreturn listPrepend(arguments.precedence, arguments.plugin) />
+	</cffunction>
+	
+	<!--- TODO Remove when Railo supports directoryCreate() --->
+	<cffunction name="directoryCreate" access="public" returntype="void" output="false">
+		<cfargument name="path" type="string" required="true" />
+		
+		<cfdirectory action="create" directory="#arguments.path#" />
 	</cffunction>
 </cfcomponent>
