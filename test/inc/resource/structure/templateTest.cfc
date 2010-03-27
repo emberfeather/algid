@@ -1,99 +1,148 @@
 <cfcomponent extends="mxunit.framework.TestCase" output="false">
-	<cffunction name="setup" access="public" returntype="void" output="false">
-		<cfset variables.i18n = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath('/i18n/')) />
-		<cfset variables.navigation = createObject('component', 'algid.inc.resource.structure.navigationFile').init(i18n) />
-		<cfset variables.theUrl = createObject('component', 'cf-compendium.inc.resource.utility.url').init() />
-	</cffunction>
+<cfscript>
+	public void function setup() {
+		variables.i18n = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath('/i18n/'));
+		variables.navigation = createObject('component', 'algid.inc.resource.structure.navigationFile').init(i18n);
+		variables.theUrl = createObject('component', 'cf-compendium.inc.resource.utility.url').init();
+		variables.template = createObject('component', 'algid.inc.resource.structure.template').init(variables.navigation, variables.theURL, 'en_US');
+	}
 	
-	<!---
-		Test that the getAttribute function works.
-	--->
-	<cffunction name="testGetAttribute" access="public" returntype="void" output="false">
-		<cfset var template = createObject('component', 'algid.inc.resource.structure.template').init(variables.navigation, variables.theURL, 'en_US') />
+	/**
+	 * Test that the getAttribute function works.
+	 */
+	public void function testGetAttribute() {
+		variables.template.setAttribute('testing', 'yippee');
 		
-		<cfset template.setAttribute('testing', 'yippee') />
-		
-		<cfset assertEquals('yippee', template.getAttribute('testing')) />
-	</cffunction>
+		assertEquals('yippee', variables.template.getAttribute('testing'));
+	}
 	
-	<!---
-		Test that the getAttribute function works without the attribute being set.
-	--->
-	<cffunction name="testGetAttribute_SansAttribute" access="public" returntype="void" output="false">
-		<cfset var template = createObject('component', 'algid.inc.resource.structure.template').init(variables.navigation, variables.theURL, 'en_US') />
-		
-		<cfset assertEquals('', template.getAttribute('testing')) />
-	</cffunction>
+	/**
+	 * Test that the getAttribute public void function works without the attribute being set.
+	 */
+	public void function testGetAttribute_SansAttribute() {
+		assertEquals('', variables.template.getAttribute('testing'));
+	}
 	
-	<!---
-		Test that the getBreadcrumb function works
-	--->
-	<cffunction name="testGetBreadcrumb_SansLevels" access="public" returntype="void" output="false">
-		<cfset var template = createObject('component', 'algid.inc.resource.structure.template').init(variables.navigation, variables.theURL, 'en_US') />
-		
-		<cfset assertEquals('', template.getBreadcrumb()) />
-	</cffunction>
+	/**
+	 * Test that the getBreadcrumb public void function works
+	 */
+	public void function testGetBreadcrumb_SansLevels() {
+		assertEquals('', variables.template.getBreadcrumb());
+	}
 	
-	<!---
-		Test that the getMeta function with a http-equiv.
-	--->
-	<cffunction name="testGetMeta_HttpEquiv" access="public" returntype="void" output="false">
-		<cfset var template = createObject('component', 'algid.inc.resource.structure.template').init(variables.navigation, variables.theURL, 'en_US') />
+	/**
+	 * Test that the getMeta public void function with a content-type http-equiv.
+	 */
+	public void function testGetMeta_httpEquiv_contenttype() {
+		variables.template.setMeta('content-type', 'text/html;charset=utf-8');
 		
-		<cfset template.setMeta('refresh', 5) />
-		
-		<cfset assertEquals('<meta http-equiv="refresh" content="5" />', template.getMeta()) />
-	</cffunction>
+		assertEquals('<meta http-equiv="content-type" content="text/html;charset=utf-8" />', variables.template.getMeta());
+	}
 	
-	<!---
-		Test that the getMeta function with a name.
-	--->
-	<cffunction name="testGetMeta_Name" access="public" returntype="void" output="false">
-		<cfset var template = createObject('component', 'algid.inc.resource.structure.template').init(variables.navigation, variables.theURL, 'en_US') />
+	/**
+	 * Test that the getMeta public void function with an expires http-equiv.
+	 */
+	public void function testGetMeta_httpEquiv_expires() {
+		variables.template.setMeta('expires', 'mon, 27 sep 2015 14:30:00 GMT');
 		
-		<cfset template.setMeta('description', 'Awesome') />
-		
-		<cfset assertEquals('<meta name="description" content="Awesome" />', template.getMeta()) />
-	</cffunction>
+		assertEquals('<meta http-equiv="expires" content="mon, 27 sep 2015 14:30:00 GMT" />', variables.template.getMeta());
+	}
 	
-	<!---
-		Test that the getStyles function works when you have added a stylesheet.
-	--->
-	<cffunction name="testGetStyles" access="public" returntype="void" output="false">
-		<cfset var style = 'testing.css' />
-		<cfset var template = createObject('component', 'algid.inc.resource.structure.template').init(variables.navigation, variables.theURL, 'en_US') />
+	/**
+	 * Test that the getMeta public void function with a pics-label http-equiv.
+	 */
+	public void function testGetMeta_httpEquiv_picslabel() {
+		variables.template.setMeta('pics-label', 'violence');
 		
-		<cfset template.addUniqueStyles(style) />
-		
-		<cfset assertEquals('<link rel="stylesheet" type="text/css" href="' & style & '" media="all" />' & chr(10), template.getStyles()) />
-	</cffunction>
+		assertEquals('<meta http-equiv="pics-label" content="violence" />', variables.template.getMeta());
+	}
 	
-	<!---
-		Test that the getStyles function works when you have not added a stylesheet.
-	--->
-	<cffunction name="testGetStyles_SanScript" access="public" returntype="void" output="false">
-		<cfset var template = createObject('component', 'algid.inc.resource.structure.template').init(variables.navigation, variables.theURL, 'en_US') />
+	/**
+	 * Test that the getMeta public void function with a pragma http-equiv.
+	 */
+	public void function testGetMeta_httpEquiv_pragma() {
+		variables.template.setMeta('pragma', 'no-cache');
 		
-		<cfset assertEquals('', template.getStyles()) />
-	</cffunction>
+		assertEquals('<meta http-equiv="pragma" content="no-cache" />', variables.template.getMeta());
+	}
 	
-	<!---
-		Test that the hasAttribute function works.
-	--->
-	<cffunction name="testHasAttribute_False" access="public" returntype="void" output="false">
-		<cfset var template = createObject('component', 'algid.inc.resource.structure.template').init(variables.navigation, variables.theURL, 'en_US') />
+	/**
+	 * Test that the getMeta public void function with a refresh http-equiv.
+	 */
+	public void function testGetMeta_httpEquiv_refresh() {
+		variables.template.setMeta('refresh', 5);
 		
-		<cfset assertFalse(template.hasAttribute('testing')) />
-	</cffunction>
+		assertEquals('<meta http-equiv="refresh" content="5" />', variables.template.getMeta());
+	}
 	
-	<!---
-		Test that the hasAttribute function works.
-	--->
-	<cffunction name="testHasAttribute_True" access="public" returntype="void" output="false">
-		<cfset var template = createObject('component', 'algid.inc.resource.structure.template').init(variables.navigation, variables.theURL, 'en_US') />
+	/**
+	 * Test that the getMeta public void function with a set-cookie http-equiv.
+	 */
+	public void function testGetMeta_httpEquiv_setcookie() {
+		variables.template.setMeta('set-cookie', 'foo=bar; path=/; expires=Thursday, 20-May-07 00:15:00 GMT');
 		
-		<cfset template.setAttribute('testing', 'yippee') />
+		assertEquals('<meta http-equiv="set-cookie" content="foo=bar; path=/; expires=Thursday, 20-May-07 00:15:00 GMT" />', variables.template.getMeta());
+	}
+	
+	/**
+	 * Test that the getMeta public void function with a window target http-equiv.
+	 */
+	public void function testGetMeta_httpEquiv_windowtarget() {
+		variables.template.setMeta('window-target', '_blank');
 		
-		<cfset assertTrue(template.hasAttribute('testing')) />
-	</cffunction>
+		assertEquals('<meta http-equiv="window-target" content="_blank" />', variables.template.getMeta());
+	}
+	
+	/**
+	 * Test that the getMeta public void function with a X-UA-Compatible http-equiv for chrome frame support.
+	 */
+	public void function testGetMeta_httpEquiv_xuacompatible() {
+		variables.template.setMeta('X-UA-Compatible', 'chrome=1');
+		
+		assertEquals('<meta http-equiv="X-UA-Compatible" content="chrome=1" />', variables.template.getMeta());
+	}
+	
+	/**
+	 * Test that the getMeta public void function with a name.
+	 */
+	public void function testGetMeta_Name() {
+		variables.template.setMeta('description', 'Awesome');
+		
+		assertEquals('<meta name="description" content="Awesome" />', variables.template.getMeta());
+	}
+	
+	/**
+	 * Test that the getStyles public void function works when you have added a stylesheet.
+	 */
+	public void function testGetStyles() {
+		var style = 'testing.css';
+		
+		variables.template.addUniqueStyles(style);
+		
+		assertEquals('<link rel="stylesheet" type="text/css" href="' & style & '" media="all" />' & chr(10), variables.template.getStyles());
+	}
+	
+	/**
+	 * Test that the getStyles public void function works when you have not added a stylesheet.
+	 */
+	public void function testGetStyles_SanScript() {
+		assertEquals('', variables.template.getStyles());
+	}
+	
+	/**
+	 * Test that the hasAttribute public void function works.
+	 */
+	public void function testHasAttribute_False() {
+		assertFalse(variables.template.hasAttribute('testing'));
+	}
+	
+	/**
+	 * Test that the hasAttribute public void function works.
+	 */
+	public void function testHasAttribute_True() {
+		variables.template.setAttribute('testing', 'yippee');
+		
+		assertTrue(variables.template.hasAttribute('testing'));
+	}
+</cfscript>
 </cfcomponent>

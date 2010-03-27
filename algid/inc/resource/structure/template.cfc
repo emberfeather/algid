@@ -264,7 +264,7 @@
 		<cfloop list="#structKeyList(variables.instance.meta)#" index="i">
 			<!--- Check if it is a http-equiv or just a normal name --->
 			<cfswitch expression="#i#">
-				<cfcase value="content-type,expires,refresh,set-cookie">
+				<cfcase value="content-type,expires,pics-label,pragma,refresh,set-cookie,window-target,X-UA-Compatible">
 					<cfset meta &= '<meta http-equiv="' & i & '" content="' & variables.instance.meta[i] & '" />' />
 				</cfcase>
 				<cfdefaultcase>
