@@ -286,7 +286,7 @@
 		<cfset objApplication = objectSerial.deserialize( settings ) />
 		
 		<!--- Save the storage path for the plugins to use --->
-		<cfset varables.storagePath = objApplication.getStoragePath() />
+		<cfset variables.storagePath = objApplication.getStoragePath() />
 		
 		<cfreturn objApplication />
 	</cffunction>
@@ -321,7 +321,7 @@
 		<cfset extender = createObject('component', 'cf-compendium.inc.resource.utility.extend').init() />
 		
 		<!--- Store the default plugin storage directory --->
-		<cfset settings['storagePath'] = varables.storagePath & '/' & arguments.pluginKey />
+		<cfset settings['storagePath'] = variables.storagePath & '/' & arguments.pluginKey />
 		
 		<!--- Read the plugin config file --->
 		<cffile action="read" file="#configPath & configFile#" variable="contents" />
