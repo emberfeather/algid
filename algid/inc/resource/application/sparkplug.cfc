@@ -299,7 +299,7 @@
 		<cfset var configFile = 'plugin.json.cfm' />
 		<cfset var configPath = variables.appBaseDirectory & 'plugins/' & arguments.pluginKey & '/config/' />
 		<cfset var contents = '' />
-		<cfset var observerManager = '' />
+		<cfset var manager = '' />
 		<cfset var events = '' />
 		<cfset var eventsPath = '' />
 		<cfset var extender = '' />
@@ -348,8 +348,14 @@
 			<cfset directoryCreate(plugin.getStoragePath()) />
 		</cfif>
 		
+		<!--- Create a cache manager for the plugin --->
+		<cfset manager = createObject('component', 'algid.inc.resource.manager.cache').init() />
+		
+		<!--- Store the observer manager for later --->
+		<cfset plugin.setCache(manager) />
+		
 		<!--- Create an observer manager for the plugin --->
-		<cfset observerManager = createObject('component', 'algid.inc.resource.manager.observer').init() />
+		<cfset manager = createObject('component', 'algid.inc.resource.manager.observer').init() />
 		
 		<!--- Look for all events that are defined for the plugin in any enabled plugin --->
 		<cfloop array="#arguments.enabledPlugins#" index="i">
@@ -363,7 +369,7 @@
 					<cfset observerName = mid(events.name, len('evnt') + 1, len(events.name) - len('evnt.cfc')) />
 					
 					<!--- Get the observer from the manager --->
-					<cfset observer = observerManager.get(observerName) />
+					<cfset observer = manager.get(observerName) />
 					
 					<!--- Create the event listner --->
 					<cfset listener = createObject('component', 'plugins.' & i & '.extend.' & arguments.pluginKey & '.events.evnt' & observerName).init() />
@@ -375,7 +381,7 @@
 		</cfloop>
 		
 		<!--- Store the observer manager for later --->
-		<cfset plugin.setObserver(observerManager) />
+		<cfset plugin.setObserver(manager) />
 		
 		<cfreturn plugin />
 	</cffunction>
