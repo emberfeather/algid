@@ -28,19 +28,9 @@
 	<cffunction name="testSetSansArguments" access="public" returntype="void" output="false">
 		<cfset var transient = createObject('component', 'algid.inc.resource.factory.transient').init() />
 		
-		<cftry>
-			<cfset transient.settransient() />
-			
-			<cfset fail("Should not be able to call the set without an argument.") />
-			
-			<cfcatch type="mxunit.exception.AssertionFailedError">
-				<cfrethrow />
-			</cfcatch>
-			
-			<cfcatch type="any">
-				<!--- expect to get here --->
-			</cfcatch>
-		</cftry>
+		<cfset expectException('any', 'Should not be able to call the set without an argument.') />
+		
+		<cfset transient.settransient() />
 	</cffunction>
 	
 	<!---
@@ -51,18 +41,8 @@
 		<cfset var transient = createObject('component', 'algid.inc.resource.factory.transient').init() />
 		<cfset var test = createObject('component', 'cf-compendium.inc.resource.base.base').init() />
 		
-		<cftry>
-			<cfset transient.settransient(test) />
-			
-			<cfset fail("Should not be able to call with a non-simple value argument.") />
-			
-			<cfcatch type="mxunit.exception.AssertionFailedError">
-				<cfrethrow />
-			</cfcatch>
-			
-			<cfcatch type="any">
-				<!--- expect to get here --->
-			</cfcatch>
-		</cftry>
+		<cfset expectException('any', 'Should not be able to call with a non-simple value argument.') />
+		
+		<cfset transient.settransient(test) />
 	</cffunction>
 </cfcomponent>

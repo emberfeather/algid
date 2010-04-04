@@ -44,19 +44,9 @@
 	<cffunction name="testSetSansArguments" access="public" returntype="void" output="false">
 		<cfset var singletons = createObject('component', 'algid.inc.resource.manager.singleton').init() />
 		
-		<cftry>
-			<cfset singletons.setSingleton() />
-			
-			<cfset fail("Should not be able to call the set without an argument.") />
-			
-			<cfcatch type="mxunit.exception.AssertionFailedError">
-				<cfrethrow />
-			</cfcatch>
-			
-			<cfcatch type="any">
-				<!--- expect to get here --->
-			</cfcatch>
-		</cftry>
+		<cfset expectException('any', 'Should not be able to call the set without an argument.') />
+		
+		<cfset singletons.setSingleton() />
 	</cffunction>
 	
 	<!---
@@ -66,18 +56,8 @@
 	<cffunction name="testSetSansObject" access="public" returntype="void" output="false">
 		<cfset var singletons = createObject('component', 'algid.inc.resource.manager.singleton').init() />
 		
-		<cftry>
-			<cfset singletons.setSingleton('testing simple value') />
-			
-			<cfset fail("Should not be able to call with a simple value argument.") />
-			
-			<cfcatch type="mxunit.exception.AssertionFailedError">
-				<cfrethrow />
-			</cfcatch>
-			
-			<cfcatch type="any">
-				<!--- expect to get here --->
-			</cfcatch>
-		</cftry>
+		<cfset expectException('any', 'Should not be able to call with a simple value argument.') />
+		
+		<cfset singletons.setSingleton('testing simple value') />
 	</cffunction>
 </cfcomponent>
