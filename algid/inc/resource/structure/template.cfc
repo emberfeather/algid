@@ -1,7 +1,7 @@
 <cfcomponent extends="cf-compendium.inc.resource.base.object" output="false">
 	<cffunction name="init" access="public" returnType="component" output="false">
 		<cfargument name="navigation" type="component" required="true" />
-		<cfargument name="theURL" type="component" required="true" />
+		<cfargument name="theUrl" type="component" required="true" />
 		<cfargument name="locale" type="string" required="true" />
 		<cfargument name="options" type="struct" default="#{}#" />
 		
@@ -9,6 +9,7 @@
 		<cfset var defaults = {
 				attributes = {},
 				authUser = '',
+				isPartial = false,
 				pageTitles = [],
 				meta = {},
 				scripts = [
@@ -24,12 +25,12 @@
 		
 		<!--- Store the navigation and url objects --->
 		<cfset variables.navigation = arguments.navigation />
-		<cfset variables.theURL = arguments.theURL />
+		<cfset variables.theUrl = arguments.theUrl />
 		<cfset variables.locale = arguments.locale />
 		
 		<!--- Get the current page information --->
 		<cfset args = {
-				theURL = arguments.theURL,
+				theUrl = arguments.theUrl,
 				locale = arguments.locale
 			} />
 		
@@ -39,6 +40,9 @@
 		</cfif>
 		
 		<cfset variables.currentPage = variables.navigation.locatePage( argumentCollection = args ) />
+		
+		<!--- Detect if this is a partial request --->
+		<cfset detectPartial() />
 		
 		<cfreturn this />
 	</cffunction>
@@ -146,7 +150,35 @@
 			</cfif>
 		</cfloop>
 	</cffunction>
-	
+<cfscript>
+	/**
+	 * Detect if the request is being made for a partial page.
+	 *
+	 * This can be used to not show parts of the page for ajax type requests.
+	 */
+	private void function detectPartial() {
+		var requestData = '';
+		
+		// Check if it is specifically being requested in the url as a partial
+		if(variables.theUrl.search('_isPartial') eq true) {
+			this.setIsPartial(true);
+			
+			// Remove from the url
+			variables.theURL.remove('_isPartial');
+			
+			return;
+		}
+		
+		// Check if it is coming from an ajax request
+		requestData = GetHttpRequestData();
+		
+		if(structKeyExists(requestData, 'headers') and structKeyExists(requestData.headers, 'HTTP_X_REQUESTED_WITH') and requestData.headers.http_x_requested_with eq 'XMLHttpRequest') {
+			this.setIsPartial(true);
+			
+			return;
+		}
+	}
+</cfscript>
 	<!---
 		Returns the attribute or a blank string if not found
 	--->
