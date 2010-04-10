@@ -7,7 +7,11 @@
 		
 		<cfreturn this />
 	</cffunction>
-	
+<cfscript>
+	public struct function get_definitions() {
+		return duplicate(variables.instance);
+	}
+</cfscript>
 	<cffunction name="onMissingMethod" access="public" returntype="any" output="false">
 		<cfargument name="missingMethodName" type="string" required="true" />
 		<cfargument name="missingMethodArguments" type="struct" required="true" />
