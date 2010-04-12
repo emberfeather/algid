@@ -32,6 +32,15 @@
 	</cffunction>
 	
 	<cffunction name="getLastLevel" access="public" returntype="struct" output="false">
-		<cfreturn variables.instance.levels[arrayLen(variables.instance.levels)] />
+		<cfif arrayLen(variables.instance.levels)>
+			<cfreturn variables.instance.levels[arrayLen(variables.instance.levels)] />
+		</cfif>
+		
+		<cfreturn {
+				title = '',
+				navTitle = '',
+				link = '',
+				path = '/'
+			} />
 	</cffunction>
 </cfcomponent>
