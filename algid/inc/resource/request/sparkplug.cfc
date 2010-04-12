@@ -77,6 +77,7 @@
 		<cfargument name="theForm" type="struct" required="true" />
 		<cfargument name="targetPage" type="string" required="true" />
 		
+		<cfset var app = '' />
 		<cfset var i = '' />
 		<cfset var j = '' />
 		<cfset var plugin = '' />
@@ -96,8 +97,12 @@
 		</cfif>
 		
 		<!--- Check for locale change --->
-		<cfif structKeyExists(URL, 'locale') and listFindNoCase(arrayToList(arguments.theApplication.settings.i18n.locales), URL.locale)>
-			<cfset arguments.theSession.managers.singleton.getSession().setLocale(URL.locale) />
+		<cfif structKeyExists(URL, 'locale')>
+			<cfset app = arguments.theApplication.managers.singleton.getApplication() />
+			
+			<cfif listFindNoCase(arrayToList(app.getI18n().locales), URL.locale)>
+				<cfset arguments.theSession.managers.singleton.getSession().setLocale(URL.locale) />
+			</cfif>
 		</cfif>
 		
 		<cfset variables.isDevelopment = not arguments.theApplication.managers.singleton.getApplication().isProduction() />
