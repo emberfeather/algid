@@ -8,7 +8,7 @@
 		<cfset variables.i18n = arguments.i18n />
 		
 		<!--- Use a query for the navigation storage --->
-		<cfset variables.navigationFields = 'pageID,level,title,navTitle,path,navPosition,description,ids,vars,attribute,attributeValue,allow,deny,secureOrder,defaults,contentPath,locale,orderBy' />
+		<cfset variables.navigationFields = 'contentID,level,title,navTitle,path,navPosition,description,ids,vars,attribute,attributeValue,allow,deny,secureOrder,defaults,contentPath,locale,orderBy' />
 		<cfset variables.navigationTypes = 'integer,integer,varChar,varChar,varChar,varChar,varChar,varChar,varChar,varChar,varChar,varChar,varChar,varChar,varChar,varChar,varChar,integer' />
 		
 		<!--- Use a query for the navigation storage --->
@@ -110,7 +110,7 @@
 		<!--- Add a new navigation row with default values --->
 		<cfset queryAddRow(variables.navigation) />
 		
-		<cfset querySetCell(variables.navigation, 'pageID', variables.nextID) />
+		<cfset querySetCell(variables.navigation, 'contentID', variables.nextID) />
 		<cfset querySetCell(variables.navigation, 'allow', '*') />
 		<cfset querySetCell(variables.navigation, 'deny', '*') />
 		<cfset querySetCell(variables.navigation, 'secureOrder', 'allow,deny') />
@@ -191,7 +191,7 @@
 		so extra does not need to be done to create navigation if
 		it was already generated
 	--->
-	<cffunction name="createUniquePageID" access="private" returntype="string" output="false">
+	<cffunction name="createUniqueContentID" access="private" returntype="string" output="false">
 		<cfargument name="theURL" type="component" required="true" />
 		<cfargument name="level" type="numeric" required="true" />
 		<cfargument name="navPosition" type="any" required="true" />
@@ -200,7 +200,7 @@
 		
 		<cfset var i = '' />
 		<cfset var position = '' />
-		<cfset var uniquePageID = '' />
+		<cfset var uniqueContentID = '' />
 		
 		<cfif isArray(arguments.navPosition)>
 			<cfloop array="#arguments.navPosition#" index="i">
@@ -212,17 +212,17 @@
 			<cfset position = arguments.navPosition />
 		</cfif>
 		
-		<cfset uniquePageID = arguments.locale & '-' & arguments.level & '-' & position />
+		<cfset uniqueContentID = arguments.locale & '-' & arguments.level & '-' & position />
 		
 		<cfif structKeyExists(arguments.options, 'depth')>
-			<cfset uniquePageID &= '-depth' & arguments.options.depth />
+			<cfset uniqueContentID &= '-depth' & arguments.options.depth />
 		</cfif>
 		
-		<cfset uniquePageID &= '-parent' & getBasePathForLevel(arguments.level, arguments.theURL.search('_base')) />
+		<cfset uniqueContentID &= '-parent' & getBasePathForLevel(arguments.level, arguments.theURL.search('_base')) />
 		
 		<!--- TODO Make the identification string more unique --->
 		
-		<cfreturn uniquePageID />
+		<cfreturn uniqueContentID />
 	</cffunction>
 	
 	<cffunction name="getDefaultRoot" access="public" returntype="string" output="false">
@@ -248,7 +248,7 @@
 		
 		<!--- Query the navigation query for the page information --->
 		<cfquery name="navigation" dbtype="query">
-			SELECT pageID, [level], path, title, navTitle, navPosition, description, ids, vars, attribute, attributeValue, allow, deny, secureOrder, defaults, orderBy
+			SELECT contentID, [level], path, title, navTitle, navPosition, description, ids, vars, attribute, attributeValue, allow, deny, secureOrder, defaults, orderBy
 			FROM variables.navigation
 			WHERE level = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.level#" />
 				and path LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.parentPath#%" />
@@ -335,7 +335,7 @@
 		
 		<!--- Query for the exact pages that match the paths --->
 		<cfquery name="navigation" dbtype="query">
-			SELECT pageID, [level], path, title, navTitle, navPosition, description, ids, vars, attribute, attributeValue, allow, deny, defaults, contentPath, orderBy
+			SELECT contentID, [level], path, title, navTitle, navPosition, description, ids, vars, attribute, attributeValue, allow, deny, defaults, contentPath, orderBy
 			FROM variables.navigation
 			WHERE path IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#arrayToList(paths)#" list="true" />)
 				and locale = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.locale#" />
@@ -400,7 +400,7 @@
 		<cfargument name="authUser" type="component" required="false" />
 		
 		<cfset var html = '' />
-		<cfset var uniquePageID = '' />
+		<cfset var uniqueContentID = '' />
 		
 		<!--- Check for a logged-in user -- NO caching --->
 		<cfif structKeyExists(arguments, 'authUser')>
@@ -408,15 +408,15 @@
 		</cfif>
 		
 		<!--- Determine a unique page identification for caching purposes --->
-		<cfset uniquePageID = createUniquePageID(argumentCollection = arguments) />
+		<cfset uniqueContentID = createUniqueContentID(argumentCollection = arguments) />
 		
 		<!--- Do we need to create and cache the HTML? --->
-		<cfif not structKeyExists(variables.cachedHTML, uniquePageID)>
-			<cfset variables.cachedHTML[uniquePageID] = super.toHTML(argumentCollection = arguments) />
+		<cfif not structKeyExists(variables.cachedHTML, uniqueContentID)>
+			<cfset variables.cachedHTML[uniqueContentID] = super.toHTML(argumentCollection = arguments) />
 		</cfif>
 		
 		<!--- Return the cached navigation html --->
-		<cfreturn variables.cachedHTML[uniquePageID] />
+		<cfreturn variables.cachedHTML[uniqueContentID] />
 	</cffunction>
 	
 	<cffunction name="validate" access="public" returntype="void" output="false">
