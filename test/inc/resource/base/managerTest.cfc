@@ -1,5 +1,4 @@
-<cfcomponent extends="mxunit.framework.TestCase" output="false">
-<cfscript>
+component extends="mxunit.framework.TestCase" {
 	/**
 	 * Should return true if it has a value set.
 	 */
@@ -30,5 +29,4 @@
 		
 		manager.setTest( test );
 	}
-</cfscript>
-</cfcomponent>
+}

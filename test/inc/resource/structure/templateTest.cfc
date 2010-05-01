@@ -1,5 +1,4 @@
-<cfcomponent extends="mxunit.framework.TestCase" output="false">
-<cfscript>
+component extends="mxunit.framework.TestCase" {
 	public void function setup() {
 		variables.i18n = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath('/i18n/'));
 		variables.navigation = createObject('component', 'algid.inc.resource.structure.navigationFile').init(i18n);
@@ -144,5 +143,4 @@
 		
 		assertTrue(variables.template.hasAttribute('testing'));
 	}
-</cfscript>
-</cfcomponent>
+}

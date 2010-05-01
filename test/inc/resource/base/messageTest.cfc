@@ -1,44 +1,44 @@
-<cfcomponent extends="mxunit.framework.TestCase" output="false">
-	<!---
+component extends="mxunit.framework.TestCase" {
+	/*
 		Tests if the length works when it has multiple messages.
-	--->
-	<cffunction name="testLengthMulti" access="public" returntype="void" output="false">
-		<cfset var message = createObject('component', 'algid.inc.resource.base.message').init() />
+	*/
+	public void function testLengthMulti() {
+		var message = createObject('component', 'algid.inc.resource.base.message').init();
 		
-		<cfset message.addMessages('Testing', 'Testing', 'Testing') />
+		message.addMessages('Testing', 'Testing', 'Testing');
 		
-		<cfset assertEquals(3, message.lengthMessages()) />
-	</cffunction>
+		assertEquals(3, message.lengthMessages());
+	}
 	
-	<!---
+	/*
 		Tests if the length works when it has no messages.
-	--->
-	<cffunction name="testLengthSansMessages" access="public" returntype="void" output="false">
-		<cfset var message = createObject('component', 'algid.inc.resource.base.message').init() />
+	*/
+	public void function testLengthSansMessages() {
+		var message = createObject('component', 'algid.inc.resource.base.message').init();
 		
-		<cfset assertEquals(0, message.lengthMessages()) />
-	</cffunction>
+		assertEquals(0, message.lengthMessages());
+	}
 	
-	<!---
+	/*
 		Tests if the length works when it has one message.
-	--->
-	<cffunction name="testLengthOne" access="public" returntype="void" output="false">
-		<cfset var message = createObject('component', 'algid.inc.resource.base.message').init() />
+	*/
+	public void function testLengthOne() {
+		var message = createObject('component', 'algid.inc.resource.base.message').init();
 		
-		<cfset message.addMessages('Testing') />
+		message.addMessages('Testing');
 		
-		<cfset assertEquals(1, message.lengthMessages()) />
-	</cffunction>
+		assertEquals(1, message.lengthMessages());
+	}
 	
-	<!---
+	/*
 		Tests if the reset works when it has one message.
-	--->
-	<cffunction name="testReset" access="public" returntype="void" output="false">
-		<cfset var message = createObject('component', 'algid.inc.resource.base.message').init() />
+	*/
+	public void function testReset() {
+		var message = createObject('component', 'algid.inc.resource.base.message').init();
 		
-		<cfset message.addMessages('Testing') />
-		<cfset message.resetMessages() />
+		message.addMessages('Testing');
+		message.resetMessages();
 		
-		<cfset assertEquals(0, message.lengthMessages()) />
-	</cffunction>
-</cfcomponent>
+		assertEquals(0, message.lengthMessages());
+	}
+}

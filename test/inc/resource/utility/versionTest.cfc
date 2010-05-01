@@ -1,33 +1,33 @@
-<cfcomponent extends="mxunit.framework.TestCase" output="false">
-	<cffunction name="setup" access="public" returntype="void" output="false">
-		<cfset variables.version = createObject('component', 'algid.inc.resource.utility.version').init() />
-	</cffunction>
+component extends="mxunit.framework.TestCase" {
+	public void function setup() {
+		variables.version = createObject('component', 'algid.inc.resource.utility.version').init();
+	}
 	
-	<cffunction name="testCompareVersionsNewer" access="public" returntype="void" output="false">
-		<cfset assertEquals(1, variables.version.compareVersions('1.0.5', '1.0.4')) />
-	</cffunction>
+	public void function testCompareVersionsNewer() {
+		assertEquals(1, variables.version.compareVersions('1.0.5', '1.0.4'));
+	}
 	
-	<cffunction name="testCompareVersionsNewerDouble" access="public" returntype="void" output="false">
-		<cfset assertEquals(1, variables.version.compareVersions('1.0.15', '1.0.2')) />
-	</cffunction>
+	public void function testCompareVersionsNewerDouble() {
+		assertEquals(1, variables.version.compareVersions('1.0.15', '1.0.2'));
+	}
 	
-	<cffunction name="testCompareVersionsNewerMismatched" access="public" returntype="void" output="false">
-		<cfset assertEquals(1, variables.version.compareVersions('1.0.2.1', '1.0.2')) />
-	</cffunction>
+	public void function testCompareVersionsNewerMismatched() {
+		assertEquals(1, variables.version.compareVersions('1.0.2.1', '1.0.2'));
+	}
 	
-	<cffunction name="testCompareVersionsOlder" access="public" returntype="void" output="false">
-		<cfset assertEquals(-1, variables.version.compareVersions('1.0.4', '1.0.5')) />
-	</cffunction>
+	public void function testCompareVersionsOlder() {
+		assertEquals(-1, variables.version.compareVersions('1.0.4', '1.0.5'));
+	}
 	
-	<cffunction name="testCompareVersionsOlderDouble" access="public" returntype="void" output="false">
-		<cfset assertEquals(-1, variables.version.compareVersions('1.0.15', '1.0.20')) />
-	</cffunction>
+	public void function testCompareVersionsOlderDouble() {
+		assertEquals(-1, variables.version.compareVersions('1.0.15', '1.0.20'));
+	}
 	
-	<cffunction name="testCompareVersionsOlderMismatched" access="public" returntype="void" output="false">
-		<cfset assertEquals(-1, variables.version.compareVersions('1.0.2', '1.0.2.1')) />
-	</cffunction>
+	public void function testCompareVersionsOlderMismatched() {
+		assertEquals(-1, variables.version.compareVersions('1.0.2', '1.0.2.1'));
+	}
 	
-	<cffunction name="testCompareVersionsSame" access="public" returntype="void" output="false">
-		<cfset assertEquals(0, variables.version.compareVersions('1.0.5', '1.0.5')) />
-	</cffunction>
-</cfcomponent>
+	public void function testCompareVersionsSame() {
+		assertEquals(0, variables.version.compareVersions('1.0.5', '1.0.5'));
+	}
+}

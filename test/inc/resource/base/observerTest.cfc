@@ -1,4 +1,2 @@
-<cfcomponent extends="mxunit.framework.TestCase" output="false">
-<cfscript>
-</cfscript>
-</cfcomponent>
+component extends="mxunit.framework.TestCase" {
+}
