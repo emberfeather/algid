@@ -39,7 +39,7 @@
 						
 						<cfloop list="#paths#" index="path">
 							<!--- Get the list of files --->
-							<cfdirectory action="list" directory="#expandPath(path)#" name="files" recurse="true" filter="#filter#" />
+							<cfdirectory action="list" directory="#expandPath(path)#" name="files" recurse="true" sort="directory asc, name asc" filter="#filter#" />
 							
 							<cfoutput query="files" group="directory">
 								<cfset shortDirectory = right(files.directory, len(files.directory) - pathLen) />
