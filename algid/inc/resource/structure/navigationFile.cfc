@@ -70,6 +70,13 @@
 					<cfset querySetCell(variables.navigation, 'orderBy', 1, currentRow) />
 				</cfif>
 				
+				<!--- Check for a defined ids --->
+				<cfif structKeyExists(i.xmlAttributes, 'ids')>
+					<cfset querySetCell(variables.navigation, 'ids', i.xmlAttributes.ids, currentRow) />
+				<cfelse>
+					<cfset querySetCell(variables.navigation, 'ids', '', currentRow) />
+				</cfif>
+				
 				<!--- Pull translated information from resource bundle --->
 				<cfset querySetCell(variables.navigation, 'title', bundle.getValue(plainPath), currentRow) />
 				<cfset querySetCell(variables.navigation, 'navTitle', bundle.getValue(plainPath & "-nav"), currentRow) />
@@ -135,12 +142,6 @@
 		
 		<cfif isXML(fileContents)>
 			<cfset fileContents = xmlParse(fileContents).xmlRoot />
-			
-			<cfif structKeyExists(fileContents.xmlAttributes, 'override') and fileContents.xmlAttributes.override eq true>
-				<!--- TODO Remove --->
-				<cfdump var="#fileContents#" />
-				<cfabort />
-			</cfif>
 			
 			<cfloop list="#arguments.locales#" index="locale">
 				<!--- Set the resource bundle --->
