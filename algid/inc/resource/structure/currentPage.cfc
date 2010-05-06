@@ -1,46 +1,43 @@
-<cfcomponent extends="cf-compendium.inc.resource.base.object" output="false">
-	<cffunction name="init" access="public" returnType="component" output="false">
-		<cfargument name="options" type="struct" default="#{}#" />
-		
-		<cfset var defaults = {
+component extends="cf-compendium.inc.resource.base.object" {
+	public component function init(struct options = {}) {
+		var defaults = {
 				levels = []
-			} />
+			};
 		
-		<cfset super.init() />
+		super.init();
 		
-		<cfset set__properties(defaults, arguments.options) />
+		set__properties(defaults, arguments.options);
 		
-		<cfreturn this />
-	</cffunction>
+		return this;
+	}
 	
-	<cffunction name="addLevel" access="public" returntype="void" output="false">
-		<cfargument name="title" type="string" required="true" />
-		<cfargument name="navTitle" type="string" required="true" />
-		<cfargument name="link" type="string" required="true" />
-		<cfargument name="path" type="string" required="true" />
+	/* required title */
+	/* required navTitle */
+	/* required link */
+	/* required path */
+	public void function addLevel(string title, string navTitle, string link, string path) {
+		var level = '';
 		
-		<cfset var level = '' />
-		
-		<cfset level = {
+		level = {
 				title = arguments.title,
 				navTitle = arguments.navTitle,
 				link = arguments.link,
 				path = arguments.path
-			} />
+			};
 		
-		<cfset this.addLevels(level) />
-	</cffunction>
+		this.addLevels(level);
+	}
 	
-	<cffunction name="getLastLevel" access="public" returntype="struct" output="false">
-		<cfif arrayLen(variables.instance.levels)>
-			<cfreturn variables.instance.levels[arrayLen(variables.instance.levels)] />
-		</cfif>
+	public struct function getLastLevel() {
+		if (arrayLen(variables.instance.levels)) {
+			return variables.instance.levels[arrayLen(variables.instance.levels)];
+		}
 		
-		<cfreturn {
+		return {
 				title = '',
 				navTitle = '',
 				link = '',
 				path = '/'
-			} />
-	</cffunction>
-</cfcomponent>
+			};
+	}
+}
