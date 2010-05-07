@@ -292,61 +292,73 @@
 			
 			<cfset profiler = request.managers.singleton.getProfiler() />
 			
-			<cfset tickers = profiler.getTickers() />
-			
-			<cfquery name="tickers" dbtype="query">
-				SELECT *
-				FROM tickers
-				ORDER BY total DESC
-			</cfquery>
 			
 			<h4>Profiling</h4>
 			
-			<div class="section">
-				<div class="grid_1">
-					<strong>Count</strong>
-				</div>
+			<cftry>
+				<cfset tickers = profiler.getTickers() />
 				
-				<div class="grid_1">
-					<strong>Total</strong>
-				</div>
-				
-				<div class="grid_1">
-					<strong>Average</strong>
-				</div>
-				
-				<div class="grid_1">
-					<strong>Percent</strong>
-				</div>
-				
-				<div class="grid_8">
-					<strong>Ticker</strong>
-				</div>
-				
-				<cfloop query="tickers">
-					<div class="grid_1" style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
-						#tickers.count#
+				<cfquery name="tickers" dbtype="query">
+					SELECT *
+					FROM tickers
+					ORDER BY total DESC
+				</cfquery>
+				<div class="section">
+					<div class="grid_1">
+						<strong>Count</strong>
 					</div>
 					
-					<div class="grid_1" style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
-						#tickers.total# ms
+					<div class="grid_1">
+						<strong>Total</strong>
 					</div>
 					
-					<div class="grid_1" style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
-						#numberFormat(tickers.average, '0.__')# ms
+					<div class="grid_1">
+						<strong>Average</strong>
 					</div>
 					
-					<div class="grid_1" style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
-						#numberFormat(( tickers.total ? (tickers.total/execution.total) * 100 : 0 ), '0.__')#%
+					<div class="grid_1">
+						<strong>Percent</strong>
 					</div>
 					
-					<div class="grid_8" style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
-						#tickers.ticker#
+					<div class="grid_8">
+						<strong>Ticker</strong>
 					</div>
-				</cfloop>
+					
+					<cfloop query="tickers">
+						<div class="grid_1" style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
+							#tickers.count#
+						</div>
+						
+						<div class="grid_1" style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
+							#tickers.total# ms
+						</div>
+						
+						<div class="grid_1" style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
+							#numberFormat(tickers.average, '0.__')# ms
+						</div>
+						
+						<div class="grid_1" style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
+							#numberFormat(( tickers.total ? (tickers.total/execution.total) * 100 : 0 ), '0.__')#%
+						</div>
+						
+						<div class="grid_8" style="<cfif tickers.average gt thresholds.timer>color: red;</cfif>">
+							#tickers.ticker#
+						</div>
+					</cfloop>
+					
+					<div class="clear"><!-- clear --></div>
+				</div>
 				
-				<div class="clear"><!-- clear --></div>
-			</div>
+				<cfcatch>
+					<div class="section">
+						<div class="grid_12">
+							Unable to load profiling: #cfcatch.message#
+						</div>
+						
+						<div class="clear"><!-- clear --></div>
+					</div>
+				</cfcatch>
+			</cftry>
 		</cfif>
 		
 		<!--- Timers --->
