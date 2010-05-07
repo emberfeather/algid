@@ -300,11 +300,11 @@
 		<cfset var configPath = variables.appBaseDirectory & 'plugins/' & arguments.pluginKey & '/config/' />
 		<cfset var contents = '' />
 		<cfset var manager = '' />
-		<cfset var events = '' />
 		<cfset var eventsPath = '' />
 		<cfset var extender = '' />
 		<cfset var i = '' />
 		<cfset var listener = '' />
+		<cfset var listeners = '' />
 		<cfset var objectSerial = '' />
 		<cfset var observer = '' />
 		<cfset var observerName = '' />
@@ -361,17 +361,19 @@
 		<cfloop array="#arguments.enabledPlugins#" index="i">
 			<cfset eventsPath = variables.appBaseDirectory & 'plugins/' & i & '/extend/' & arguments.pluginKey & '/events/' />
 			
+			<!--- Check if there is an events directory for the plugin --->
 			<cfif directoryExists(eventsPath)>
-				<cfdirectory action="list" directory="#eventsPath#" name="events" filter="evnt*.cfc" />
+				<!--- Find all the event listeners for the plugin --->
+				<cfdirectory action="list" directory="#eventsPath#" name="listeners" filter="evnt*.cfc" />
 				
-				<cfloop query="events">
+				<cfloop query="listeners">
 					<!--- Determine the observer to use --->
-					<cfset observerName = mid(events.name, len('evnt') + 1, len(events.name) - len('evnt.cfc')) />
+					<cfset observerName = mid(listeners.name, len('evnt') + 1, len(listeners.name) - len('evnt.cfc')) />
 					
 					<!--- Get the observer from the manager --->
 					<cfset observer = manager.get(observerName) />
 					
-					<!--- Create the event listner --->
+					<!--- Create the event listener --->
 					<cfset listener = createObject('component', 'plugins.' & i & '.extend.' & arguments.pluginKey & '.events.evnt' & observerName).init() />
 					
 					<!--- Register event listener with the observer --->
