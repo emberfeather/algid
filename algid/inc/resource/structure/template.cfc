@@ -375,7 +375,7 @@
 		
 		<cfset var level = '' />
 		
-		<cfset level = variables.currentPage.getLevels()[variables.currentPage.lengthLevels()] />
+		<cfset level = variables.currentPage.getLastLevel() />
 		
 		<cfreturn variables.navigation.convertContentPath(level.path, level.contentPath, arguments.prefix) />
 	</cffunction>
