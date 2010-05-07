@@ -42,6 +42,7 @@
 		<cfargument name="authUser" type="component" required="false" />
 		
 		<cfset var attributes = '' />
+		<cfset var currentPath = '' />
 		<cfset var currentPathAtLevel = '' />
 		<cfset var defaults = {
 				navClasses = []
@@ -52,8 +53,10 @@
 		<cfset var positions = '' />
 		<cfset var temp = '' />
 		
+		<cfset currentPath = arguments.theURL.search('_base') />
+		
 		<!--- Determine what page we are on for this level --->
-		<cfset currentPathAtLevel = getBasePathForLevel(arguments.level + 1, arguments.theURL.search('_base')) />
+		<cfset currentPathAtLevel = getBasePathForLevel(arguments.level + 1, currentPath) />
 		
 		<!--- Trim the trailing period --->
 		<cfif currentPathAtLevel neq ''>
@@ -114,7 +117,7 @@
 			<cfset arguments.theURL.setCurrentPage('_base', navigation.path) />
 			
 			<!--- Check if the page is selected --->
-			<cfset isSelected = currentPathAtLevel eq navigation.path />
+			<cfset isSelected = (currentPathAtLevel eq navigation.path or currentPath eq navigation.path) />
 			
 			<cfset html &= '<li>' />
 			
