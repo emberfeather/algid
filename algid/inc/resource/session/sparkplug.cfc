@@ -77,8 +77,11 @@
 		<!--- Determine the locale for the session --->
 		<cfset locale = left(cgi.http_accept_language, 4) />
 		
-		<!--- If its not in the available locales use the default --->
-		<cfif not listFindNoCase( arrayToList(arguments.theApplication.managers.singleton.getApplication().getI18n().locales), locale )>
+		<cfif not structKeyExists(arguments.theApplication, 'managers')>
+			<!--- If the application isn't started all the way just use english --->
+			<cfset locale = 'en_US' />
+		<cfelseif not listFindNoCase( arrayToList(arguments.theApplication.managers.singleton.getApplication().getI18n().locales), locale )>
+			<!--- If its not in the available locales use the default --->
 			<cfset locale = arguments.theApplication.managers.singleton.getApplication().getI18n().default />
 		</cfif>
 		
