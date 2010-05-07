@@ -300,11 +300,11 @@
 		<cfset var configPath = variables.appBaseDirectory & 'plugins/' & arguments.pluginKey & '/config/' />
 		<cfset var contents = '' />
 		<cfset var manager = '' />
-		<cfset var events = '' />
 		<cfset var eventsPath = '' />
 		<cfset var extender = '' />
 		<cfset var i = '' />
 		<cfset var listener = '' />
+		<cfset var listeners = '' />
 		<cfset var objectSerial = '' />
 		<cfset var observer = '' />
 		<cfset var observerName = '' />
