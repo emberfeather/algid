@@ -319,6 +319,7 @@
 	</cffunction>
 	
 	<cffunction name="locatePage" access="public" returntype="component" output="false">
+		<cfargument name="domain" type="string" required="true" />
 		<cfargument name="theURL" type="component" required="true" />
 		<cfargument name="locale" type="string" required="true" />
 		<cfargument name="authUser" type="component" required="false" />

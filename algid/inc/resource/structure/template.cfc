@@ -1,5 +1,6 @@
 <cfcomponent extends="cf-compendium.inc.resource.base.object" output="false">
 	<cffunction name="init" access="public" returnType="component" output="false">
+		<cfargument name="domain" type="string" required="true" />
 		<cfargument name="navigation" type="component" required="true" />
 		<cfargument name="theUrl" type="component" required="true" />
 		<cfargument name="locale" type="string" required="true" />
@@ -12,9 +13,7 @@
 				isPartial = false,
 				pageTitles = [],
 				meta = {},
-				scripts = [
-					'http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js'
-				],
+				scripts = [],
 				styles = []
 			} />
 		<cfset var i = '' />
@@ -30,6 +29,7 @@
 		
 		<!--- Get the current page information --->
 		<cfset args = {
+				domain = arguments.domain,
 				theUrl = arguments.theUrl,
 				locale = arguments.locale
 			} />
