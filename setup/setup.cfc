@@ -101,6 +101,14 @@
 		</cfloop>
 		
 		<cfswitch expression="#arguments.wizard#-#arguments.type#-#arguments.host#">
+			<cfcase value="project-app-github">
+				<cfset projectGithubApplication( arguments.request ) />
+			</cfcase>
+			
+			<cfcase value="project-plugin-github">
+				<cfset projectGithubPlugin( arguments.request ) />
+			</cfcase>
+			
 			<cfcase value="project-app-google">
 				<cfset projectGoogleApplication( arguments.request ) />
 			</cfcase>
@@ -133,6 +141,123 @@
 		</cfif>
 		
 		<cfreturn arguments.path />
+	</cffunction>
+	
+	<cffunction name="projectGithubApplication" access="private" returntype="void" output="false">
+		<cfargument name="request" type="struct" required="true" />
+		
+		<cfset var args = {} />
+		<cfset var key = '' />
+		
+		<!--- Trim the key --->
+		<cfset key = trim( arguments.request.key ) />
+		
+		<cfset args.request = arguments.request />
+		<cfset args.srcPath = variables.setupBasePath & 'project/github/application' />
+		
+		<!--- The versioned directories --->
+		<cfset args.directories = 'build' />
+		<cfset args.directories &= ',build/export' />
+		<cfset args.directories &= ',build/lib' />
+		<cfset args.directories &= ',build/logs' />
+		<cfset args.directories &= ',build/settings' />
+		<cfset args.directories &= ',build/templates,build/templates/config' />
+		<cfset args.directories &= ',dist/' />
+		<cfset args.directories &= ',dist/war,dist/war/lib,dist/war/META-INF,dist/war/WEB-INF' />
+		<cfset args.directories &= ',' & key />
+		
+		<!--- The static files --->
+		<cfset args.staticFiles = 'build/lib/compiler.jar,build/lib/yuicompressor.jar' />
+		
+		<!--- The versioned files --->
+		<cfset args.versionedFiles = '.gitignore,Application.cfc,build.xml,releaseNotes.txt,version.json' />
+		<cfset args.versionedFiles &= ',build/settings/build.properties,build/settings/project.properties,build/settings/statSVN.properties,build/settings/test.properties,build/settings/user.properties.example,build/settings/version.properties' />
+		<cfset args.versionedFiles &= ',build/templates/version.json' />
+		<cfset args.versionedFiles &= ',dist/war/railo.xml,dist/war/META-INF/context.xml' />
+		
+		<!--- The unversioned files --->
+		<cfset args.unversionedFiles = 'build/settings/user.properties' />
+		
+		<!--- The repository properties --->
+		<cfset args.gitProperties = [] />
+		
+		<cfswitch expression="#arguments.request.scm#">
+			<cfcase value="none">
+				<cfset setupFile( argumentCollection = args ) />
+			</cfcase>
+			
+			<cfcase value="git">
+				<!--- Setup the working copy path --->
+				<cfset arguments.request.workingCopy = normalizePath(arguments.request.path) />
+				
+				<cfset setupGIT( argumentCollection = args ) />
+				
+				<!--- Add the key to the path for the application setup --->
+				<cfset arguments.request.path = normalizePath(arguments.request.path) & key />
+			</cfcase>
+			
+			<cfdefaultcase>
+				<cfthrow message="Not supported" detail="The #arguments.request.scm# type of SCM is not supported" />
+			</cfdefaultcase>
+		</cfswitch>
+		
+		<!--- Setup the application --->
+		<cfset standaloneApplication( arguments.request ) />
+	</cffunction>
+	
+	<cffunction name="projectGithubPlugin" access="private" returntype="void" output="false">
+		<cfargument name="request" type="struct" required="true" />
+		
+		<cfset var args = {} />
+		
+		<cfset args.request = arguments.request />
+		<cfset args.srcPath = variables.setupBasePath & 'project/github/plugin' />
+		
+		<!--- The versioned directories --->
+		<cfset args.directories = 'build' />
+		<cfset args.directories &= ',build/export' />
+		<cfset args.directories &= ',build/lib' />
+		<cfset args.directories &= ',build/logs' />
+		<cfset args.directories &= ',build/settings' />
+		<cfset args.directories &= ',build/templates' />
+		<cfset args.directories &= ',build/unit' />
+		<cfset args.directories &= ',test' />
+		<cfset args.directories &= ',test/inc,test/inc/model' />
+		
+		<!--- The static files --->
+		<cfset args.staticFiles = 'build/lib/compiler.jar,build/lib/mxunit-ant-java5.jar,build/lib/mxunit-ant.jar,build/lib/yuicompressor.jar' />
+		
+		<!--- The versioned files --->
+		<cfset args.versionedFiles = '.gitignore,Application.cfc,build.xml,releaseNotes.txt,version.json' />
+		<cfset args.versionedFiles &= ',build/settings/build.properties,build/settings/project.properties,build/settings/statSVN.properties,build/settings/test.properties,build/settings/user.properties.example,build/settings/version.properties' />
+		<cfset args.versionedFiles &= ',build/templates/version.json' />
+		<cfset args.versionedFiles &= ',test/notATest.cfc' />
+		
+		<!--- The unversioned files --->
+		<cfset args.unversionedFiles = 'build/settings/user.properties' />
+		
+		<!--- The repository properties --->
+		<cfset args.gitProperties = [] />
+		
+		<cfswitch expression="#arguments.request.scm#">
+			<cfcase value="none">
+				<cfset setupFile( argumentCollection = args ) />
+			</cfcase>
+			
+			<cfcase value="git">
+				<!--- Setup the working copy path --->
+				<cfset arguments.request.workingCopy = normalizePath(arguments.request.path) />
+				
+				<cfset setupGIT( argumentCollection = args ) />
+			</cfcase>
+			
+			<cfdefaultcase>
+				<cfthrow message="Not supported" detail="The #arguments.request.scm# type of SCM is not supported" />
+			</cfdefaultcase>
+		</cfswitch>
+		
+		<!--- Setup the plugin --->
+		<cfset standalonePlugin( arguments.request ) />
 	</cffunction>
 	
 	<cffunction name="projectGoogleApplication" access="private" returntype="void" output="false">
@@ -214,10 +339,9 @@
 			
 			<cfcase value="svn">
 				<cfset setupSVN( argumentCollection = args ) />
-			</cfcase>
-			
-			<cfcase value="git">
-				<cfset setupGIT( argumentCollection = args ) />
+				
+				<!--- Add the key to the path for the application setup --->
+				<cfset arguments.request.path = normalizePath(arguments.request.path) & 'trunk/' & key />
 			</cfcase>
 			
 			<cfdefaultcase>
@@ -225,10 +349,7 @@
 			</cfdefaultcase>
 		</cfswitch>
 		
-		<!--- Add the key to the path for the application setup --->
-		<cfset arguments.request.path = normalizePath(arguments.request.path) & 'trunk/' & key />
-		
-		<!--- Setup the plugin --->
+		<!--- Setup the application --->
 		<cfset standaloneApplication( arguments.request ) />
 	</cffunction>
 	
@@ -300,19 +421,15 @@
 			
 			<cfcase value="svn">
 				<cfset setupSVN( argumentCollection = args ) />
-			</cfcase>
-			
-			<cfcase value="git">
-				<cfset setupGIT( argumentCollection = args ) />
+				
+				<!--- Add the trunk to the path for the plugin setup --->
+				<cfset arguments.request.path = normalizePath(arguments.request.path) & 'trunk/' />
 			</cfcase>
 			
 			<cfdefaultcase>
 				<cfthrow message="Not supported" detail="The #arguments.request.scm# type of SCM is not supported" />
 			</cfdefaultcase>
 		</cfswitch>
-		
-		<!--- Add the trunk to the path for the plugin setup --->
-		<cfset arguments.request.path = normalizePath(arguments.request.path) & 'trunk/' />
 		
 		<!--- Setup the plugin --->
 		<cfset standalonePlugin( arguments.request ) />
@@ -356,8 +473,34 @@
 		<cfargument name="unversionedFiles" type="string" required="true" />
 		
 		<cfset var newObjects = '' />
+		<cfset var git = '' />
+		<cfset var property = '' />
 		
-		<cfthrow message="Not implemented yet" />
+		<cfset arguments.request.path = normalizePath(arguments.request.path) />
+		
+		<cfparam name="arguments.request.workingCopy" default="#arguments.request.path#" />
+		<cfparam name="arguments.request.prefix" default="" />
+		
+		<!--- Create the git helper object --->
+		<cfset git = createObject('component', 'git').init( arguments.request.workingCopy ) />
+		
+		<!--- Create the directories and add to repository --->
+		<cfset newObjects = createDirectories( arguments.request.path, arguments.directories ) />
+		
+		<cfset git.addFiles( newObjects, arguments.request.prefix ) />
+		
+		<!--- Copy the static versioned files and add to repository --->
+		<cfset newObjects = copyStatics( arguments.srcPath, arguments.request.path, arguments.staticFiles ) />
+		
+		<cfset git.addFiles( newObjects, arguments.request.prefix ) />
+		
+		<!--- Copy the versioned files and add to repository --->
+		<cfset newObjects = copyFiles( arguments.srcPath, arguments.request.path, arguments.versionedFiles, arguments.request ) />
+		
+		<cfset git.addFiles( newObjects, arguments.request.prefix ) />
+		
+		<!--- Copy the unversioned files --->
+		<cfset copyFiles( arguments.srcPath, arguments.request.path, arguments.unversionedFiles, arguments.request ) />
 	</cffunction>
 	
 	<!---

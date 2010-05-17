@@ -97,17 +97,117 @@
 				</cfif>
 				
 				<cfswitch expression="#URL.wizard#-#URL.type#-#URL.host#">
+					<cfcase value="project-app-github">
+						<div class="grid_12">
+							<h2>New Application Project on GitHub</h2>
+							
+							<p>
+								Thanks for choosing to host your application on GitHub!
+								When your application working you should add it to the
+								<a href="http://code.google.com/p/algid/wiki/DirectoryApplication">Algid application directory</a>.
+							</p>
+							
+							<h3>Git</h3>
+							
+							<p>
+								To make things easier, select the option to add the files to the git repository
+								and the wizard will attempt to run some of the git commands to help you out.
+							</p>
+							
+							<p>
+								Make sure that you have already cloned or run the init command for the repository.
+							</p>
+							
+							<p>
+								In the <code>Path</code> field below enter the complete path to the cloned 
+								directory.
+							</p>
+							
+							<h3>All the Works</h3>
+							
+							<p>
+								After the wizard is complete, find out 
+								<a href="http://code.google.com/p/algid/wiki/ProjectGitHubApplication">how to use the extras</a>
+								to get the most from your new application!
+							</p>
+							
+							<h3>The Wizard</h3>
+							
+							<p>
+								To do the wizardly thing, this is what we need:
+							</p>
+						</div>
+						
+						<form action="<cfoutput>?wizard=#URL.wizard#&type=#URL.type#&host=#URL.host#</cfoutput>" method="post">
+							<cfoutput>#view.formProjectApplicationGitHub( FORM )#</cfoutput>
+							
+							<div class="grid_12 align-center">
+								<input type="submit" value="Create Application Project!" />
+							</div>
+						</form>
+					</cfcase>
+					
+					<cfcase value="project-plugin-github">
+						<div class="grid_12">
+							<h2>New Plugin Project on GitHub</h2>
+							
+							<p>
+								Thanks for choosing to host your plugin on GitHub!
+								When your plugin working you may should add it to the
+								<a href="http://code.google.com/p/algid/wiki/DirectoryPlugin">Algid plugin directory</a>.
+							</p>
+							
+							<h3>Git</h3>
+							
+							<p>
+								To make things easier, select the option to add the files to the git repository
+								and the wizard will attempt to run some of the git commands to help you out.
+							</p>
+							
+							<p>
+								Make sure that you have already cloned or run the init command for the repository.
+							</p>
+							
+							<p>
+								In the <code>Path</code> field below enter the complete path to the cloned 
+								directory.
+							</p>
+							
+							<h3>All the Works</h3>
+							
+							<p>
+								After the wizard is complete, find out 
+								<a href="http://code.google.com/p/algid/wiki/ProjectGitHubPlugin">how to use the extras</a>
+								to get the most from your new project!
+							</p>
+							
+							<h3>The Wizard</h3>
+							
+							<p>
+								To do the wizardly thing, this is what we need:
+							</p>
+						</div>
+						
+						<form action="<cfoutput>?wizard=#URL.wizard#&type=#URL.type#&host=#URL.host#</cfoutput>" method="post">
+							<cfoutput>#view.formProjectPluginGitHub( FORM )#</cfoutput>
+							
+							<div class="grid_12 align-center">
+								<input type="submit" value="Create Plugin Project!" />
+							</div>
+						</form>
+					</cfcase>
+					
 					<cfcase value="project-app-google">
 						<div class="grid_12">
 							<h2>New Application Project on Google Code</h2>
 							
 							<p>
-								Thanks for choosing to open source your plugin on Google Code!
+								Thanks for choosing to open source your application on Google Code!
 								When your application working you should add it to the
 								<a href="http://code.google.com/p/algid/wiki/DirectoryApplication">Algid application directory</a>.
 							</p>
 							
-							<h3>Subversion Checkout</h3>
+							<h3>Subversion</h3>
 							
 							<p>
 								To make things easier, select the option to add the files to the svn repository
@@ -142,6 +242,8 @@
 								to get the most from your new application!
 							</p>
 							
+							<h3>The Wizard</h3>
+							
 							<p>
 								To do the wizardly thing, this is what we need:
 							</p>
@@ -166,7 +268,7 @@
 								<a href="http://code.google.com/p/algid/wiki/DirectoryPlugin">Algid plugin directory</a>.
 							</p>
 							
-							<h3>Subversion Checkout</h3>
+							<h3>Subversion</h3>
 							
 							<p>
 								To make things easier, select the option to add the files to the svn repository
@@ -317,6 +419,33 @@
 						</div>
 						
 						<div class="grid_6">
+							<dl>
+								<dt>
+									<a href="?wizard=project&type=app&host=github">
+										New Application Project on GitHub
+									</a>
+								</dt>
+								<dd>
+									If you are starting a new application and want to host it on
+									GitHub this option will create the normal application files
+									but also creates some extra directories, files, and an ant script
+									to help you manage your project.
+								</dd>
+								<dt>
+									<a href="?wizard=project&type=plugin&host=github">
+										New Plugin Project on GitHub
+									</a>
+								</dt>
+								<dd>
+									If you are starting a new plugin and want to host it on
+									GitHub this option will create the normal plugin files
+									but also creates some extra directories, files, and an ant script
+									to help you manage your project.
+								</dd>
+							</dl>
+						</div>
+						
+						<div class="grid_12">
 							<dl>
 								<dt>
 									New Project on Different Hosting?

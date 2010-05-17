@@ -89,10 +89,11 @@
 	<cffunction name="elementUseSCM" access="private" returntype="string" output="false">
 		<cfargument name="request" type="struct" default="#{}#" />
 		<cfargument name="description" type="string" required="true" />
+		<cfargument name="options" type="array" required="true" />
 		
 		<cfparam name="arguments.request.scm" default="none" />
 		
-		<cfreturn element('Use Source Control?', 'scm', 'radio', arguments.request.scm, arguments.description, [ 'None', 'SVN' ]) />
+		<cfreturn element('Use Source Control?', 'scm', 'radio', arguments.request.scm, arguments.description, arguments.options) />
 	</cffunction>
 	
 	<cffunction name="elementWikiPath" access="private" returntype="string" output="false">
@@ -135,6 +136,42 @@
 		<cfreturn html />
 	</cffunction>
 	
+	<cffunction name="formProjectApplicationGithub" access="public" returntype="string" output="false">
+		<cfargument name="request" type="struct" default="#{}#" />
+		
+		<cfset var html = '' />
+		
+		<cfsavecontent variable="html">
+			<cfoutput>
+				#elementTitle(arguments.request, 'The full title of the application.')#
+				#elementKey(arguments.request, 'A unique key used to identify your application.')#
+				#elementRepoName(arguments.request, 'The name of your github project. EX: http://github.com/&lt;username&gt;/<strong>application-name</strong>')#
+				#elementPath(arguments.request, 'The full path to the local repository root.')#
+				#elementUseSCM(arguments.request, 'Would you like the wizard to add the files and set the properties for you?', [ 'None', 'Git' ])#
+			</cfoutput>
+		</cfsavecontent>
+		
+		<cfreturn html />
+	</cffunction>
+	
+	<cffunction name="formProjectPluginGithub" access="public" returntype="string" output="false">
+		<cfargument name="request" type="struct" default="#{}#" />
+		
+		<cfset var html = '' />
+		
+		<cfsavecontent variable="html">
+			<cfoutput>
+				#elementTitle(arguments.request, 'The full title of the plugin.')#
+				#elementKey(arguments.request, 'A unique key used to identify your plugin. This must be unique among <strong>all</strong> plugins.')#
+				#elementRepoName(arguments.request, 'The name of your github project. EX: http://github.com/&lt;username&gt;/<strong>algid-pluginName</strong>')#
+				#elementPath(arguments.request, 'The full path to the local repository root.')#
+				#elementUseSCM(arguments.request, 'Would you like the wizard to add the files and set the properties for you?', [ 'None', 'Git' ])#
+			</cfoutput>
+		</cfsavecontent>
+		
+		<cfreturn html />
+	</cffunction>
+	
 	<cffunction name="formProjectApplicationGoogle" access="public" returntype="string" output="false">
 		<cfargument name="request" type="struct" default="#{}#" />
 		
@@ -146,7 +183,7 @@
 				#elementKey(arguments.request, 'A unique key used to identify your application.')#
 				#elementRepoName(arguments.request, 'The name of your google code project. EX: http://code.google.com/p/<strong>application-name</strong>')#
 				#elementPath(arguments.request, 'The full path to the svn checkout of the repository root.')#
-				#elementUseSCM(arguments.request, 'Would you like the wizard to add the files and set the properties for you?')#
+				#elementUseSCM(arguments.request, 'Would you like the wizard to add the files and set the properties for you?', [ 'None', 'SVN' ])#
 			</cfoutput>
 		</cfsavecontent>
 		
@@ -164,7 +201,7 @@
 				#elementKey(arguments.request, 'A unique key used to identify your plugin. This must be unique among <strong>all</strong> plugins.')#
 				#elementRepoName(arguments.request, 'The name of your google code project. EX: http://code.google.com/p/<strong>algid-pluginName</strong>')#
 				#elementPath(arguments.request, 'The full path to the svn checkout of the repository root.')#
-				#elementUseSCM(arguments.request, 'Would you like the wizard to add the files and set the properties for you?')#
+				#elementUseSCM(arguments.request, 'Would you like the wizard to add the files and set the properties for you?', [ 'None', 'SVN' ])#
 			</cfoutput>
 		</cfsavecontent>
 		
