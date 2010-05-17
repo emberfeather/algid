@@ -1,5 +1,7 @@
 build/export
 build/logs
 build/settings/user.properties
-build/stats
 build/unit
+@key@/config/settings.json.cfm
+@key@/config/version.json.cfm
+dist/

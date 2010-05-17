@@ -171,7 +171,7 @@
 		
 		<!--- The versioned files --->
 		<cfset args.versionedFiles = '.gitignore,Application.cfc,build.xml,releaseNotes.txt,version.json' />
-		<cfset args.versionedFiles &= ',build/settings/build.properties,build/settings/project.properties,build/settings/statSVN.properties,build/settings/test.properties,build/settings/user.properties.example,build/settings/version.properties' />
+		<cfset args.versionedFiles &= ',build/settings/build.properties,build/settings/project.properties,build/settings/test.properties,build/settings/user.properties.example,build/settings/version.properties' />
 		<cfset args.versionedFiles &= ',build/templates/version.json' />
 		<cfset args.versionedFiles &= ',dist/war/railo.xml,dist/war/META-INF/context.xml' />
 		
@@ -229,7 +229,7 @@
 		
 		<!--- The versioned files --->
 		<cfset args.versionedFiles = '.gitignore,Application.cfc,build.xml,releaseNotes.txt,version.json' />
-		<cfset args.versionedFiles &= ',build/settings/build.properties,build/settings/project.properties,build/settings/statSVN.properties,build/settings/test.properties,build/settings/user.properties.example,build/settings/version.properties' />
+		<cfset args.versionedFiles &= ',build/settings/build.properties,build/settings/project.properties,build/settings/test.properties,build/settings/user.properties.example,build/settings/version.properties' />
 		<cfset args.versionedFiles &= ',build/templates/version.json' />
 		<cfset args.versionedFiles &= ',test/notATest.cfc' />
 		
