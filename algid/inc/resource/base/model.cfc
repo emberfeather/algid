@@ -12,7 +12,8 @@
 		<cfargument name="i18n" type="component" required="true" />
 		<cfargument name="locale" type="string" default="en_US" />
 		
-		<cfset variables.instance = {} />
+		<cfset super.init() />
+		
 		<cfset variables.attributes = {} />
 		<cfset variables.attributeOrder = '' />
 		
