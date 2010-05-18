@@ -1,6 +1,6 @@
 component extends="mxunit.framework.TestCase" {
 	public void function setup() {
-		variables.jsonJr = createObject('component', 'algid.inc.resource.request.jsonJr').init();
+		variables.response = createObject('component', 'algid.inc.resource.request.jsonJrResponse').init();
 		variables.equivalent = createObject('component', 'cf-compendium.inc.resource.utility.equivalent').init();
 	}
 	
@@ -15,6 +15,6 @@ component extends="mxunit.framework.TestCase" {
 			head = {}
 		};
 		
-		assertTrue(variables.equivalent.areEquivalent(expected, deserializeJSON(jsonJr.getResponse())));
+		assertTrue(variables.equivalent.areEquivalent(expected, deserializeJSON(variables.response.getResponse())));
 	}
 }
