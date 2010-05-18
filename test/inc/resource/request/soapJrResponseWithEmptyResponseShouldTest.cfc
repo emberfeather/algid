@@ -1,6 +1,6 @@
 component extends="mxunit.framework.TestCase" {
 	public void function setup() {
-		variables.response = createObject('component', 'algid.inc.resource.request.jsonJrResponse').init();
+		variables.response = createObject('component', 'algid.inc.resource.request.soapJrResponse').init();
 		variables.equivalent = createObject('component', 'cf-compendium.inc.resource.utility.equivalent').init();
 	}
 	
