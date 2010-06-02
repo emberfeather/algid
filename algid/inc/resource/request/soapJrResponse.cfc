@@ -11,7 +11,7 @@ component extends="cf-compendium.inc.resource.base.object" {
 			"HEAD" = {
 				"result" = 1
 			},
-			"Body" = {}
+			"BODY" = {}
 		});
 		
 		return this;
