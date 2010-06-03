@@ -231,7 +231,7 @@
 		<cfset args.versionedFiles = '.gitignore,Application.cfc,build.xml,releaseNotes.txt,version.json' />
 		<cfset args.versionedFiles &= ',build/settings/build.properties,build/settings/project.properties,build/settings/test.properties,build/settings/user.properties.example,build/settings/version.properties' />
 		<cfset args.versionedFiles &= ',build/templates/version.json' />
-		<cfset args.versionedFiles &= ',test/notATest.cfc' />
+		<cfset args.versionedFiles &= ',test/HttpAntRunner.cfc,test/notATest.cfc,test/RemoteFacade.cfc' />
 		
 		<!--- The unversioned files --->
 		<cfset args.unversionedFiles = 'build/settings/user.properties' />
