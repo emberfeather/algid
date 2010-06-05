@@ -568,7 +568,7 @@
 		<cfset args.staticFiles = '' />
 		
 		<!--- The versioned files --->
-		<cfset args.versionedFiles = 'config/Application.cfc,config/application.json.cfm,config/defaults.json.cfm' />
+		<cfset args.versionedFiles = 'config/Application.cfc,config/application.json.cfm' />
 		<cfset args.versionedFiles &= ',Application.cfc,index.cfm' />
 		
 		<!--- The unversioned files --->
@@ -672,7 +672,7 @@
 		<cfset args.staticFiles = '' />
 		
 		<!--- The versioned files --->
-		<cfset args.versionedFiles = 'config/Application.cfc,config/configure.cfc,config/defaults.json.cfm,config/plugin.json.cfm' />
+		<cfset args.versionedFiles = 'config/Application.cfc,config/configure.cfc,config/plugin.json.cfm' />
 		<cfset args.versionedFiles &= ',extend/Application.cfc' />
 		<cfset args.versionedFiles &= ',i18n/config/plugin.properties,i18n/config/plugin_en_US.properties' />
 		<cfset args.versionedFiles &= ',inc/Application.cfc' />
