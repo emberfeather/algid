@@ -44,9 +44,6 @@
 					
 					<cflog type="information" application="true" log="application" text="#replacementPlugin.getKey()# is acting as a replacement for version #currVersion# of the #j# plugin" />
 				<cfelse>
-					<!--- TODO Remove --->
-					<cfdump var="#arguments.plugins.get(j)#" />
-					<cfabort />
 					<cfthrow message="Missing required dependency" detail="#j# with a version at least #prerequisites[j]# is required by #i#" />
 				</cfif>
 				
