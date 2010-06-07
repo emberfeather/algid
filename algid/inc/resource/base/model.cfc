@@ -225,4 +225,8 @@
 		<cfset variables.i18n.bundlePath = arguments.bundlePath />
 		<cfset variables.i18n.bundleName = arguments.bundleName />
 	</cffunction>
+	
+	<cffunction name="_toJSON" access="public" returntype="string" output="false">
+		<cfreturn serializeJSON(variables.instance) />
+	</cffunction>
 </cfcomponent>
