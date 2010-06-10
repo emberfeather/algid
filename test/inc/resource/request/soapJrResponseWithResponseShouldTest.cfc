@@ -12,7 +12,9 @@ component extends="mxunit.framework.TestCase" {
 			body = {
 				test = 'true'
 			},
-			head = {}
+			head = {
+				result = 1
+			}
 		};
 		
 		variables.response.setBody({
