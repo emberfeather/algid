@@ -7,7 +7,7 @@
 	}
 	
 	/* required key */
-	public component function get( string key ) {
+	public any function get( string key ) {
 		return variables.instance[arguments.key];
 	}
 	
@@ -69,7 +69,7 @@
 	
 	/* required key */
 	/* required value */
-	public void function set( string key, component value ) {
+	public void function set( string key, any value ) {
 		variables.instance[arguments.key] = arguments.value;
 	}
 </cfscript>

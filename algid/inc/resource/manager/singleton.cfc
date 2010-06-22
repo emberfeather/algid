@@ -9,7 +9,7 @@
 		<cfreturn this />
 	</cffunction>
 	
-	<cffunction name="get" access="public" returntype="component" output="false">
+	<cffunction name="get" access="public" returntype="any" output="false">
 		<cfargument name="singleton" type="string" required="true" />
 		
 		<!--- Check if we are missing the singleton --->
