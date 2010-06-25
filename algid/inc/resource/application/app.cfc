@@ -22,6 +22,7 @@
 				startedOn = now(),
 				storagePath = '/storage',
 				token = createUUID(),
+				useFuzzySearch = false,
 				useThreaded = true
 			} />
 		
