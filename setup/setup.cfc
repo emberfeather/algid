@@ -234,7 +234,7 @@
 		<cfset args.versionedFiles &= ',test/HttpAntRunner.cfc,test/notATest.cfc,test/RemoteFacade.cfc' />
 		
 		<!--- The unversioned files --->
-		<cfset args.unversionedFiles = 'build/settings/user.properties' />
+		<cfset args.unversionedFiles = '' />
 		
 		<!--- The repository properties --->
 		<cfset args.gitProperties = [] />
