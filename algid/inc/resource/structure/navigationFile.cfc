@@ -271,18 +271,22 @@
 							allow = '*'
 							
 							<!--- Has explicit permission --->
-							<cfloop array="#permissions#" index="permission">
-								or <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> IN allow
-							</cfloop>
+							<cfif structKeyExists(arguments, 'authUser')>
+								<cfloop array="#permissions#" index="permission">
+									or <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> IN allow
+								</cfloop>
+							</cfif>
 							
 							or (
 								<!--- Everyone is not blocked --->
 								deny <> '*'
 								
 								<!--- Is not explicitly blocked --->
-								<cfloop array="#permissions#" index="permission">
-									and <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> not IN deny
-								</cfloop>
+								<cfif structKeyExists(arguments, 'authUser')>
+									<cfloop array="#permissions#" index="permission">
+										and <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> not IN deny
+									</cfloop>
+								</cfif>
 							)
 						)
 					) or (
@@ -292,18 +296,22 @@
 							deny <> '*'
 							
 							<!--- Is not explicitly blocked --->
-							<cfloop array="#permissions#" index="permission">
-								and <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> not IN deny
-							</cfloop>
+							<cfif structKeyExists(arguments, 'authUser')>
+								<cfloop array="#permissions#" index="permission">
+									and <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> not IN deny
+								</cfloop>
+							</cfif>
 						)
 						and (
 							<!--- Everyone is allowed --->
 							allow = '*'
 							
 							<!--- Has explicit permission --->
-							<cfloop array="#permissions#" index="permission">
-								or <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> IN allow
-							</cfloop>
+							<cfif structKeyExists(arguments, 'authUser')>
+								<cfloop array="#permissions#" index="permission">
+									or <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> IN allow
+								</cfloop>
+							</cfif>
 						)
 					)
 				)
