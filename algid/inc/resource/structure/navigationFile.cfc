@@ -339,15 +339,13 @@
 		
 		<!--- Check the base path --->
 		<cfset currentPath = arguments.theURL.search('_base') />
-		
-		<!--- Explode the current path --->
-		<cfset paths = explodePath(currentPath eq '' ? variables.defaultRoot : currentPath) />
+		<cfset currentPath = currentPath eq '' ? variables.defaultRoot : currentPath />
 		
 		<!--- Query for the exact pages that match the paths --->
 		<cfquery name="navigation" dbtype="query">
 			SELECT contentID, [level], path, title, navTitle, navPosition, description, ids, vars, attribute, attributeValue, allow, deny, defaults, contentPath, orderBy
 			FROM variables.navigation
-			WHERE path IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#arrayToList(paths)#" list="true" />)
+			WHERE path IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#createPathList(currentPath)#" list="true" />)
 				and locale = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.locale#" />
 				
 				<!--- TODO add in authUser type permission checking --->

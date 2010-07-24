@@ -1,37 +1,35 @@
 <cfcomponent extends="cf-compendium.inc.resource.base.base" output="false">
-	<cffunction name="init" access="public" returntype="component" output="false">
-		<cfreturn this />
-	</cffunction>
+<cfscript>
+	public component function init() {
+		return this;
+	}
 	
-	<cffunction name="explodePath" access="public" returntype="array" output="false">
-		<cfargument name="path" type="string" required="true" />
+	public string function createPathList( string path, string key = '' ) {
+		var pathList = '';
+		var pathPart = '';
+		var i = '';
 		
-		<cfset var exploded = [] />
-		<cfset var part = '' />
-		<cfset var partLen = '' />
-		<cfset var search = 0 />
+		// If provided a key then prepend a slash so it can be added to the end of the pathPart
+		if(arguments.key != '') {
+			arguments.key = '/' & arguments.key;
+		} else {
+			// Handle the root path possibility
+			pathList = listAppend(pathList, '/');
+		}
 		
-		<cfset search = find('/', arguments.path, search) />
+		// Set the base path in the path list
+		pathList = listAppend(pathList, arguments.key);
 		
-		<cfloop condition="search gt 0">
-			<!--- Make sure that only the root will end with a period --->
-			<cfset partLen = (search gt 1 ? search - 1 : search) />
+		// Make the list from each part of the provided path
+		for( i = 1; i <= listLen(arguments.path, '/'); i++ ) {
+			pathPart = listAppend(pathPart, listGetAt(arguments.path, i, '/'), '/');
 			
-			<!--- Retrieve the part of the path --->
-			<cfset part = left(arguments.path, partLen) />
-			
-			<!--- Add the part --->
-			<cfset arrayAppend(exploded, part) />
-			
-			<cfset search = find('/', arguments.path, search + 1) />
-		</cfloop>
+			pathList = listAppend(pathList, '/' & pathPart & arguments.key);
+		}
 		
-		<!--- The full path is part of the explode --->
-		<cfset arrayAppend(exploded, arguments.path) />
-		
-		<cfreturn exploded />
-	</cffunction>
-	
+		return pathList;
+	}
+</cfscript>
 	<cffunction name="generateHTML" access="private" returntype="string" output="false">
 		<cfargument name="theURL" type="component" required="true" />
 		<cfargument name="level" type="numeric" required="true" />
