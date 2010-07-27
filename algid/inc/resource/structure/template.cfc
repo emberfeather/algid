@@ -14,7 +14,8 @@
 				pageTitles = [],
 				meta = {},
 				scripts = [],
-				styles = []
+				styles = [],
+				template = ''
 			} />
 		<cfset var i = '' />
 		
@@ -422,6 +423,17 @@
 		</cfloop>
 		
 		<cfreturn results />
+	</cffunction>
+	
+	<!---
+		Returns the template in use
+	--->
+	<cffunction name="getTemplate" access="public" returntype="string" output="false">
+		<cfif variables.instance.template eq ''>
+			<cfreturn this.getIsPartial() ? 'partial' : 'index' />
+		</cfif>
+		
+		<cfreturn variables.instance.template />
 	</cffunction>
 	
 	<!---
