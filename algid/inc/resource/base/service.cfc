@@ -1,16 +1,23 @@
 <cfcomponent extends="cf-compendium.inc.resource.base.base" output="false">
 	<cffunction name="init" access="public" returnType="component" output="false">
-		<cfargument name="datasource" type="struct" required="true" />
 		<cfargument name="transport" type="struct" required="true" />
 		
 		<cfset super.init() />
 		
-		<cfset variables.datasource = arguments.datasource />
 		<cfset variables.transport = arguments.transport />
+		<cfset variables.datasource = transport.theApplication.managers.singleton.getApplication().getDSUpdate() />
+		<cfset variables.i18n = variables.transport.theApplication.managers.singleton.getI18N() />
+		<cfset variables.locale = structKeyExists(arguments.transport, 'session') ? variables.transport.theSession.managers.singleton.getSession().getLocale() : 'en_US' />
 		
 		<cfreturn this />
 	</cffunction>
-	
+<cfscript>
+	public component function getModel(required string plugin, required string model) {
+		var models = transport.theRequest.managers.singleton.getManagerModel();
+		
+		return models.get(arguments.plugin, arguments.model);
+	}
+</cfscript>
 	<!---
 		Used to trigger a specific event on a plugin.
 	--->
