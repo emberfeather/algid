@@ -401,9 +401,9 @@
 		<cfloop array="#variables.instance.scripts#" index="i">
 			<!--- Check if the script is a reference or actual code --->
 			<cfif find(' ', i)>
-				<cfset results &= '<script type="text/javascript">' & i & '</script>' & chr(10) />
+				<cfset results &= '<script>' & i & '</script>' & chr(10) />
 			<cfelse>
-				<cfset results &= '<script type="text/javascript" src="' & i & '"></script>' & chr(10) />
+				<cfset results &= '<script src="' & i & '"></script>' & chr(10) />
 			</cfif>
 		</cfloop>
 		
@@ -419,7 +419,7 @@
 		
 		<!--- Loop through each script and add it to the result --->
 		<cfloop array="#variables.instance.styles#" index="i">
-			<cfset results &= '<link rel="stylesheet" type="text/css" href="' & i.href & '" media="' & i.media & '" />' & chr(10) />
+			<cfset results &= '<link rel="stylesheet" href="' & i.href & '" media="' & i.media & '" />' & chr(10) />
 		</cfloop>
 		
 		<cfreturn results />
