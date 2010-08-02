@@ -118,7 +118,7 @@ component extends="mxunit.framework.TestCase" {
 		
 		variables.template.addUniqueStyles(style);
 		
-		assertEquals('<link rel="stylesheet" type="text/css" href="' & style & '" media="all" />' & chr(10), variables.template.getStyles());
+		assertEquals('<link rel="stylesheet" href="' & style & '" media="all" />' & chr(10), variables.template.getStyles());
 	}
 	
 	/**
