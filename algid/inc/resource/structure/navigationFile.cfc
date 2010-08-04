@@ -343,6 +343,7 @@
 		<cfset var paths = '' />
 		<cfset var navigation = '' />
 		<cfset var currentPath = '' />
+		<cfset var varName = '' />
 		
 		<!--- Check the base path --->
 		<cfset currentPath = arguments.theURL.search('_base') />
@@ -367,8 +368,28 @@
 			<!--- Create the url --->
 			<cfset arguments.theURL.setCurrent('_base', navigation.path) />
 			
+			<!--- Add any ids --->
+			<cfloop list="#navigation.ids#" index="varName">
+				<cfset arguments.theURL.setCurrent(varName, theURL.searchID(varName)) />
+			</cfloop>
+			
+			<!--- Add any vars --->
+			<cfloop list="#navigation.vars#" index="varName">
+				<cfset arguments.theURL.setCurrent(varName, theURL.search(varName)) />
+			</cfloop>
+			
 			<!--- Add to the current page --->
 			<cfset currentPage.addLevel(navigation.title, navigation.navTitle, arguments.theURL.getCurrent(), navigation.path, navigation.contentPath) />
+			
+			<!--- Remove any ids --->
+			<cfloop list="#navigation.ids#" index="varName">
+				<cfset arguments.theURL.removeCurrent(varName) />
+			</cfloop>
+			
+			<!--- Remove any vars --->
+			<cfloop list="#navigation.vars#" index="varName">
+				<cfset arguments.theURL.removeCurrent(varName) />
+			</cfloop>
 		</cfloop>
 		
 		<cfreturn currentPage />
