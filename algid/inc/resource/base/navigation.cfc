@@ -50,6 +50,7 @@
 		<cfset var navigation = '' />
 		<cfset var positions = '' />
 		<cfset var temp = '' />
+		<cfset var varName = '' />
 		
 		<cfset currentPath = arguments.theURL.search('_base') />
 		
@@ -119,6 +120,16 @@
 			<!--- Check if the page is selected --->
 			<cfset isSelected = (currentPathAtLevel eq navigation.path or currentPath eq navigation.path) />
 			
+			<!--- Add any ids --->
+			<cfloop list="#navigation.ids#" index="varName">
+				<cfset arguments.theURL.setCurrentPage(varName, theURL.searchID(varName)) />
+			</cfloop>
+			
+			<!--- Add any vars --->
+			<cfloop list="#navigation.vars#" index="varName">
+				<cfset arguments.theURL.setCurrentPage(varName, theURL.search(varName)) />
+			</cfloop>
+			
 			<cfset html &= '<li>' />
 			
 			<cfset html &= '<a' />
@@ -182,6 +193,16 @@
 			
 			<!--- Remove the navigation variable so it doesn't affect other navigation --->
 			<cfset arguments.theURL.removeCurrentPage('_base') />
+			
+			<!--- Remove any ids --->
+			<cfloop list="#navigation.ids#" index="varName">
+				<cfset arguments.theURL.removeCurrentPage(varName) />
+			</cfloop>
+			
+			<!--- Remove any vars --->
+			<cfloop list="#navigation.vars#" index="varName">
+				<cfset arguments.theURL.removeCurrentPage(varName) />
+			</cfloop>
 			
 			<cfset html &= '</li>' & chr(10) />
 		</cfoutput>

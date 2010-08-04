@@ -77,6 +77,13 @@
 					<cfset querySetCell(variables.navigation, 'ids', '', currentRow) />
 				</cfif>
 				
+				<!--- Check for a defined vars --->
+				<cfif structKeyExists(i.xmlAttributes, 'vars')>
+					<cfset querySetCell(variables.navigation, 'vars', i.xmlAttributes.vars, currentRow) />
+				<cfelse>
+					<cfset querySetCell(variables.navigation, 'vars', '', currentRow) />
+				</cfif>
+				
 				<!--- Pull translated information from resource bundle --->
 				<cfset querySetCell(variables.navigation, 'title', bundle.getValue(plainPath), currentRow) />
 				<cfset querySetCell(variables.navigation, 'navTitle', bundle.getValue(plainPath & "-nav"), currentRow) />
