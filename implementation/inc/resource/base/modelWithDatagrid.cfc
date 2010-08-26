@@ -22,7 +22,7 @@
 			) />
 		
 		<!--- Set the bundle information for translation --->
-		<cfset setI18NBundle('inc/resource/base', 'modelWithDatagrid') />
+		<cfset addBundle('inc/resource/base', 'modelWithDatagrid') />
 		
 		<cfreturn this />
 	</cffunction>
