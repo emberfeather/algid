@@ -24,12 +24,6 @@
 		<!--- Set base bundle for translation --->
 		<cfset addBundle('/cf-compendium/i18n/inc/resource/base', 'object') />
 		
-		<cfset variables.validation = {
-				bundlePath = '/cf-compendium/i18n/inc/resource/utility',
-				bundleName = 'validation',
-				componentPath = 'cf-compendium.inc.resource.utility.validation'
-			} />
-		
 		<cfreturn this />
 	</cffunction>
 	
@@ -69,10 +63,6 @@
 		return arguments.uuid;
 	}
 </cfscript>
-	
-	<cffunction name="createValidator" access="public" returntype="void" output="false">
-		<cfset variables.validator = variables.i18n.i18n.getValidation(variables.i18n.locale, variables.validation.bundlePath, variables.validation.bundleName, variables.validation.componentPath) />
-	</cffunction>
 	
 	<!---
 		Used to clone the model attributes of the original object
@@ -144,7 +134,9 @@
 		<cfset var attribute = '' />
 		<cfset var attributeSet = '' />
 		<cfset var attributeValue = '' />
+		<cfset var bundle = '' />
 		<cfset var childAttribute = '' />
+		<cfset var format = '' />
 		<cfset var i = '' />
 		<cfset var isUnique = '' />
 		<cfset var j = '' />
@@ -177,7 +169,11 @@
 				<cfif structKeyExists(variables.attributes, attribute) and not structIsEmpty(variables.attributes[attribute].validation)>
 					<!--- Make sure that we have a validator object --->
 					<cfif not structKeyExists(variables, 'validator')>
-						<cfset createValidator() />
+						<cfset bundle = variables.i18n.getResourceBundle('/cf-compendium/i18n/inc/resource/utility', 'validation', variables.locale) />
+						<cfset format = variables.i18n.getMessageFormat(variables.locale) />
+						
+						<!--- Create the validator object --->
+						<cfset variables.validator = createObject('component', 'cf-compendium.inc.resource.utility.validation').init(bundle, format) />
 					</cfif>
 					
 					<!--- Try to validate with each of the specified tests against the validation object --->
