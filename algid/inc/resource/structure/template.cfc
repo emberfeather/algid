@@ -112,14 +112,13 @@
 		
 		<cfset var i = '' />
 		<cfset var isUnique = '' />
-		<cfset var j = '' />
 		<cfset var script = '' />
 		
 		<!--- Don't check for uniqueness if it is js and not a file reference --->
-		<cfif not find(' ', i)>
+		<cfif not find(' ', arguments.value)>
 			<!--- Check if it is already in the array --->
-			<cfloop array="#variables.instance.styles#" index="j">
-				<cfif j.script eq arguments.value>
+			<cfloop array="#variables.instance.scripts#" index="i">
+				<cfif i.script eq arguments.value>
 					<cfreturn />
 				</cfif>
 			</cfloop>
@@ -138,9 +137,6 @@
 	--->
 	<cffunction name="addUniqueScripts" access="public" returntype="void" output="false">
 		<cfset var i = '' />
-		<cfset var isUnique = '' />
-		<cfset var j = '' />
-		<cfset var style = '' />
 		
 		<cfloop array="#arguments#" index="i">
 			<cfset addUniqueScript( i ) />
