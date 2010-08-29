@@ -13,19 +13,11 @@
 		<!-- Create a single, concatenated JS file -->
 		<concat destfile="${build.script}jquery.${project.name}.js">
 			<fileset dir="${build.script}" includes="jquery.base.js" />
-			<fileset dir="${build.script}" includes="jquery.form.js" />
-			<fileset dir="${build.script}" includes="jquery.list.js" />
-			<fileset dir="${build.script}" includes="jquery.datagrid.js" />
-			<fileset dir="${build.script}" includes="jquery.timeago.js" />
 		</concat>
 		
 		<!-- Create a single, concatenated CSS file -->
 		<concat destfile="${build.style}${project.name}.css">
 			<fileset dir="${build.style}" includes="base.css" />
-			<fileset dir="${build.style}" includes="form.css" />
-			<fileset dir="${build.style}" includes="list.css" />
-			<fileset dir="${build.style}" includes="datagrid.css" />
-			<fileset dir="${build.style}" includes="code.css" />
 		</concat>
 		
 		<!-- Compress the JS files with Google Closure Compiler -->
