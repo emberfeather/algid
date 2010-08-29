@@ -219,7 +219,6 @@
 		<cfset args.directories &= ',build/lib' />
 		<cfset args.directories &= ',build/logs' />
 		<cfset args.directories &= ',build/settings' />
-		<cfset args.directories &= ',build/templates' />
 		<cfset args.directories &= ',build/unit' />
 		<cfset args.directories &= ',test' />
 		<cfset args.directories &= ',test/inc,test/inc/model' />
@@ -228,9 +227,8 @@
 		<cfset args.staticFiles = 'build/lib/compiler.jar,build/lib/mxunit-ant-java5.jar,build/lib/mxunit-ant.jar,build/lib/yuicompressor.jar' />
 		
 		<!--- The versioned files --->
-		<cfset args.versionedFiles = '.gitignore,Application.cfc,build.xml,README.md,releaseNotes.txt,version.json' />
+		<cfset args.versionedFiles = '.gitignore,Application.cfc,build.xml,README.md,version.json' />
 		<cfset args.versionedFiles &= ',build/settings/build.properties,build/settings/project.properties,build/settings/test.properties,build/settings/user.properties.example,build/settings/version.properties' />
-		<cfset args.versionedFiles &= ',build/templates/version.json' />
 		<cfset args.versionedFiles &= ',test/HttpAntRunner.cfc,test/notATest.cfc,test/RemoteFacade.cfc' />
 		
 		<!--- The unversioned files --->

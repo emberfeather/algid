@@ -76,7 +76,7 @@
 		<echo message="Finished: Environment Preparation"/>
 	</target>
 	
-	<target name="release" depends="prepare,minify,testVarScoper,testMXUnit" description="Tags a release and uploads a new version of the setup zip">
+	<target name="release" depends="prepare,minify,testVarScoper,testMXUnit" description="Tags a release">
 		<echo message="Starting: Release of version ${project.version}" />
 		
 		<!-- Start a release branch -->
