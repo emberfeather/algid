@@ -118,14 +118,39 @@ component extends="mxunit.framework.TestCase" {
 		
 		variables.template.addUniqueStyles(style);
 		
-		assertEquals('<link rel="stylesheet" type="text/css" href="' & style & '" media="all" />' & chr(10), variables.template.getStyles());
+		assertEquals('<link rel="stylesheet" href="' & style & '" media="all" />' & chr(10), variables.template.getStyles());
 	}
 	
 	/**
 	 * Test that the getStyles public void function works when you have not added a stylesheet.
 	 */
-	public void function testGetStyles_SanScript() {
+	public void function testGetStyles_SansScript() {
 		assertEquals('', variables.template.getStyles());
+	}
+	
+	/**
+	 * Test that the getTemplate with a template is respected
+	 */
+	public void function testGetTemplate() {
+		variables.template.setTemplate('mine');
+		
+		assertEquals('mine', variables.template.getTemplate());
+	}
+	
+	/**
+	 * Test that the getTemplate without a template set defaults correctly
+	 */
+	public void function testGetTemplate_SansTemplate() {
+		assertEquals('index', variables.template.getTemplate());
+	}
+	
+	/**
+	 * Test that the getTemplate without a template that is a partial defaults correctly
+	 */
+	public void function testGetTemplate_SansTemplateWithPartial() {
+		variables.template.setIsPartial(true);
+		
+		assertEquals('partial', variables.template.getTemplate());
 	}
 	
 	/**

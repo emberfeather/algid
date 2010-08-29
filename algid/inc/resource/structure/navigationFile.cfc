@@ -77,6 +77,13 @@
 					<cfset querySetCell(variables.navigation, 'ids', '', currentRow) />
 				</cfif>
 				
+				<!--- Check for a defined vars --->
+				<cfif structKeyExists(i.xmlAttributes, 'vars')>
+					<cfset querySetCell(variables.navigation, 'vars', i.xmlAttributes.vars, currentRow) />
+				<cfelse>
+					<cfset querySetCell(variables.navigation, 'vars', '', currentRow) />
+				</cfif>
+				
 				<!--- Pull translated information from resource bundle --->
 				<cfset querySetCell(variables.navigation, 'title', bundle.getValue(plainPath), currentRow) />
 				<cfset querySetCell(variables.navigation, 'navTitle', bundle.getValue(plainPath & "-nav"), currentRow) />
@@ -271,18 +278,22 @@
 							allow = '*'
 							
 							<!--- Has explicit permission --->
-							<cfloop array="#permissions#" index="permission">
-								or <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> IN allow
-							</cfloop>
+							<cfif structKeyExists(arguments, 'authUser')>
+								<cfloop array="#permissions#" index="permission">
+									or <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> IN allow
+								</cfloop>
+							</cfif>
 							
 							or (
 								<!--- Everyone is not blocked --->
 								deny <> '*'
 								
 								<!--- Is not explicitly blocked --->
-								<cfloop array="#permissions#" index="permission">
-									and <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> not IN deny
-								</cfloop>
+								<cfif structKeyExists(arguments, 'authUser')>
+									<cfloop array="#permissions#" index="permission">
+										and <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> not IN deny
+									</cfloop>
+								</cfif>
 							)
 						)
 					) or (
@@ -292,18 +303,22 @@
 							deny <> '*'
 							
 							<!--- Is not explicitly blocked --->
-							<cfloop array="#permissions#" index="permission">
-								and <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> not IN deny
-							</cfloop>
+							<cfif structKeyExists(arguments, 'authUser')>
+								<cfloop array="#permissions#" index="permission">
+									and <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> not IN deny
+								</cfloop>
+							</cfif>
 						)
 						and (
 							<!--- Everyone is allowed --->
 							allow = '*'
 							
 							<!--- Has explicit permission --->
-							<cfloop array="#permissions#" index="permission">
-								or <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> IN allow
-							</cfloop>
+							<cfif structKeyExists(arguments, 'authUser')>
+								<cfloop array="#permissions#" index="permission">
+									or <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> IN allow
+								</cfloop>
+							</cfif>
 						)
 					)
 				)
@@ -328,18 +343,17 @@
 		<cfset var paths = '' />
 		<cfset var navigation = '' />
 		<cfset var currentPath = '' />
+		<cfset var varName = '' />
 		
 		<!--- Check the base path --->
 		<cfset currentPath = arguments.theURL.search('_base') />
-		
-		<!--- Explode the current path --->
-		<cfset paths = explodePath(currentPath eq '' ? variables.defaultRoot : currentPath) />
+		<cfset currentPath = currentPath eq '' ? variables.defaultRoot : currentPath />
 		
 		<!--- Query for the exact pages that match the paths --->
 		<cfquery name="navigation" dbtype="query">
 			SELECT contentID, [level], path, title, navTitle, navPosition, description, ids, vars, attribute, attributeValue, allow, deny, defaults, contentPath, orderBy
 			FROM variables.navigation
-			WHERE path IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#arrayToList(paths)#" list="true" />)
+			WHERE path IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#createPathList(currentPath)#" list="true" />)
 				and locale = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.locale#" />
 				
 				<!--- TODO add in authUser type permission checking --->
@@ -354,8 +368,28 @@
 			<!--- Create the url --->
 			<cfset arguments.theURL.setCurrent('_base', navigation.path) />
 			
+			<!--- Add any ids --->
+			<cfloop list="#navigation.ids#" index="varName">
+				<cfset arguments.theURL.setCurrent(varName, theURL.searchID(varName)) />
+			</cfloop>
+			
+			<!--- Add any vars --->
+			<cfloop list="#navigation.vars#" index="varName">
+				<cfset arguments.theURL.setCurrent(varName, theURL.search(varName)) />
+			</cfloop>
+			
 			<!--- Add to the current page --->
 			<cfset currentPage.addLevel(navigation.title, navigation.navTitle, arguments.theURL.getCurrent(), navigation.path, navigation.contentPath) />
+			
+			<!--- Remove any ids --->
+			<cfloop list="#navigation.ids#" index="varName">
+				<cfset arguments.theURL.removeCurrent(varName) />
+			</cfloop>
+			
+			<!--- Remove any vars --->
+			<cfloop list="#navigation.vars#" index="varName">
+				<cfset arguments.theURL.removeCurrent(varName) />
+			</cfloop>
 		</cfloop>
 		
 		<cfreturn currentPage />

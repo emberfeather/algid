@@ -1,16 +1,19 @@
 component extends="mxunit.framework.TestCase" {
+	public void function setup() {
+		variables.singletons = createObject('component', 'algid.inc.resource.manager.singleton').init();
+	}
+	
 	/*
 		When using the singleton manager and the singleton exists
 		and is not a stub it should return true for the has
 		functionality.
 	*/
 	public void function testHasSingleton() {
-		var singletons = createObject('component', 'algid.inc.resource.manager.singleton').init();
 		var test = createObject('component', 'cf-compendium.inc.resource.base.base').init();
 		
-		singletons.setSingleton( test );
+		variables.singletons.setSingleton( test );
 		
-		assertTrue(singletons.hasSingleton());
+		assertTrue(variables.singletons.hasSingleton());
 	}
 	
 	/*
@@ -19,9 +22,7 @@ component extends="mxunit.framework.TestCase" {
 		functionality.
 	*/
 	public void function testHasSingletonSansSingleton() {
-		var singletons = createObject('component', 'algid.inc.resource.manager.singleton').init();
-		
-		assertFalse(singletons.hasSingleton());
+		assertFalse(variables.singletons.hasSingleton());
 	}
 	
 	/*
@@ -30,11 +31,9 @@ component extends="mxunit.framework.TestCase" {
 		functionality.
 	*/
 	public void function testHasSingletonStub() {
-		var singletons = createObject('component', 'algid.inc.resource.manager.singleton').init();
+		variables.singletons.getSingleton();
 		
-		singletons.getSingleton();
-		
-		assertFalse(singletons.hasSingleton());
+		assertFalse(variables.singletons.hasSingleton());
 	}
 	
 	/*
@@ -42,11 +41,9 @@ component extends="mxunit.framework.TestCase" {
 		to have an object passed as an argument.
 	*/
 	public void function testSetSansArguments() {
-		var singletons = createObject('component', 'algid.inc.resource.manager.singleton').init();
-		
 		expectException('any', 'Should not be able to call the set without an argument.');
 		
-		singletons.setSingleton();
+		variables.singletons.setSingleton();
 	}
 	
 	/*
@@ -54,10 +51,20 @@ component extends="mxunit.framework.TestCase" {
 		to be an actual object.
 	*/
 	public void function testSetSansObject() {
-		var singletons = createObject('component', 'algid.inc.resource.manager.singleton').init();
-		
 		expectException('any', 'Should not be able to call with a simple value argument.');
 		
-		singletons.setSingleton('testing simple value');
+		variables.singletons.setSingleton('testing simple value');
+	}
+	
+	/*
+		When setting a singleton on the singleton manager it needs
+		to be an actual object.
+	*/
+	public void function testSetWithJavaObject() {
+		var singleton = '';
+		
+		singleton = createObject('java', 'java.awt.geom.Area').init();
+		
+		variables.singletons.setSingleton(singleton);
 	}
 }

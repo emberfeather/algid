@@ -14,7 +14,8 @@
 				pageTitles = [],
 				meta = {},
 				scripts = [],
-				styles = []
+				styles = [],
+				template = ''
 			} />
 		<cfset var i = '' />
 		
@@ -69,6 +70,16 @@
 	</cffunction>
 	
 	<!---
+		Uses the unique to add the script
+	--->
+	<cffunction name="addScript" access="public" returntype="void" output="false">
+		<cfargument name="value" type="string" required="true" />
+		<cfargument name="fallback" type="struct" default="#{}#" />
+		
+		<cfset this.addUniqueScript( argumentCollection = arguments ) />
+	</cffunction>
+	
+	<!---
 		Uses the unique to add the scripts
 	--->
 	<cffunction name="addScripts" access="public" returntype="void" output="false">
@@ -76,7 +87,7 @@
 	</cffunction>
 	
 	<!---
-		Uses the unique to add the scripts
+		Uses the unique to add the style
 	--->
 	<cffunction name="addStyle" access="public" returntype="void" output="false">
 		<cfargument name="href" type="string" required="true" />
@@ -86,10 +97,50 @@
 	</cffunction>
 	
 	<!---
-		Uses the unique to add the scripts
+		Uses the unique to add the styles
 	--->
 	<cffunction name="addStyles" access="public" returntype="void" output="false">
 		<cfset this.addUniqueStyles( argumentCollection = arguments ) />
+	</cffunction>
+	
+	<!---
+		Adds only a unique script
+	--->
+	<cffunction name="addUniqueScript" access="public" returntype="void" output="false">
+		<cfargument name="value" type="string" required="true" />
+		<cfargument name="fallback" type="struct" default="#{}#" />
+		
+		<cfset var i = '' />
+		<cfset var isUnique = '' />
+		<cfset var script = '' />
+		
+		<!--- Don't check for uniqueness if it is js and not a file reference --->
+		<cfif not find(' ', arguments.value)>
+			<!--- Check if it is already in the array --->
+			<cfloop array="#variables.instance.scripts#" index="i">
+				<cfif i.script eq arguments.value>
+					<cfreturn />
+				</cfif>
+			</cfloop>
+		</cfif>
+		
+		<cfset script = {
+				script = arguments.value,
+				fallback = arguments.fallback
+			} />
+		
+		<cfset arrayAppend( variables.instance.scripts, script ) />
+	</cffunction>
+	
+	<!---
+		Adds only unique scripts
+	--->
+	<cffunction name="addUniqueScripts" access="public" returntype="void" output="false">
+		<cfset var i = '' />
+		
+		<cfloop array="#arguments#" index="i">
+			<cfset addUniqueScript( i ) />
+		</cfloop>
 	</cffunction>
 	
 	<!---
@@ -399,10 +450,14 @@
 		<!--- Loop through each script and add it to the result --->
 		<cfloop array="#variables.instance.scripts#" index="i">
 			<!--- Check if the script is a reference or actual code --->
-			<cfif find(' ', i)>
-				<cfset results &= '<script type="text/javascript">' & i & '</script>' & chr(10) />
+			<cfif find(' ', i.script)>
+				<cfset results &= '<script>' & i.script & '</script>' & chr(10) />
 			<cfelse>
-				<cfset results &= '<script type="text/javascript" src="' & i & '"></script>' & chr(10) />
+				<cfset results &= '<script src="' & i.script & '"></script>' & chr(10) />
+				
+				<cfif structKeyExists(i.fallback, 'condition') and i.fallback.condition neq ''>
+					<cfset results &= '<script>' & i.fallback.condition & ' && document.write(''<script src="' & i.fallback.script & '"><\/script>'')</script>' & chr(10) />
+				</cfif>
 			</cfif>
 		</cfloop>
 		
@@ -418,10 +473,21 @@
 		
 		<!--- Loop through each script and add it to the result --->
 		<cfloop array="#variables.instance.styles#" index="i">
-			<cfset results &= '<link rel="stylesheet" type="text/css" href="' & i.href & '" media="' & i.media & '" />' & chr(10) />
+			<cfset results &= '<link rel="stylesheet" href="' & i.href & '" media="' & i.media & '" />' & chr(10) />
 		</cfloop>
 		
 		<cfreturn results />
+	</cffunction>
+	
+	<!---
+		Returns the template in use
+	--->
+	<cffunction name="getTemplate" access="public" returntype="string" output="false">
+		<cfif variables.instance.template eq ''>
+			<cfreturn this.getIsPartial() ? 'partial' : 'index' />
+		</cfif>
+		
+		<cfreturn variables.instance.template />
 	</cffunction>
 	
 	<!---

@@ -9,12 +9,17 @@ component extends="mxunit.framework.TestCase" {
 	 */
 	public void function testReturnMinimalResponse() {
 		var expected = '';
+		var response = '';
 		
 		expected = {
 			body = {},
-			head = {}
+			head = {
+				result = 1
+			}
 		};
 		
-		assertTrue(variables.equivalent.areEquivalent(expected, deserializeJSON(variables.response.getResponse())));
+		response = variables.response.getResponse();
+		
+		assertTrue(variables.equivalent.areEquivalent(expected, deserializeJSON(response)), 'Response ''' & response & ''' was not equivalent to expected response');
 	}
 }

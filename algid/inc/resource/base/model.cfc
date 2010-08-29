@@ -17,18 +17,12 @@
 		<cfset variables.attributes = {} />
 		<cfset variables.attributeOrder = '' />
 		
-		<cfset variables.i18n = {
-				i18n = arguments.i18n,
-				locale = arguments.locale,
-				bundlePath = '/cf-compendium/i18n/inc/resource/base',
-				bundleName = 'object'
-			} />
+		<cfset variables.i18n = arguments.i18n />
+		<cfset variables.locale = arguments.locale />
+		<cfset variables.label = createObject('component', 'cf-compendium.inc.resource.i18n.label').init(arguments.i18n, arguments.locale) />
 		
-		<cfset variables.validation = {
-				bundlePath = '/cf-compendium/i18n/inc/resource/utility',
-				bundleName = 'validation',
-				componentPath = 'cf-compendium.inc.resource.utility.validation'
-			} />
+		<!--- Set base bundle for translation --->
+		<cfset addBundle('/cf-compendium/i18n/inc/resource/base', 'object') />
 		
 		<cfreturn this />
 	</cffunction>
@@ -70,10 +64,6 @@
 	}
 </cfscript>
 	
-	<cffunction name="createValidator" access="public" returntype="void" output="false">
-		<cfset variables.validator = variables.i18n.i18n.getValidation(variables.i18n.locale, variables.validation.bundlePath, variables.validation.bundleName, variables.validation.componentPath) />
-	</cffunction>
-	
 	<!---
 		Used to clone the model attributes of the original object
 	--->
@@ -114,12 +104,7 @@
 	<cffunction name="getAttributeLabel" access="public" returntype="string" output="false">
 		<cfargument name="attribute" type="string" required="true" />
 		
-		<!--- Make sure that we have a bundle object --->
-		<cfif not structKeyExists(variables.i18n, 'bundle')>
-			<cfset variables.i18n.bundle = variables.i18n.i18n.getResourceBundle(variables.i18n.bundlePath, variables.i18n.bundleName, variables.i18n.locale) />
-		</cfif>
-		
-		<cfreturn variables.i18n.bundle.getValue(attribute) />
+		<cfreturn variables.label.get(arguments.attribute) />
 	</cffunction>
 	
 	<!---
@@ -149,7 +134,9 @@
 		<cfset var attribute = '' />
 		<cfset var attributeSet = '' />
 		<cfset var attributeValue = '' />
+		<cfset var bundle = '' />
 		<cfset var childAttribute = '' />
+		<cfset var format = '' />
 		<cfset var i = '' />
 		<cfset var isUnique = '' />
 		<cfset var j = '' />
@@ -182,7 +169,11 @@
 				<cfif structKeyExists(variables.attributes, attribute) and not structIsEmpty(variables.attributes[attribute].validation)>
 					<!--- Make sure that we have a validator object --->
 					<cfif not structKeyExists(variables, 'validator')>
-						<cfset createValidator() />
+						<cfset bundle = variables.i18n.getResourceBundle('/cf-compendium/i18n/inc/resource/utility', 'validation', variables.locale) />
+						<cfset format = variables.i18n.getMessageFormat(variables.locale) />
+						
+						<!--- Create the validator object --->
+						<cfset variables.validator = createObject('component', 'cf-compendium.inc.resource.utility.validation').init(bundle, format) />
 					</cfif>
 					
 					<!--- Try to validate with each of the specified tests against the validation object --->
@@ -218,12 +209,11 @@
 	<!---
 		Used to set the bundle information for the object
 	--->
-	<cffunction name="setI18NBundle" access="public" returntype="void" output="false">
-		<cfargument name="bundlePath" type="string" required="true" />
-		<cfargument name="bundleName" type="string" required="true" />
+	<cffunction name="addBundle" access="public" returntype="void" output="false">
+		<cfargument name="path" type="string" required="true" />
+		<cfargument name="name" type="string" required="true" />
 		
-		<cfset variables.i18n.bundlePath = arguments.bundlePath />
-		<cfset variables.i18n.bundleName = arguments.bundleName />
+		<cfset variables.label.addBundle(argumentCollection = arguments) />
 	</cffunction>
 	
 	<cffunction name="_toJSON" access="public" returntype="string" output="false">

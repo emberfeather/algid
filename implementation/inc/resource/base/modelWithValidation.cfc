@@ -26,7 +26,7 @@
 			) />
 		
 		<!--- Set the bundle information for translation --->
-		<cfset setI18NBundle('/i18n/inc/resource/base', 'modelWithValidation') />
+		<cfset addBundle('/i18n/inc/resource/base', 'modelWithValidation') />
 		
 		<cfreturn this />
 	</cffunction>

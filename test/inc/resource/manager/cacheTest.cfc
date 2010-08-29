@@ -35,16 +35,4 @@ component extends="mxunit.framework.TestCase" {
 		
 		caches.setCache();
 	}
-	
-	/*
-		When setting a cache on the cache manager it needs
-		to be an actual object.
-	*/
-	public void function testSetSansObject() {
-		var caches = createObject('component', 'algid.inc.resource.manager.cache').init();
-		
-		expectException('any', 'Should not be able to call with a simple value argument.');
-		
-		caches.setCache('testing simple value');
-	}
 }
