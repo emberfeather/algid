@@ -10,7 +10,6 @@
 		<cfset var defaults = {
 				attributes = {},
 				authUser = '',
-				isPartial = false,
 				pageTitles = [],
 				meta = {},
 				scripts = [],
@@ -41,9 +40,6 @@
 		</cfif>
 		
 		<cfset variables.currentPage = variables.navigation.locatePage( argumentCollection = args ) />
-		
-		<!--- Detect if this is a partial request --->
-		<cfset detectPartial() />
 		
 		<cfreturn this />
 	</cffunction>
@@ -201,35 +197,7 @@
 			</cfif>
 		</cfloop>
 	</cffunction>
-<cfscript>
-	/**
-	 * Detect if the request is being made for a partial page.
-	 *
-	 * This can be used to not show parts of the page for ajax type requests.
-	 */
-	private void function detectPartial() {
-		var requestData = '';
-		
-		// Check if it is specifically being requested in the url as a partial
-		if(variables.theUrl.search('_isPartial') eq true) {
-			this.setIsPartial(true);
-			
-			// Remove from the url
-			variables.theURL.remove('_isPartial');
-			
-			return;
-		}
-		
-		// Check if it is coming from an ajax request
-		requestData = GetHttpRequestData();
-		
-		if(structKeyExists(requestData, 'headers') and structKeyExists(requestData.headers, 'HTTP_X_REQUESTED_WITH') and requestData.headers.http_x_requested_with eq 'XMLHttpRequest') {
-			this.setIsPartial(true);
-			
-			return;
-		}
-	}
-</cfscript>
+	
 	<!---
 		Returns the attribute or a blank string if not found
 	--->
@@ -484,7 +452,7 @@
 	--->
 	<cffunction name="getTemplate" access="public" returntype="string" output="false">
 		<cfif variables.instance.template eq ''>
-			<cfreturn this.getIsPartial() ? 'partial' : 'index' />
+			<cfreturn 'index' />
 		</cfif>
 		
 		<cfreturn variables.instance.template />

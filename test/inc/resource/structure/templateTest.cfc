@@ -145,15 +145,6 @@ component extends="mxunit.framework.TestCase" {
 	}
 	
 	/**
-	 * Test that the getTemplate without a template that is a partial defaults correctly
-	 */
-	public void function testGetTemplate_SansTemplateWithPartial() {
-		variables.template.setIsPartial(true);
-		
-		assertEquals('partial', variables.template.getTemplate());
-	}
-	
-	/**
 	 * Test that the hasAttribute public void function works.
 	 */
 	public void function testHasAttribute_False() {
