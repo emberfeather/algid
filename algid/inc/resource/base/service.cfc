@@ -17,6 +17,12 @@
 		
 		return models.get(arguments.plugin, arguments.model);
 	}
+	
+	public component function getService(required string plugin, required string service) {
+		var services = transport.theRequest.managers.singleton.getManagerService();
+		
+		return services.get(arguments.plugin, arguments.service);
+	}
 </cfscript>
 	<!---
 		Used to trigger a specific event on a plugin.
