@@ -117,7 +117,22 @@
 </cfsilent>
 
 <cfoutput>
-	<div class="container_12" style="margin-top: 1em;">
+	<link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+	
+	<style>
+		.container_12.debugging {
+			margin-top: 2em;
+			font-size: .9em;
+			line-height: 1.35em;
+			font-family: 'Inconsolata', arial, serif;
+		}
+		
+		h4 {
+			margin: .5em;
+		}
+	</style>
+	
+	<div class="container_12 debugging no-print">
 		<!--- Server Information and Execution Times --->
 		<div class="section">
 			<div class="grid_3">
