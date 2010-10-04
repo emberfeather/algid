@@ -3,6 +3,7 @@
 		<cfargument name="domain" type="string" required="true" />
 		<cfargument name="navigation" type="component" required="true" />
 		<cfargument name="theUrl" type="component" required="true" />
+		<cfargument name="i18n" type="component" required="true" />
 		<cfargument name="locale" type="string" required="true" />
 		<cfargument name="options" type="struct" default="#{}#" />
 		
@@ -25,7 +26,14 @@
 		<!--- Store the navigation and url objects --->
 		<cfset variables.navigation = arguments.navigation />
 		<cfset variables.theUrl = arguments.theUrl />
+		
+		<cfset variables.i18n = arguments.i18n />
 		<cfset variables.locale = arguments.locale />
+		
+		<cfset variables.label = createObject('component', 'cf-compendium.inc.resource.i18n.label').init(variables.i18n, variables.locale) />
+		
+		<!--- Set base bundle for translation --->
+		<cfset addBundle('/algid/i18n/inc/resource/structure', 'template') />
 		
 		<!--- Get the current page information --->
 		<cfset args = {
@@ -42,6 +50,13 @@
 		<cfset variables.currentPage = variables.navigation.locatePage( argumentCollection = args ) />
 		
 		<cfreturn this />
+	</cffunction>
+	
+	<cffunction name="addBundle" access="public" returntype="void" output="false">
+		<cfargument name="path" type="string" required="true" />
+		<cfargument name="name" type="string" required="true" />
+		
+		<cfset variables.label.addBundle(argumentCollection = arguments) />
 	</cffunction>
 	
 	<!---
@@ -296,6 +311,15 @@
 		</cfif>
 		
 		<cfreturn htmlTitle />
+	</cffunction>
+	
+	<!---
+		Returns the i18n label value
+	--->
+	<cffunction name="getLabel" access="public" returntype="string" output="false">
+		<cfargument name="key" type="string" required="true" />
+		
+		<cfreturn variables.label.get(argumentCollection = arguments) />
 	</cffunction>
 	
 	<!---
