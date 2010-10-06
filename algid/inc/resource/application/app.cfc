@@ -51,8 +51,7 @@
 	/**
 	 * Make sure that the storage path is an absolute path and exists
 	 */
-	/* required value */
-	public void function setStoragePath(string value) {
+	public void function setStoragePath(required string value) {
 		var absolutePath = '';
 		
 		absolutePath = arguments.value;

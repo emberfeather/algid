@@ -6,22 +6,18 @@
 		return this;
 	}
 	
-	/* required key */
-	public any function get( string key ) {
+	public any function get( required string key ) {
 		return variables.instance[arguments.key];
 	}
 	
 	/**
 	 * Check if we have a value defined
 	 */
-	/* required key */
-	public boolean function has( string key ) {
+	public boolean function has( required string key ) {
 		return structKeyExists(variables.instance, arguments.key);
 	}
 	
-	/* required missingMethodName */
-	/* required missingMethodArguments */
-	public any function onMissingMethod( string missingMethodName, struct missingMethodArguments ) {
+	public any function onMissingMethod( required string missingMethodName, required struct missingMethodArguments ) {
 		var attribute = '';
 		var prefix = '';
 		var result = '';
@@ -67,9 +63,7 @@
 		dump(variables.instance);
 	}
 	
-	/* required key */
-	/* required value */
-	public void function set( string key, any value ) {
+	public void function set( required string key, required any value ) {
 		variables.instance[arguments.key] = arguments.value;
 	}
 </cfscript>

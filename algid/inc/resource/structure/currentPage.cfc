@@ -11,11 +11,7 @@ component extends="cf-compendium.inc.resource.base.object" {
 		return this;
 	}
 	
-	/* required title */
-	/* required navTitle */
-	/* required link */
-	/* required path */
-	public void function addLevel(string title, string navTitle, string link, string path) {
+	public void function addLevel(required string title, required string navTitle, required string link, required string path) {
 		var level = '';
 		
 		level = {
