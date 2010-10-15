@@ -331,6 +331,13 @@
 	</cffunction>
 	
 	<!---
+		Returns the levels
+	--->
+	<cffunction name="getLevels" access="public" returntype="array" output="false">
+		<cfreturn variables.currentPage.getLevels() />
+	</cffunction>
+	
+	<!---
 		Returns the formatted meta information
 	--->
 	<cffunction name="getMeta" access="public" returntype="string" output="false">
