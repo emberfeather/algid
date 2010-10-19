@@ -243,7 +243,7 @@
 			} />
 		<cfset var i = '' />
 		<cfset var levels = '' />
-		<cfset var numLevels = this.getLevel() />
+		<cfset var numLevels = this.getCurrentLevel() />
 		
 		<!--- Extend out the options --->
 		<cfset arguments.options = extend(defaults, arguments.options) />
@@ -326,8 +326,8 @@
 	<!---
 		Returns the number of levels in use
 	--->
-	<cffunction name="getLevel" access="public" returntype="numeric" output="false">
-		<cfreturn variables.currentPage.lengthLevels() />
+	<cffunction name="getCurrentLevel" access="public" returntype="numeric" output="false">
+		<cfreturn variables.currentPage.countLevels() />
 	</cffunction>
 	
 	<!---

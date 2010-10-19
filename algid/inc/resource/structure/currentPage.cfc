@@ -6,20 +6,28 @@ component extends="cf-compendium.inc.resource.base.object" {
 		
 		super.init();
 		
+		variables.customCount = 0;
+		
 		set__properties(defaults, arguments.options);
 		
 		return this;
 	}
 	
-	public void function addLevel(required string title, required string navTitle, required string link, required string path, numeric position = 0) {
+	public void function addLevel(required string title, required string navTitle, required string link, required string path, numeric position = 0, boolean isCustom = false) {
 		var level = '';
 		
 		level = {
+			isCustom = arguments.isCustom,
 			title = arguments.title,
 			navTitle = arguments.navTitle,
 			link = arguments.link,
 			path = arguments.path
 		};
+		
+		// Check if this is a custom level
+		if(arguments.isCustom) {
+			variables.customCount++;
+		}
 		
 		this.addLevels(level, arguments.position);
 	}
@@ -54,5 +62,12 @@ component extends="cf-compendium.inc.resource.base.object" {
 			link = '',
 			path = '/'
 		};
+	}
+	
+	/**
+	 * Custom levels should not affect the count of the levels.
+	 */
+	public numeric function countLevels() {
+		return arrayLen(variables.instance.levels) - variables.customCount;
 	}
 }

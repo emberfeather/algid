@@ -223,4 +223,22 @@ component extends="mxunit.framework.TestCase" {
 		assertEquals('?my=title1', levels[1].link);
 		assertEquals('/title1', levels[1].path);
 	}
+	
+	public void function testCountLevelsWithLevelsAndOneCustomLevel() {
+		variables.currentPage.addLevel('Test Title 1', 'Title 1', '?my=title1', '/title1');
+		variables.currentPage.addLevel('Test Title 2', 'Title 2', '?my=title2', '/title2');
+		variables.currentPage.addLevel('Test Title 3', 'Title 3', '?my=title3', '/title3');
+		variables.currentPage.addLevel('Test Title 4', 'Title 4', '?my=title4', '/title4', 2, true);
+		
+		assertEquals(3, variables.currentPage.countLevels());
+	}
+	
+	public void function testCountLevelsWithLevelsAndTwoCustomLevel() {
+		variables.currentPage.addLevel('Test Title 1', 'Title 1', '?my=title1', '/title1');
+		variables.currentPage.addLevel('Test Title 2', 'Title 2', '?my=title2', '/title2', 2, true);
+		variables.currentPage.addLevel('Test Title 3', 'Title 3', '?my=title3', '/title3');
+		variables.currentPage.addLevel('Test Title 4', 'Title 4', '?my=title4', '/title4', 2, true);
+		
+		assertEquals(2, variables.currentPage.countLevels());
+	}
 }
