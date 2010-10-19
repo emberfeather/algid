@@ -287,7 +287,7 @@
 		<cfset var i = '' />
 		<cfset var htmlTitle = '' />
 		<cfset var levels = '' />
-		<cfset var numLevels = this.getLevel() />
+		<cfset var numLevels = this.getCurrentLevel() />
 		
 		<!--- Check if there are page titles --->
 		<cfif not numLevels>
@@ -398,10 +398,10 @@
 		Returns the page title
 	--->
 	<cffunction name="getPageTitle" access="public" returntype="string" output="false">
-		<cfargument name="level" type="numeric" default="#this.getLevel()#" />
+		<cfargument name="level" type="numeric" default="#this.getCurrentLevel()#" />
 		
 		<cfset var levels = '' />
-		<cfset var numLevels = this.getLevel() />
+		<cfset var numLevels = this.getCurrentLevel() />
 		
 		<!--- Check if there are page titles --->
 		<cfif not numLevels>
