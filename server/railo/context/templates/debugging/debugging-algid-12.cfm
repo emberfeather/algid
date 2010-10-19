@@ -122,7 +122,7 @@
 	<style>
 		.container_12.debugging {
 			margin-top: 2em;
-			font-size: .9em;
+			font-size: 12px;
 			line-height: 1.35em;
 			font-family: 'Inconsolata', arial, serif;
 		}
