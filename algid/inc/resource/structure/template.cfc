@@ -67,6 +67,7 @@
 		<cfargument name="navTitle" type="string" required="true" />
 		<cfargument name="link" type="string" required="true" />
 		<cfargument name="position" type="numeric" default="0" />
+		<cfargument name="isCustom" type="boolean" default="false" />
 		
 		<cfset var currLevel = '' />
 		
