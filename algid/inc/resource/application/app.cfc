@@ -16,6 +16,7 @@
 						'en_US'
 					]
 				},
+				name = 'Algid',
 				path = '/',
 				plugins = [],
 				precedence = [],
