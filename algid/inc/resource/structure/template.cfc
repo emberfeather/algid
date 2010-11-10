@@ -275,6 +275,13 @@
 	</cffunction>
 	
 	<!---
+		Returns the number of levels in use
+	--->
+	<cffunction name="getCurrentLevel" access="public" returntype="numeric" output="false">
+		<cfreturn variables.currentPage.countLevels() />
+	</cffunction>
+	
+	<!---
 		Returns the formatted page titles in reverse
 	--->
 	<cffunction name="getHtmlTitle" access="public" returntype="string" output="false">
@@ -288,7 +295,7 @@
 		<cfset var i = '' />
 		<cfset var htmlTitle = '' />
 		<cfset var levels = '' />
-		<cfset var numLevels = this.getCurrentLevel() />
+		<cfset var numLevels = variables.currentPage.lengthLevels() />
 		
 		<!--- Check if there are page titles --->
 		<cfif not numLevels>
@@ -322,13 +329,6 @@
 		<cfargument name="key" type="string" required="true" />
 		
 		<cfreturn variables.label.get(argumentCollection = arguments) />
-	</cffunction>
-	
-	<!---
-		Returns the number of levels in use
-	--->
-	<cffunction name="getCurrentLevel" access="public" returntype="numeric" output="false">
-		<cfreturn variables.currentPage.countLevels() />
 	</cffunction>
 	
 	<!---
@@ -399,10 +399,10 @@
 		Returns the page title
 	--->
 	<cffunction name="getPageTitle" access="public" returntype="string" output="false">
-		<cfargument name="level" type="numeric" default="#this.getCurrentLevel()#" />
+		<cfargument name="level" type="numeric" default="#variables.currentPage.lengthLevels()#" />
 		
 		<cfset var levels = '' />
-		<cfset var numLevels = this.getCurrentLevel() />
+		<cfset var numLevels = variables.currentPage.lengthLevels() />
 		
 		<!--- Check if there are page titles --->
 		<cfif not numLevels>
