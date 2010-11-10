@@ -134,7 +134,7 @@
 	
 	<div class="container_12 debugging no-print">
 		<!--- Server Information and Execution Times --->
-		<div class="section">
+		<div class="section respect-float">
 			<div class="grid_3">
 				<div>
 					<strong>Algid Debugging</strong>
@@ -198,14 +198,12 @@
 					Query Execution
 				</div>
 			</div>
-			
-			<div class="clear"><!-- clear --></div>
 		</div>
 		
 		<!--- Top - Total --->
 		<h4>Top - Total Execution Time</h4>
 		
-		<div class="section">
+		<div class="section respect-float">
 			<div class="grid_1">
 				<strong>Count</strong>
 			</div>
@@ -247,14 +245,12 @@
 					#page.src#
 				</div>
 			</cfloop>
-			
-			<div class="clear"><!-- clear --></div>
 		</div>
 		
 		<!--- Top - Average --->
 		<h4>Top - Average Execution Time</h4>
 		
-		<div class="section">
+		<div class="section respect-float">
 			<div class="grid_1">
 				<strong>Count</strong>
 			</div>
@@ -296,8 +292,6 @@
 					#page.src#
 				</div>
 			</cfloop>
-			
-			<div class="clear"><!-- clear --></div>
 		</div>
 		
 		<!--- Profiler --->
@@ -318,7 +312,7 @@
 					FROM tickers
 					ORDER BY total DESC
 				</cfquery>
-				<div class="section">
+				<div class="section respect-float">
 					<div class="grid_1">
 						<strong>Count</strong>
 					</div>
@@ -360,17 +354,13 @@
 							#tickers.ticker#
 						</div>
 					</cfloop>
-					
-					<div class="clear"><!-- clear --></div>
 				</div>
 				
 				<cfcatch>
-					<div class="section">
+					<div class="section respect-float">
 						<div class="grid_12">
 							Unable to load profiling: #cfcatch.message#
 						</div>
-						
-						<div class="clear"><!-- clear --></div>
 					</div>
 				</cfcatch>
 			</cftry>
@@ -380,7 +370,7 @@
 		<cfif debugging.timers.recordcount>
 			<h4>Timers</h4>
 			
-			<div class="section">
+			<div class="section respect-float">
 				<div class="grid_2">
 					<strong>Label</strong>
 				</div>
@@ -414,8 +404,6 @@
 						#debugging.timers.template#
 					</div>
 				</cfloop>
-				
-				<div class="clear"><!-- clear --></div>
 			</div>
 		</cfif>
 		
@@ -423,7 +411,7 @@
 		<cfif debugging.queries.recordcount>
 			<h4>Queries</h4>
 			
-			<div class="section">
+			<div class="section respect-float">
 				<cfloop query="debugging.queries">
 					<div style="<cfif debugging.queries.time gt thresholds.query>color: red;</cfif>">
 						<div class="grid_3">
@@ -455,8 +443,6 @@
 						<div class="clear"><!-- clear --></div>
 					</div>
 				</cfloop>
-				
-				<div class="clear"><!-- clear --></div>
 			</div>
 		</cfif>
 	</div>
