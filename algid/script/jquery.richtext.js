@@ -1,4 +1,4 @@
-;(function($){
+(function($){
 	$.algid = $.algid || {};
 	
 	$.algid.richtext = {
@@ -70,8 +70,7 @@
 					{name:'Picture', key:'P', replaceWith:'<img src="[![Source:!:http://]!]" alt="[![Alternative text]!]" />' },
 					{name:'Link', key:'L', openWith:'<a href="[![Link:!:http://]!]"(!( title="[![Title]!]")!)>', closeWith:'</a>', placeHolder:'Your text to link...' },
 					{separator:'---------------' },
-					{name:'Clean', className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, "") } },
-					//{name:'Preview', className:'preview', call:'preview' }
+					{name:'Clean', className:'clean', replaceWith:function(markitup) { return markitup.selection.replace(/<(.*?)>/g, ""); } }
 				]
 			},
 			markdown: {
@@ -123,9 +122,7 @@
 					{name:'Link', openWith:'"', closeWith:'([![Title]!])":[![Link:!:http://]!]', placeHolder:'Your text to link here...' },
 					{separator:'---------------' },
 					{name:'Quotes', openWith:'bq(!(([![Class]!]))!). '},
-					{name:'Code', openWith:'@', closeWith:'@'},
-					//{separator:'---------------' },
-					//{name:'Preview', call:'preview', className:'preview'}
+					{name:'Code', openWith:'@', closeWith:'@'}
 				]
 			},
 			wiki: {
@@ -150,9 +147,7 @@
 					{name:'Url', openWith:"[[![Url:!:http://]!] ", closeWith:']', placeHolder:'Your text to link here...' },
 					{separator:'---------------' },
 					{name:'Quotes', openWith:'(!(> |!|>)!)', placeHolder:''},
-					{name:'Code', openWith:'(!(<source lang="[![Language:!:php]!]">|!|<pre>)!)', closeWith:'(!(</source>|!|</pre>)!)'}, 
-					//{separator:'---------------' },
-					//{name:'Preview', call:'preview', className:'preview'}
+					{name:'Code', openWith:'(!(<source lang="[![Language:!:php]!]">|!|<pre>)!)', closeWith:'(!(</source>|!|</pre>)!)'} 
 				]
 			}
 		}
@@ -163,23 +158,28 @@
 	});
 	
 	$.fn.richtext = function() {
+		var createEditor;
+		var i;
+		
+		createEditor = function(){
+			var editor = $(this);
+			var settings = $.extend({}, $.algid.richtext.types[type], editor.data('settings'));
+			var extraSettings = editor.data('extraSettings');
+			
+			editor.markItUp(settings, extraSettings);
+			
+			editor.removeClass('editor-' + type);
+		};
+		
 		// Check if enabled
 		if($.algid.richtext.useRichText) {
 			// Remove any previous markdown editor
 			this.markItUpRemove();
 			
 			// Find all supported editors
-			for( type in $.algid.richtext.types ) {
-				this.filter('.editor-' + type).each(function(){
-					var editor = $(this);
-					var settings = $.extend({}, $.algid.richtext.types[type], editor.data('settings'));
-					var extraSettings = editor.data('extraSettings');
-					
-					editor.markItUp(settings, extraSettings);
-					
-					editor.removeClass('editor-' + type);
-				}).end;
+			for( i = 0; i < $.algid.richtext.types.length; i++ ) {
+				this.filter('.editor-' + $.algid.richtext.types[i]).each(createEditor).end();
 			}
 		}
 	};
-})(jQuery);
+}(jQuery));
