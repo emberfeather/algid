@@ -152,7 +152,7 @@
 			<fileset dir="${test.jslint.filePath}" casesensitive="yes">
 				<include name="**/*.js"/>
 				<exclude name="**/*-min.js"/>
-				<exclude name="**/jquery.markitup.js"/>
+				<exclude name="script/markitup/jquery.markitup.js"/>
 			</fileset>
 		</jslint>
 		
