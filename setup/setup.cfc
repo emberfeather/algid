@@ -224,7 +224,7 @@
 		<cfset args.directories &= ',test/inc,test/inc/model' />
 		
 		<!--- The static files --->
-		<cfset args.staticFiles = 'build/lib/compiler.jar,build/lib/mxunit-ant-java5.jar,build/lib/mxunit-ant.jar,build/lib/yuicompressor.jar' />
+		<cfset args.staticFiles = 'build/lib/compiler.jar,build/lib/mxunit-ant-java5.jar,build/lib/jslint4java.jar,build/lib/mxunit-ant.jar,build/lib/yuicompressor.jar' />
 		
 		<!--- The versioned files --->
 		<cfset args.versionedFiles = '.gitignore,Application.cfc,build.xml,README.md,version.json' />
