@@ -105,7 +105,7 @@
 			</cfif>
 		</cfif>
 		
-		<cfset variables.isDevelopment = not arguments.theApplication.managers.singleton.getApplication().isProduction() />
+		<cfset variables.isDevelopment = arguments.theApplication.managers.singleton.getApplication().isDevelopment() />
 		
 		<!--- Setup the request managers --->
 		<cfset arguments.theRequest.managers = {
