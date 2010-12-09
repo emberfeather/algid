@@ -463,6 +463,7 @@
 		<cfset arguments.theApplication.factories.transient.setManagerService('algid.inc.resource.manager.service') />
 		<cfset arguments.theApplication.factories.transient.setManagerSingleton('algid.inc.resource.manager.singleton') />
 		<cfset arguments.theApplication.factories.transient.setManagerView('algid.inc.resource.manager.view') />
+		<cfset arguments.theApplication.factories.transient.setModelSerial('algid.inc.resource.storage.modelSerial') />
 		<cfset arguments.theApplication.factories.transient.setObject('cf-compendium.inc.resource.base.object') />
 		<cfset arguments.theApplication.factories.transient.setOptions('cf-compendium.inc.resource.utility.options') />
 		<cfset arguments.theApplication.factories.transient.setPaginate('cf-compendium.inc.resource.utility.paginate') />
