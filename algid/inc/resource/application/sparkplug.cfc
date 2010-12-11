@@ -280,7 +280,7 @@
 		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
 		
 		<!--- Create the application singleton --->
-		<cfset objApplication = objectSerial.deserialize( settings ) />
+		<cfset objApplication = objectSerial.deserialize( input = settings, isTrustedSource = true ) />
 		
 		<!--- Save the storage path for the plugins to use --->
 		<cfset variables.storagePath = objApplication.getStoragePath() />
@@ -338,7 +338,7 @@
 		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
 		
 		<!--- Create the plugin singleton --->
-		<cfset plugin = objectSerial.deserialize( input = settings, doComplete = true ) />
+		<cfset plugin = objectSerial.deserialize( input = settings, doComplete = true, isTrustedSource = true ) />
 		
 		<!--- Create the plugin storage directory if it does not exist --->
 		<cfif not directoryExists(plugin.getStoragePath())>
@@ -414,7 +414,7 @@
 		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
 		
 		<!--- Create the application singleton --->
-		<cfset plugin = objectSerial.deserialize( input = settings, doComplete = true ) />
+		<cfset plugin = objectSerial.deserialize( input = settings, doComplete = true, isTrustedSource = true ) />
 		
 		<cfreturn plugin />
 	</cffunction>
