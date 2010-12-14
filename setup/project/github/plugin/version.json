@@ -1,6 +1,6 @@
 {
 	"archive": "",
-	"plugin": "@key@",
+	"name": "@key@",
 	"releaseNotes": "",
 	"URL": "",
 	"version": "0.1.0"
