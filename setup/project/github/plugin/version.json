@@ -1,6 +1,7 @@
 {
 	"archive": "",
-	"name": "@key@",
+	"key": "@key@",
+	"title": "@title@",
 	"releaseNotes": "",
 	"URL": "",
 	"version": "0.1.0"
