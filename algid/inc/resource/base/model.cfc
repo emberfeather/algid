@@ -165,6 +165,19 @@
 					<cfset arguments.missingMethodArguments[1] = cleanUUID(toString(arguments.missingMethodArguments[1])) />
 				</cfif>
 				
+				<!--- Check for option to clean the input before validating --->
+				<cfif structKeyExists(variables.attributes, attribute) and structKeyExists(variables.attributes[attribute].options, 'cleanData')>
+					<!--- Make sure that we have a cleaning object --->
+					<cfif not structKeyExists(variables, 'cleanData')>
+						<!--- Create the clean object --->
+						<cfset variables.cleanData = createObject('component', 'cf-compendium.inc.resource.utility.cleanData').init() />
+					</cfif>
+					
+					<cfinvoke component="#variables.cleanData#" method="#variables.attributes[attribute].options.cleanData#" returnvariable="arguments.missingMethodArguments[1]">
+						<cfinvokeargument name="value" value="#arguments.missingMethodArguments[1]#" />
+					</cfinvoke>
+				</cfif>
+				
 				<!--- Check for any validation given in the attribute meta --->
 				<cfif structKeyExists(variables.attributes, attribute) and not structIsEmpty(variables.attributes[attribute].validation)>
 					<!--- Make sure that we have a validator object --->
