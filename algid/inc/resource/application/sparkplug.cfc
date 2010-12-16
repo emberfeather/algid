@@ -438,12 +438,15 @@
 		
 		<cfset var temp = '' />
 		
-		<!--- Create the default singleton --->
+		<!--- Create the default singletons --->
 		<cfset temp = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath(arguments.theApplication.managers.singleton.getApplication().getI18n().base)) />
 		<cfset arguments.theApplication.managers.singleton.setI18N(temp) />
 		
 		<cfset temp = createObject('component', 'cf-compendium.inc.resource.storage.objectSerial').init() />
 		<cfset arguments.theApplication.managers.singleton.setObjectSerial(temp) />
+		
+		<cfset temp = createObject('component', 'algid.inc.resource.utility.version').init() />
+		<cfset arguments.theApplication.managers.singleton.setVersions(temp) />
 		
 		<!--- Set the base transient factory items --->
 		<cfset arguments.theApplication.factories.transient.setBase62('cf-compendium.inc.resource.utility.base62') />
