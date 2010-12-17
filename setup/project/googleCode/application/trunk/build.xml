@@ -301,8 +301,8 @@
 		</filterset>
 		
 		<!-- Copy the plugin config file -->
-		<copy tofile="${basedir}/${project.key}/config/application.json.cfm" overwrite="true">
-			<fileset file="${build.templates}/config/application.json.cfm"/>
+		<copy tofile="${basedir}/${project.key}/config/project.json.cfm" overwrite="true">
+			<fileset file="${build.templates}/config/project.json.cfm"/>
 			<filterset refid="templateFilterset"/>
 		</copy>
 		

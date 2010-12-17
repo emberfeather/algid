@@ -291,7 +291,7 @@
 		<!--- The versioned files --->
 		<cfset args.versionedFiles = 'trunk/Application.cfc,trunk/build.xml,trunk/releaseNotes.txt,trunk/version.json' />
 		<cfset args.versionedFiles &= ',trunk/dist/settings/build.properties,trunk/dist/settings/project.properties,trunk/dist/settings/statSVN.properties,trunk/dist/settings/test.properties,trunk/dist/settings/user.properties.example,trunk/dist/settings/version.properties' />
-		<cfset args.versionedFiles &= ',trunk/dist/templates/config/application.json.cfm,trunk/dist/templates/version.json,trunk/dist/templates/externalsApp.txt,trunk/dist/templates/externalsAppDev.txt' />
+		<cfset args.versionedFiles &= ',trunk/dist/templates/config/project.json.cfm,trunk/dist/templates/version.json,trunk/dist/templates/externalsApp.txt,trunk/dist/templates/externalsAppDev.txt' />
 		<cfset args.versionedFiles &= ',trunk/dist/war/railo.xml,trunk/dist/war/META-INF/context.xml' />
 		<cfset args.versionedFiles &= ',trunk/test/notATest.cfc' />
 		<cfset args.versionedFiles &= ',wiki/ReleaseNotes.wiki,wiki/Settings.wiki' />
@@ -381,7 +381,7 @@
 		<!--- The versioned files --->
 		<cfset args.versionedFiles = 'trunk/Application.cfc,trunk/build.xml,trunk/releaseNotes.txt,trunk/version.json' />
 		<cfset args.versionedFiles &= ',trunk/dist/settings/build.properties,trunk/dist/settings/project.properties,trunk/dist/settings/statSVN.properties,trunk/dist/settings/test.properties,trunk/dist/settings/user.properties.example,trunk/dist/settings/version.properties' />
-		<cfset args.versionedFiles &= ',trunk/dist/templates/config/plugin.json.cfm,trunk/dist/templates/version.json' />
+		<cfset args.versionedFiles &= ',trunk/dist/templates/config/project.json.cfm,trunk/dist/templates/version.json' />
 		<cfset args.versionedFiles &= ',trunk/test/notATest.cfc' />
 		<cfset args.versionedFiles &= ',wiki/Extend.wiki,wiki/Install.wiki,wiki/ReleaseNotes.wiki,wiki/Settings.wiki,wiki/Theory.wiki' />
 		
@@ -566,7 +566,7 @@
 		<cfset args.staticFiles = '' />
 		
 		<!--- The versioned files --->
-		<cfset args.versionedFiles = 'config/Application.cfc,config/application.json.cfm' />
+		<cfset args.versionedFiles = 'config/Application.cfc,config/project.json.cfm' />
 		<cfset args.versionedFiles &= ',Application.cfc,index.cfm' />
 		
 		<!--- The unversioned files --->
@@ -670,7 +670,7 @@
 		<cfset args.staticFiles = '' />
 		
 		<!--- The versioned files --->
-		<cfset args.versionedFiles = 'config/Application.cfc,config/configure.cfc,config/plugin.json.cfm' />
+		<cfset args.versionedFiles = 'config/Application.cfc,config/configure.cfc,config/project.json.cfm' />
 		<cfset args.versionedFiles &= ',extend/Application.cfc' />
 		<cfset args.versionedFiles &= ',i18n/config/plugin.properties,i18n/config/plugin_en_US.properties' />
 		<cfset args.versionedFiles &= ',inc/Application.cfc' />

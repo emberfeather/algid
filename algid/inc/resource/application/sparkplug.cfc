@@ -240,7 +240,7 @@
 	</cffunction>
 	
 	<cffunction name="readApplication" access="private" returntype="struct" output="false">
-		<cfset var configFile = 'application.json.cfm' />
+		<cfset var configFile = 'project.json.cfm' />
 		<cfset var configPath = variables.appBaseDirectory & 'config/' />
 		<cfset var contents = '' />
 		<cfset var extender = '' />
@@ -293,7 +293,7 @@
 		<cfargument name="pluginKey" type="string" required="true" />
 		
 		<cfset var config = '' />
-		<cfset var configFile = 'plugin.json.cfm' />
+		<cfset var configFile = 'project.json.cfm' />
 		<cfset var configPath = variables.appBaseDirectory & 'plugins/' & arguments.pluginKey & '/config/' />
 		<cfset var contents = '' />
 		<cfset var manager = '' />
@@ -389,7 +389,7 @@
 		<cfargument name="project" type="string" required="true" />
 		
 		<cfset var config = '' />
-		<cfset var configFile = arguments.project & '.json.cfm' />
+		<cfset var configFile = 'project.json.cfm' />
 		<cfset var configPath = '/' & arguments.project & '/config/' />
 		<cfset var contents = '' />
 		<cfset var extender = '' />
