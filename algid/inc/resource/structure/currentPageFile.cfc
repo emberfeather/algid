@@ -1,21 +1,21 @@
-<cfcomponent extends="algid.inc.resource.structure.currentPage" output="false">
-	<cffunction name="addLevel" access="public" returntype="void" output="false">
-		<cfargument name="title" type="string" required="true" />
-		<cfargument name="navTitle" type="string" required="true" />
-		<cfargument name="link" type="string" required="true" />
-		<cfargument name="path" type="string" required="true" />
-		<cfargument name="contentPath" type="string" required="true" />
+component extends="algid.inc.resource.structure.currentPage" {
+	public void function addLevel(required string title, required string navTitle, required string link, required string path, required string contentPath, numeric position = 0, boolean isCustom = false) {
+		var level = '';
 		
-		<cfset var level = '' />
+		level = {
+			isCustom = arguments.isCustom,
+			title = arguments.title,
+			navTitle = arguments.navTitle,
+			link = arguments.link,
+			path = arguments.path,
+			contentPath = arguments.contentPath
+		};
 		
-		<cfset level = {
-				title = arguments.title,
-				navTitle = arguments.navTitle,
-				link = arguments.link,
-				path = arguments.path,
-				contentPath = arguments.contentPath
-			} />
+		// Check if this is a custom level
+		if(arguments.isCustom) {
+			variables.customCount++;
+		}
 		
-		<cfset this.addLevels(level) />
-	</cffunction>
-</cfcomponent>
+		this.addLevels(level, arguments.position);
+	}
+}

@@ -9,8 +9,7 @@
 	/**
 	 * Register a listener to wait for events
 	 */
-	/* required listener */
-	public void function register( component listener ) {
+	public void function register( required component listener ) {
 		arrayAppend(variables.listeners, arguments.listener);
 	}
 </cfscript>

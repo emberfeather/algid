@@ -9,6 +9,7 @@
 					]
 				},
 				key = 'undefined',
+				plugin = '',
 				prerequisites = {},
 				replaces = {},
 				requestSingletons = {},

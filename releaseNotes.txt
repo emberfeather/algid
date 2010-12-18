@@ -1,3 +1,0 @@
-  * Rewrote the setup utility
-  * Added support to the setup utility for Google Code hosted projects.
-  * Application projects support generating a WAR file for deployment.

@@ -3,6 +3,7 @@
 		<cfargument name="domain" type="string" required="true" />
 		<cfargument name="navigation" type="component" required="true" />
 		<cfargument name="theUrl" type="component" required="true" />
+		<cfargument name="i18n" type="component" required="true" />
 		<cfargument name="locale" type="string" required="true" />
 		<cfargument name="options" type="struct" default="#{}#" />
 		
@@ -10,7 +11,6 @@
 		<cfset var defaults = {
 				attributes = {},
 				authUser = '',
-				isPartial = false,
 				pageTitles = [],
 				meta = {},
 				scripts = [],
@@ -26,7 +26,14 @@
 		<!--- Store the navigation and url objects --->
 		<cfset variables.navigation = arguments.navigation />
 		<cfset variables.theUrl = arguments.theUrl />
+		
+		<cfset variables.i18n = arguments.i18n />
 		<cfset variables.locale = arguments.locale />
+		
+		<cfset variables.label = createObject('component', 'cf-compendium.inc.resource.i18n.label').init(variables.i18n, variables.locale) />
+		
+		<!--- Set base bundle for translation --->
+		<cfset addBundle('/algid/i18n/inc/resource/structure', 'template') />
 		
 		<!--- Get the current page information --->
 		<cfset args = {
@@ -42,10 +49,14 @@
 		
 		<cfset variables.currentPage = variables.navigation.locatePage( argumentCollection = args ) />
 		
-		<!--- Detect if this is a partial request --->
-		<cfset detectPartial() />
-		
 		<cfreturn this />
+	</cffunction>
+	
+	<cffunction name="addBundle" access="public" returntype="void" output="false">
+		<cfargument name="path" type="string" required="true" />
+		<cfargument name="name" type="string" required="true" />
+		
+		<cfset variables.label.addBundle(argumentCollection = arguments) />
 	</cffunction>
 	
 	<!---
@@ -55,6 +66,8 @@
 		<cfargument name="title" type="string" required="true" />
 		<cfargument name="navTitle" type="string" required="true" />
 		<cfargument name="link" type="string" required="true" />
+		<cfargument name="position" type="numeric" default="0" />
+		<cfargument name="isCustom" type="boolean" default="false" />
 		
 		<cfset var currLevel = '' />
 		
@@ -201,35 +214,7 @@
 			</cfif>
 		</cfloop>
 	</cffunction>
-<cfscript>
-	/**
-	 * Detect if the request is being made for a partial page.
-	 *
-	 * This can be used to not show parts of the page for ajax type requests.
-	 */
-	private void function detectPartial() {
-		var requestData = '';
-		
-		// Check if it is specifically being requested in the url as a partial
-		if(variables.theUrl.search('_isPartial') eq true) {
-			this.setIsPartial(true);
-			
-			// Remove from the url
-			variables.theURL.remove('_isPartial');
-			
-			return;
-		}
-		
-		// Check if it is coming from an ajax request
-		requestData = GetHttpRequestData();
-		
-		if(structKeyExists(requestData, 'headers') and structKeyExists(requestData.headers, 'HTTP_X_REQUESTED_WITH') and requestData.headers.http_x_requested_with eq 'XMLHttpRequest') {
-			this.setIsPartial(true);
-			
-			return;
-		}
-	}
-</cfscript>
+	
 	<!---
 		Returns the attribute or a blank string if not found
 	--->
@@ -259,7 +244,7 @@
 			} />
 		<cfset var i = '' />
 		<cfset var levels = '' />
-		<cfset var numLevels = this.getLevel() />
+		<cfset var numLevels = this.getCurrentLevel() />
 		
 		<!--- Extend out the options --->
 		<cfset arguments.options = extend(defaults, arguments.options) />
@@ -290,6 +275,13 @@
 	</cffunction>
 	
 	<!---
+		Returns the number of levels in use
+	--->
+	<cffunction name="getCurrentLevel" access="public" returntype="numeric" output="false">
+		<cfreturn variables.currentPage.countLevels() />
+	</cffunction>
+	
+	<!---
 		Returns the formatted page titles in reverse
 	--->
 	<cffunction name="getHtmlTitle" access="public" returntype="string" output="false">
@@ -303,7 +295,7 @@
 		<cfset var i = '' />
 		<cfset var htmlTitle = '' />
 		<cfset var levels = '' />
-		<cfset var numLevels = this.getLevel() />
+		<cfset var numLevels = variables.currentPage.lengthLevels() />
 		
 		<!--- Check if there are page titles --->
 		<cfif not numLevels>
@@ -331,10 +323,19 @@
 	</cffunction>
 	
 	<!---
-		Returns the number of levels in use
+		Returns the i18n label value
 	--->
-	<cffunction name="getLevel" access="public" returntype="numeric" output="false">
-		<cfreturn variables.currentPage.lengthLevels() />
+	<cffunction name="getLabel" access="public" returntype="string" output="false">
+		<cfargument name="key" type="string" required="true" />
+		
+		<cfreturn variables.label.get(argumentCollection = arguments) />
+	</cffunction>
+	
+	<!---
+		Returns the levels
+	--->
+	<cffunction name="getLevels" access="public" returntype="array" output="false">
+		<cfreturn variables.currentPage.getLevels() />
 	</cffunction>
 	
 	<!---
@@ -398,10 +399,10 @@
 		Returns the page title
 	--->
 	<cffunction name="getPageTitle" access="public" returntype="string" output="false">
-		<cfargument name="level" type="numeric" default="#this.getLevel()#" />
+		<cfargument name="level" type="numeric" default="#variables.currentPage.lengthLevels()#" />
 		
 		<cfset var levels = '' />
-		<cfset var numLevels = this.getLevel() />
+		<cfset var numLevels = variables.currentPage.lengthLevels() />
 		
 		<!--- Check if there are page titles --->
 		<cfif not numLevels>
@@ -484,7 +485,7 @@
 	--->
 	<cffunction name="getTemplate" access="public" returntype="string" output="false">
 		<cfif variables.instance.template eq ''>
-			<cfreturn this.getIsPartial() ? 'partial' : 'index' />
+			<cfreturn 'index' />
 		</cfif>
 		
 		<cfreturn variables.instance.template />

@@ -240,7 +240,7 @@
 	</cffunction>
 	
 	<cffunction name="readApplication" access="private" returntype="struct" output="false">
-		<cfset var configFile = 'application.json.cfm' />
+		<cfset var configFile = 'project.json.cfm' />
 		<cfset var configPath = variables.appBaseDirectory & 'config/' />
 		<cfset var contents = '' />
 		<cfset var extender = '' />
@@ -280,7 +280,7 @@
 		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
 		
 		<!--- Create the application singleton --->
-		<cfset objApplication = objectSerial.deserialize( settings ) />
+		<cfset objApplication = objectSerial.deserialize( input = settings, isTrustedSource = true ) />
 		
 		<!--- Save the storage path for the plugins to use --->
 		<cfset variables.storagePath = objApplication.getStoragePath() />
@@ -293,7 +293,7 @@
 		<cfargument name="pluginKey" type="string" required="true" />
 		
 		<cfset var config = '' />
-		<cfset var configFile = 'plugin.json.cfm' />
+		<cfset var configFile = 'project.json.cfm' />
 		<cfset var configPath = variables.appBaseDirectory & 'plugins/' & arguments.pluginKey & '/config/' />
 		<cfset var contents = '' />
 		<cfset var manager = '' />
@@ -338,7 +338,7 @@
 		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
 		
 		<!--- Create the plugin singleton --->
-		<cfset plugin = objectSerial.deserialize( input = settings, doComplete = true ) />
+		<cfset plugin = objectSerial.deserialize( input = settings, doComplete = true, isTrustedSource = true ) />
 		
 		<!--- Create the plugin storage directory if it does not exist --->
 		<cfif not directoryExists(plugin.getStoragePath())>
@@ -389,7 +389,7 @@
 		<cfargument name="project" type="string" required="true" />
 		
 		<cfset var config = '' />
-		<cfset var configFile = arguments.project & '.json.cfm' />
+		<cfset var configFile = 'project.json.cfm' />
 		<cfset var configPath = '/' & arguments.project & '/config/' />
 		<cfset var contents = '' />
 		<cfset var extender = '' />
@@ -414,7 +414,7 @@
 		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
 		
 		<!--- Create the application singleton --->
-		<cfset plugin = objectSerial.deserialize( input = settings, doComplete = true ) />
+		<cfset plugin = objectSerial.deserialize( input = settings, doComplete = true, isTrustedSource = true ) />
 		
 		<cfreturn plugin />
 	</cffunction>
@@ -438,12 +438,15 @@
 		
 		<cfset var temp = '' />
 		
-		<!--- Create the default singleton --->
+		<!--- Create the default singletons --->
 		<cfset temp = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath(arguments.theApplication.managers.singleton.getApplication().getI18n().base)) />
 		<cfset arguments.theApplication.managers.singleton.setI18N(temp) />
 		
 		<cfset temp = createObject('component', 'cf-compendium.inc.resource.storage.objectSerial').init() />
 		<cfset arguments.theApplication.managers.singleton.setObjectSerial(temp) />
+		
+		<cfset temp = createObject('component', 'algid.inc.resource.utility.version').init() />
+		<cfset arguments.theApplication.managers.singleton.setVersions(temp) />
 		
 		<!--- Set the base transient factory items --->
 		<cfset arguments.theApplication.factories.transient.setBase62('cf-compendium.inc.resource.utility.base62') />
@@ -463,8 +466,11 @@
 		<cfset arguments.theApplication.factories.transient.setManagerService('algid.inc.resource.manager.service') />
 		<cfset arguments.theApplication.factories.transient.setManagerSingleton('algid.inc.resource.manager.singleton') />
 		<cfset arguments.theApplication.factories.transient.setManagerView('algid.inc.resource.manager.view') />
+		<cfset arguments.theApplication.factories.transient.setModelSerial('algid.inc.resource.storage.modelSerial') />
+		<cfset arguments.theApplication.factories.transient.setObject('cf-compendium.inc.resource.base.object') />
 		<cfset arguments.theApplication.factories.transient.setOptions('cf-compendium.inc.resource.utility.options') />
 		<cfset arguments.theApplication.factories.transient.setPaginate('cf-compendium.inc.resource.utility.paginate') />
+		<cfset arguments.theApplication.factories.transient.setPlugin('algid.inc.resource.plugin.plugin') />
 		<cfset arguments.theApplication.factories.transient.setQueue('cf-compendium.inc.resource.utility.queue') />
 		<cfset arguments.theApplication.factories.transient.setStack('cf-compendium.inc.resource.utility.stack') />
 		<cfset arguments.theApplication.factories.transient.setTokens('cf-compendium.inc.resource.security.tokens') />

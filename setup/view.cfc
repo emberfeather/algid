@@ -18,11 +18,13 @@
 		<cfsavecontent variable="html">
 			<cfoutput>
 				<div class="clear"><!-- clear --></div>
+				
 				<div class="grid_2 text-right">
 					<label for="ele_#arguments.name#">
 						#arguments.label# :
 					</label>
 				</div>
+				
 				<div class="grid_3">
 					<cfswitch expression="#arguments.type#">
 						<cfcase value="checkbox">
@@ -41,6 +43,7 @@
 						</cfcase>
 					</cfswitch>
 				</div>
+				
 				<div class="grid_7">
 					#arguments.description#
 				</div>

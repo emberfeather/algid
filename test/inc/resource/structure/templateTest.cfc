@@ -3,7 +3,7 @@ component extends="mxunit.framework.TestCase" {
 		variables.i18n = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath('/i18n/'));
 		variables.navigation = createObject('component', 'algid.inc.resource.structure.navigationFile').init(i18n);
 		variables.theUrl = createObject('component', 'cf-compendium.inc.resource.utility.url').init();
-		variables.template = createObject('component', 'algid.inc.resource.structure.template').init(cgi.remote_host, variables.navigation, variables.theURL, 'en_US');
+		variables.template = createObject('component', 'algid.inc.resource.structure.template').init(cgi.remote_host, variables.navigation, variables.theURL, variables.i18n, 'en_US');
 	}
 	
 	/**
@@ -27,6 +27,10 @@ component extends="mxunit.framework.TestCase" {
 	 */
 	public void function testGetBreadcrumb_SansLevels() {
 		assertEquals('', variables.template.getBreadcrumb());
+	}
+	
+	public void function testGetLabel() {
+		assertEquals('title', variables.template.getLabel('title'));
 	}
 	
 	/**
@@ -142,15 +146,6 @@ component extends="mxunit.framework.TestCase" {
 	 */
 	public void function testGetTemplate_SansTemplate() {
 		assertEquals('index', variables.template.getTemplate());
-	}
-	
-	/**
-	 * Test that the getTemplate without a template that is a partial defaults correctly
-	 */
-	public void function testGetTemplate_SansTemplateWithPartial() {
-		variables.template.setIsPartial(true);
-		
-		assertEquals('partial', variables.template.getTemplate());
 	}
 	
 	/**

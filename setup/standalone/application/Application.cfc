@@ -17,7 +17,7 @@
 	</cffunction>
 	
 	<cffunction name="onApplicationStart" access="public" returntype="boolean" output="false">
-		<cfset var appConfigFile = expandPath('config/application.json.cfm') />
+		<cfset var appConfigFile = expandPath('config/project.json.cfm') />
 		
 		<cfset application.sparkplug = createObject('component', 'algid.inc.resource.application.sparkplug').init( this.mappings['/root'] ) />
 		

@@ -16,6 +16,7 @@
 						'en_US'
 					]
 				},
+				name = 'Algid',
 				path = '/',
 				plugins = [],
 				precedence = [],
@@ -44,15 +45,22 @@
 		<cfreturn listFindNoCase(pluginList, arguments.plugin) gt 0 />
 	</cffunction>
 	
+	<cffunction name="isDevelopment" access="public" returntype="boolean" output="false">
+		<cfreturn this.getEnvironment() eq 'development' />
+	</cffunction>
+	
+	<cffunction name="isMaintenance" access="public" returntype="boolean" output="false">
+		<cfreturn this.getEnvironment() eq 'maintenance' />
+	</cffunction>
+	
 	<cffunction name="isProduction" access="public" returntype="boolean" output="false">
-		<cfreturn this.getEnvironment() eq 'production' />
+		<cfreturn not ( isMaintenance() or isDevelopment() ) />
 	</cffunction>
 <cfscript>
 	/**
 	 * Make sure that the storage path is an absolute path and exists
 	 */
-	/* required value */
-	public void function setStoragePath(string value) {
+	public void function setStoragePath(required string value) {
 		var absolutePath = '';
 		
 		absolutePath = arguments.value;
