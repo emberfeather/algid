@@ -9,7 +9,7 @@
 		]
 	},
 	"key": "@key@",
-	"plugin": "@plugin@",
+	"plugin": "@title@",
 	"prerequisites": {
 	},
 	"requestSingletons": {
