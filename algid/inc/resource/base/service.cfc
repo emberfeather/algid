@@ -9,6 +9,7 @@ component extends="cf-compendium.inc.resource.base.base" {
 		
 		return this;
 	}
+	
 	public component function getModel(required string plugin, required string model) {
 		var models = transport.theRequest.managers.singleton.getManagerModel();
 		
