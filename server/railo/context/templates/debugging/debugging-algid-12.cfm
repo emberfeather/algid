@@ -118,7 +118,6 @@
 
 <cfoutput>
 	<link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="/algid/style/960/reset.css" media="all" /> 
 	<link rel="stylesheet" href="/algid/style/960/960.css" media="all" /> 
 	
 	<style>
@@ -130,7 +129,7 @@
 		}
 		
 		h4 {
-			margin: .5em;
+			margin: 1em 0 .5em 0;
 		}
 	</style>
 	
