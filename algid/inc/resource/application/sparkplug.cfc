@@ -474,7 +474,8 @@
 		<cfset arguments.theApplication.factories.transient.setQueue('cf-compendium.inc.resource.utility.queue') />
 		<cfset arguments.theApplication.factories.transient.setStack('cf-compendium.inc.resource.utility.stack') />
 		<cfset arguments.theApplication.factories.transient.setTokens('cf-compendium.inc.resource.security.tokens') />
-		<cfset arguments.theApplication.factories.transient.setURL('cf-compendium.inc.resource.utility.url') />
+		<cfset arguments.theApplication.factories.transient.setUrl('cf-compendium.inc.resource.utility.url') />
+		<cfset arguments.theApplication.factories.transient.setUrlRewrite('cf-compendium.inc.resource.utility.urlRewrite') />
 	</cffunction>
 	
 	<cffunction name="start" access="public" returntype="void" output="false">
