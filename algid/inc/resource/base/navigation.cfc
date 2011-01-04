@@ -261,13 +261,8 @@
 		<cfargument name="locale" type="string" default="en_US" />
 		<cfargument name="authUser" type="component" required="false" />
 		
-		<!--- Allow for a custom parent path --->
-		<cfif structKeyExists(arguments.options, 'parentPath') and len(arguments.options.parentPath)>
-			<cfset arguments.parentPath = arguments.options.parentPath />
-		<cfelse>
-			<!--- Set the base parent path dependent upon the current level --->
-			<cfset arguments.parentPath = getBasePathForLevel(arguments.level, arguments.theURL.search('_base')) />
-		</cfif>
+		<!--- Set the base parent path dependent upon the current level and optionally a custom parent path --->
+		<cfset arguments.parentPath = getBasePathForLevel(arguments.level, (structKeyExists(arguments.options, 'parentPath') ? arguments.options.parentPath : arguments.theURL.search('_base'))) />
 		
 		<!---
 			If we can't find a parent path for the level we are looking
