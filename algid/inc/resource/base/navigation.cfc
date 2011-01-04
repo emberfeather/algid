@@ -104,7 +104,7 @@
 		<!--- Close the opening ul --->
 		<cfset html &= '">' & chr(10) />
 		
-		<cfoutput query="navigation" group="contentID">
+		<cfoutput query="navigation" group="navTitle">
 			<!--- Discover the attributes for the page --->
 			<cfset attributes = {} />
 			
