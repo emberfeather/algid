@@ -42,9 +42,6 @@
 		<cfset var attributes = '' />
 		<cfset var currentPath = '' />
 		<cfset var currentPathAtLevel = '' />
-		<cfset var defaults = {
-				navClasses = []
-			} />
 		<cfset var html = '' />
 		<cfset var isSelected = '' />
 		<cfset var navigation = '' />
@@ -61,12 +58,6 @@
 		<cfif currentPathAtLevel neq ''>
 			<cfset currentPathAtLevel = left(currentPathAtLevel, len(currentPathAtLevel) - 1) />
 		</cfif>
-		
-		<!--- Extend the options --->
-		<cfset arguments.options = extend(defaults, arguments.options) />
-		
-		<!--- For generating the navigation HTML exclude blank nav titles --->
-		<cfset arguments.options.hideBlankNavTitles = true />
 		
 		<!--- Store the nav positions for later --->
 		<cfset positions = arguments.navPosition />
@@ -93,10 +84,9 @@
 		
 		<!--- Add navigation classes --->
 		<cfif arrayLen(arguments.options.navClasses)>
-			<cfset html &= arguments.options.navClasses[1] />
+			<cfset html &= ' ' & arguments.options.navClasses[1] />
 		</cfif>
 		
-		<cfset html &= ' ' & arguments.navPosition />
 		<cfset html &= ' level-' & arguments.level />
 		
 		<!--- Close the opening ul --->
@@ -257,6 +247,17 @@
 		<cfargument name="locale" type="string" default="en_US" />
 		<cfargument name="authUser" type="component" required="false" />
 		
+		<cfset var defaults = {
+			navClasses = []
+		} />
+		<cfset var html = '' />
+		
+		<!--- Extend the options --->
+		<cfset arguments.options = extend(defaults, arguments.options) />
+		
+		<!--- For generating the navigation HTML exclude blank nav titles --->
+		<cfset arguments.options.hideBlankNavTitles = true />
+		
 		<!--- Set the base parent path dependent upon the current level and optionally a custom parent path --->
 		<cfset arguments.parentPath = getBasePathForLevel(arguments.level, (structKeyExists(arguments.options, 'parentPath') ? arguments.options.parentPath : arguments.theURL.search('_base'))) />
 		
@@ -271,6 +272,29 @@
 		<!--- Clean the URL instance --->
 		<cfset arguments.theURL.cleanCurrentPage() />
 		
-		<cfreturn '<nav>' & chr(10) & generateHTML(argumentCollection = arguments) & '</nav>' & chr(10) />
+		
+		<!--- Generate the html off the given navigation --->
+		<cfset html = '<nav class="' />
+		
+		<!--- Add navigation classes --->
+		<cfif arrayLen(arguments.options.navClasses)>
+			<cfset html &= ' ' & arguments.options.navClasses[1] />
+			
+			<!--- Check if there are multiple nav classes being used --->
+			<cfif arrayLen(arguments.options.navClasses)>
+				<cfset arrayDeleteAt(arguments.options.navClasses, 1) />
+			</cfif>
+		</cfif>
+		
+		<cfset html &= ' ' & arguments.navPosition />
+		
+		<!--- Close the opening ul --->
+		<cfset html &= '">' & chr(10) />
+		
+		<cfset html &= generateHTML(argumentCollection = arguments) />
+		
+		<cfset html &= '</nav>' & chr(10) />
+		
+		<cfreturn html />
 	</cffunction>
 </cfcomponent>
