@@ -89,9 +89,7 @@
 		</cfif>
 		
 		<!--- Generate the html off the given navigation --->
-		<cfset html = '<nav>' & chr(10) />
-		
-		<cfset html &= '<ul class="' />
+		<cfset html = '<ul class="' />
 		
 		<!--- Add navigation classes --->
 		<cfif arrayLen(arguments.options.navClasses)>
@@ -209,8 +207,6 @@
 		
 		<cfset html &= '</ul>' & chr(10) />
 		
-		<cfset html &= '</nav>' & chr(10) />
-		
 		<cfreturn html />
 	</cffunction>
 	
@@ -275,6 +271,6 @@
 		<!--- Clean the URL instance --->
 		<cfset arguments.theURL.cleanCurrentPage() />
 		
-		<cfreturn generateHTML(argumentCollection = arguments) />
+		<cfreturn '<nav>' & chr(10) & generateHTML(argumentCollection = arguments) & '</nav>' & chr(10) />
 	</cffunction>
 </cfcomponent>
