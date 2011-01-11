@@ -157,7 +157,7 @@
 		<cfswitch expression="#prefix#">
 			<cfcase value="set">
 				<!--- Check for UUID --->
-				<cfif right(attribute, 2) eq 'ID'>
+				<cfif right(attribute, 2) eq 'ID' and isSimpleValue(arguments.missingMethodArguments[1])>
 					<cfset arguments.missingMethodArguments[1] = cleanUUID(toString(arguments.missingMethodArguments[1])) />
 				</cfif>
 				
