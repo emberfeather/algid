@@ -220,13 +220,11 @@
 			<cfset position = arguments.navPosition />
 		</cfif>
 		
-		<cfset uniqueContentID = arguments.locale & '-' & arguments.level & '-' & position />
+		<cfset uniqueContentID = arguments.theURL.search('_base') & '--' & arguments.locale & '--' & arguments.level & '--' & position />
 		
 		<cfif structKeyExists(arguments.options, 'depth')>
-			<cfset uniqueContentID &= '-depth' & arguments.options.depth />
+			<cfset uniqueContentID &= '--depth' & arguments.options.depth />
 		</cfif>
-		
-		<cfset uniqueContentID &= '-base' & arguments.theURL.search('_base') />
 		
 		<cfreturn uniqueContentID />
 	</cffunction>
