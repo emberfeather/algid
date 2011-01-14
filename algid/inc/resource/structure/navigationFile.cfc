@@ -226,9 +226,7 @@
 			<cfset uniqueContentID &= '-depth' & arguments.options.depth />
 		</cfif>
 		
-		<cfset uniqueContentID &= '-parent' & getBasePathForLevel(arguments.level, arguments.theURL.search('_base')) />
-		
-		<!--- TODO Make the identification string more unique --->
+		<cfset uniqueContentID &= '-base' & arguments.theURL.search('_base') />
 		
 		<cfreturn uniqueContentID />
 	</cffunction>
