@@ -146,15 +146,13 @@
 		</cfloop>
 		
 		<!---
-			Avoid race conditions by having fully formed variables replace
+			Minimize race conditions by having fully formed variables replace
 			the current session information.
-			
-			Using the struct key list to determine what to pull over since
-			the plugins can modify the session and want those custom variables
-			to be pulled into the actual session from the temp session.
 		--->
-		<cfloop list="#structKeyList(tempSession)#" index="i">
-			<cfset arguments.theSession[i] = tempSession[i] />
-		</cfloop>
+		<cflock scope="session" type="exclusive" timeout="20">
+			<cfloop list="#structKeyList(tempSession)#" index="i">
+				<cfset arguments.theSession[i] = tempSession[i] />
+			</cfloop>
+		</cflock>
 	</cffunction>
 </cfcomponent>

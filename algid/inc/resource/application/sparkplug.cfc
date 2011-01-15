@@ -587,16 +587,14 @@
 		</cfloop>
 		
 		<!---
-			Avoid race conditions by having fully formed variables replace
+			Minimizing race conditions by having fully formed variables replace
 			the current application information
-			
-			Using the struct key list to determine what to pull over since
-			the plugins can modify the application and want those custom variables
-			to be pulled into the actual application from the temp application.
 		--->
-		<cfloop list="#structKeyList(tempApplication)#" index="i">
-			<cfset arguments.theApplication[i] = tempApplication[i] />
-		</cfloop>
+		<cflock scope="application" type="exclusive" timeout="20">
+			<cfloop list="#structKeyList(tempApplication)#" index="i">
+				<cfset arguments.theApplication[i] = tempApplication[i] />
+			</cfloop>
+		</cflock>
 	</cffunction>
 	
 	<cffunction name="updatePluginVersion" access="private" returntype="void" output="false">
