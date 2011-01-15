@@ -247,10 +247,12 @@
 		<cfargument name="locale" type="string" default="en_US" />
 		<cfargument name="authUser" type="component" required="false" />
 		
+		<cfset var classes = '' />
 		<cfset var defaults = {
 			navClasses = []
 		} />
 		<cfset var html = '' />
+		<cfset var navHtml = '' />
 		
 		<!--- Extend the options --->
 		<cfset arguments.options = extend(defaults, arguments.options) />
@@ -272,13 +274,9 @@
 		<!--- Clean the URL instance --->
 		<cfset arguments.theURL.cleanCurrentPage() />
 		
-		
-		<!--- Generate the html off the given navigation --->
-		<cfset html = '<nav class="' />
-		
-		<!--- Add navigation classes --->
+		<!--- Determine navigation classes --->
 		<cfif arrayLen(arguments.options.navClasses)>
-			<cfset html &= ' ' & arguments.options.navClasses[1] />
+			<cfset classes &= ' ' & arguments.options.navClasses[1] />
 			
 			<!--- Check if there are multiple nav classes being used --->
 			<cfif arrayLen(arguments.options.navClasses)>
@@ -286,12 +284,16 @@
 			</cfif>
 		</cfif>
 		
-		<cfset html &= ' ' & arguments.navPosition />
+		<!--- Generate the html off the given navigation --->
+		<cfset navHtml = generateHTML(argumentCollection = arguments) />
 		
-		<!--- Close the opening ul --->
-		<cfset html &= '">' & chr(10) />
+		<cfif navHtml eq ''>
+			<cfreturn '' />
+		</cfif>
 		
-		<cfset html &= generateHTML(argumentCollection = arguments) />
+		<cfset html = '<nav class="' & classes & ' ' & arguments.navPosition & '">' & chr(10) />
+		
+		<cfset html &= navHtml />
 		
 		<cfset html &= '</nav>' & chr(10) />
 		
