@@ -52,4 +52,26 @@
 		
 		<echo message="Finished: CSS and JS minification"/>
 	</target>
+	
+	<target name="testJSLint" depends="prepare" description="Runs the JSLint Tests">
+		<echo message="Starting: JSLint Tests"/>
+		
+		<!-- Make the unit test directory -->
+		<mkdir dir="${build.dist}/jslint" />
+		
+		<!-- Load ANT tasks -->
+		<taskdef name="jslint" classname="com.googlecode.jslint4java.ant.JSLintTask" classpath="${master.lib}${file.separator}${master.lib.jar.jslint}" />
+		
+		<jslint options="eqeqeq,immed,passfail">
+			<formatter type="plain" />
+			<formatter type="xml" destfile="${build.dist}/jslint/jslint.xml" />
+			<fileset dir="${test.jslint.filePath}" casesensitive="yes">
+				<include name="**/*.js"/>
+				<exclude name="**/*-min.js"/>
+				<exclude name="script/markitup/jquery.markitup.js"/>
+			</fileset>
+		</jslint>
+		
+		<echo message="Finished: JSLint Tests"/>
+	</target>
 </project>
