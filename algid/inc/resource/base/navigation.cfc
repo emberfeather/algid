@@ -4,6 +4,11 @@
 		return this;
 	}
 	
+	private string function cleanPath( required string path ) {
+		// Default to doing nothing to the path
+		return arguments.path;
+	}
+	
 	public string function createPathList( string path, string key = '' ) {
 		var pathList = '';
 		var pathPart = '';
@@ -103,7 +108,7 @@
 			</cfif>
 			
 			<!--- Set the navigation  --->
-			<cfset arguments.theURL.setCurrentPage('_base', navigation.path) />
+			<cfset arguments.theURL.setCurrentPage('_base', cleanPath(navigation.path)) />
 			
 			<!--- Check if the page is selected --->
 			<cfset isSelected = (currentPathAtLevel eq navigation.path or currentPath eq navigation.path) />
