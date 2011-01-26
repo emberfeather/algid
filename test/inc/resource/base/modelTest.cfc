@@ -40,9 +40,9 @@ component extends="mxunit.framework.TestCase" {
 	/*
 		Test the get attribute list functionality.
 	*/
-	public void function testGetAttributeList() {
+	public void function testget__attributeList() {
 		var model = createObject('component', 'implementation.inc.resource.base.modelWithValidation').init(variables.i18n);
 		
-		assertEquals('firstName,lastName', listSort(model.getAttributeList(), 'text'));
+		assertEquals('firstName,lastName', listSort(model.get__attributeList(), 'text'));
 	}
 }

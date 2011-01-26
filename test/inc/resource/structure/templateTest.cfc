@@ -9,7 +9,7 @@ component extends="mxunit.framework.TestCase" {
 	/**
 	 * Test that the getAttribute function works.
 	 */
-	public void function testGetAttribute() {
+	public void function testget__attribute() {
 		variables.template.setAttribute('testing', 'yippee');
 		
 		assertEquals('yippee', variables.template.getAttribute('testing'));
@@ -152,7 +152,7 @@ component extends="mxunit.framework.TestCase" {
 	 * Test that the hasAttribute public void function works.
 	 */
 	public void function testHasAttribute_False() {
-		assertFalse(variables.template.hasAttribute('testing'));
+		assertFalse(variables.template.has__attribute('testing'));
 	}
 	
 	/**

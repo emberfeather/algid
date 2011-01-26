@@ -6,7 +6,7 @@
 		<cfset super.init(arguments.i18n, arguments.locale) />
 		
 		<!--- First Name --->
-		<cfset addAttribute(
+		<cfset add__attribute(
 				attribute = 'firstName',
 				form = {
 					type = 'text'
@@ -18,7 +18,7 @@
 			) />
 		
 		<!--- Last Name --->
-		<cfset addAttribute(
+		<cfset add__attribute(
 				attribute = 'lastName',
 				form = {
 					type = 'text'
@@ -26,7 +26,7 @@
 			) />
 		
 		<!--- Set the bundle information for translation --->
-		<cfset addBundle('/i18n/inc/resource/base', 'modelWithValidation') />
+		<cfset add__bundle('/i18n/inc/resource/base', 'modelWithValidation') />
 		
 		<cfreturn this />
 	</cffunction>

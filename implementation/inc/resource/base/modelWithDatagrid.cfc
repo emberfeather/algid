@@ -6,7 +6,7 @@
 		<cfset super.init(arguments.i18n, arguments.locale) />
 		
 		<!--- First Name --->
-		<cfset addAttribute(
+		<cfset add__attribute(
 				attribute = 'firstName',
 				dataGrid = {
 					type = 'text'
@@ -14,7 +14,7 @@
 			) />
 		
 		<!--- Last Name --->
-		<cfset addAttribute(
+		<cfset add__attribute(
 				attribute = 'lastName',
 				dataGrid = {
 					type = 'text'

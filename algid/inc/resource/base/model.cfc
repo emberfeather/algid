@@ -22,7 +22,7 @@
 		<cfset variables.label = createObject('component', 'cf-compendium.inc.resource.i18n.label').init(arguments.i18n, arguments.locale) />
 		
 		<!--- Set base bundle for translation --->
-		<cfset addBundle('/cf-compendium/i18n/inc/resource/base', 'object') />
+		<cfset add__bundle('/cf-compendium/i18n/inc/resource/base', 'object') />
 		
 		<cfreturn this />
 	</cffunction>
@@ -30,7 +30,7 @@
 	<!---
 		Used to add an attribute to the object with it's meta information
 	--->
-	<cffunction name="addAttribute" access="public" returntype="void" output="false">
+	<cffunction name="add__attribute" access="public" returntype="void" output="false">
 		<cfargument name="attribute" type="string" required="true" />
 		<cfargument name="defaultValue" type="any" default="" />
 		<cfargument name="validation" type="struct" default="#{}#" />
@@ -50,7 +50,6 @@
 			<cfset variables.instance[arguments.attribute & 'Confirm'] = arguments.defaultValue />
 		</cfif>
 	</cffunction>
-	
 <cfscript>
 	/**
 	 * Cleans the value of the given UUID to conform to the 5 segment uuid format.
@@ -63,7 +62,6 @@
 		return arguments.uuid;
 	}
 </cfscript>
-	
 	<!---
 		Used to clone the model attributes of the original object
 	--->
@@ -73,7 +71,7 @@
 		<cfset var i = '' />
 		<cfset var value = '' />
 		
-		<cfloop list="#this.getAttributeList()#" index="i">
+		<cfloop list="#this.get__attributeList()#" index="i">
 			<!--- Get the value from the original --->
 			<cfinvoke component="#arguments.original#" method="get#i#" returnvariable="value" />
 			
@@ -92,7 +90,7 @@
 	<!---
 		Used to get an attribute
 	--->
-	<cffunction name="getAttribute" access="public" returntype="struct" output="false">
+	<cffunction name="get__attribute" access="public" returntype="struct" output="false">
 		<cfargument name="attribute" type="string" required="true" />
 		
 		<cfreturn variables.attributes[arguments.attribute] />
@@ -101,7 +99,7 @@
 	<!---
 		Used to get an attribute's label
 	--->
-	<cffunction name="getAttributeLabel" access="public" returntype="string" output="false">
+	<cffunction name="get__attributeLabel" access="public" returntype="string" output="false">
 		<cfargument name="attribute" type="string" required="true" />
 		
 		<cfreturn variables.label.get(arguments.attribute) />
@@ -111,14 +109,14 @@
 		Used to return a list of all the attributes publicly available 
 		through the dynamic setters and getters.
 	--->
-	<cffunction name="getAttributeList" access="public" returntype="string" output="false">
+	<cffunction name="get__attributeList" access="public" returntype="string" output="false">
 		<cfreturn variables.attributeOrder />
 	</cffunction>
 	
 	<!---
 		Checks for the existance of an attribute
 	--->
-	<cffunction name="hasAttribute" access="public" returntype="boolean" output="false">
+	<cffunction name="has__attribute" access="public" returntype="boolean" output="false">
 		<cfargument name="attributeName" type="string" required="true" />
 		
 		<cfreturn structKeyExists(variables.attributeOrder, arguments.attributeName) />
@@ -178,19 +176,19 @@
 					<cfloop list="#structKeyList(variables.attributes[attribute].validation)#" index="i">
 						<cfif isStruct(variables.attributes[attribute].validation[i])>
 							<!--- If it is a struct we can use it as an argument collection --->
-							<cfset variables.attributes[attribute].validation[i].label = getAttributeLabel(attribute) />
+							<cfset variables.attributes[attribute].validation[i].label = get__attributeLabel(attribute) />
 							<cfset variables.attributes[attribute].validation[i].value = arguments.missingMethodArguments />
 							
 							<cfinvoke component="#validator#" method="#i#" argumentcollection="#variables.attributes[attribute].validation[i]#" />
 						<cfelseif isArray(variables.attributes[attribute].validation[i])>
 							<!--- If it is an array we can use it as an argument collection --->
 							<cfset arrayPrepend(variables.attributes[attribute].validation[i], arguments.missingMethodArguments) />
-							<cfset arrayPrepend(variables.attributes[attribute].validation[i], getAttributeLabel(attribute)) />
+							<cfset arrayPrepend(variables.attributes[attribute].validation[i], get__attributeLabel(attribute)) />
 							
 							<cfinvoke component="#validator#" method="#i#" argumentcollection="#variables.attributes[attribute].validation[i]#" />
 						<cfelse>
 							<cfinvoke component="#validator#" method="#i#">
-								<cfinvokeargument name="label" value="#getAttributeLabel(attribute)#" />
+								<cfinvokeargument name="label" value="#get__attributeLabel(attribute)#" />
 								<cfinvokeargument name="value" value="#arguments.missingMethodArguments[1]#" />
 								<cfinvokeargument name="extra" value="#variables.attributes[attribute].validation[i]#" />
 							</cfinvoke>
@@ -207,7 +205,7 @@
 	<!---
 		Used to set the bundle information for the object
 	--->
-	<cffunction name="addBundle" access="public" returntype="void" output="false">
+	<cffunction name="add__bundle" access="public" returntype="void" output="false">
 		<cfargument name="path" type="string" required="true" />
 		<cfargument name="name" type="string" required="true" />
 		
