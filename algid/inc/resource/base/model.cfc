@@ -119,7 +119,7 @@
 	<cffunction name="has__attribute" access="public" returntype="boolean" output="false">
 		<cfargument name="attributeName" type="string" required="true" />
 		
-		<cfreturn structKeyExists(variables.attributeOrder, arguments.attributeName) />
+		<cfreturn structKeyExists(variables.attributes, arguments.attributeName) />
 	</cffunction>
 	
 	<!---
