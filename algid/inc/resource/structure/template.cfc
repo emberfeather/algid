@@ -237,11 +237,11 @@
 		
 		<cfset var breadcrumb = '' />
 		<cfset var defaults = {
-				separator = ' : ',
-				showMultiple = true,
-				topLevel = 1,
-				useNavTitle = true
-			} />
+			separator = ' : ',
+			showMultiple = true,
+			topLevel = 1,
+			useNavTitle = true
+		} />
 		<cfset var i = '' />
 		<cfset var levels = '' />
 		<cfset var numLevels = this.getCurrentLevel() />
@@ -289,7 +289,7 @@
 		
 		<cfset var defaults = {
 				separator = ' : ',
-				showMultiple = true,
+				showMultiple = false,
 				useNavTitle = true
 			} />
 		<cfset var i = '' />
@@ -371,12 +371,12 @@
 		
 		<cfset var args = '' />
 		<cfset var defaults = {
-				numLevels = 1,
-				isExpanded = false,
-				groupTag = '',
-				outerTag = 'ul',
-				innerTag = 'li'
-			} />
+			numLevels = 1,
+			isExpanded = false,
+			groupTag = '',
+			outerTag = 'ul',
+			innerTag = 'li'
+		} />
 		
 		<!--- Create an argument collection --->
 		<cfset args = {
