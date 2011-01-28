@@ -85,7 +85,7 @@
 		</cfif>
 		
 		<!--- Generate the html off the given navigation --->
-		<cfset html = '<ul class="' />
+		<cfset html = '<' & arguments.options.outerTag & ' class="' />
 		
 		<!--- Add navigation classes --->
 		<cfif arrayLen(arguments.options.navClasses)>
@@ -123,7 +123,7 @@
 				<cfset arguments.theURL.setCurrentPage(varName, theURL.search(varName)) />
 			</cfloop>
 			
-			<cfset html &= '<li>' />
+			<cfset html &= '<' & arguments.options.innerTag & '>' />
 			
 			<cfset html &= '<a' />
 			
@@ -197,10 +197,10 @@
 				<cfset arguments.theURL.removeCurrentPage(varName) />
 			</cfloop>
 			
-			<cfset html &= '</li>' & chr(10) />
+			<cfset html &= '</' & arguments.options.innerTag & '>' & chr(10) />
 		</cfoutput>
 		
-		<cfset html &= '</ul>' & chr(10) />
+		<cfset html &= '</' & arguments.options.outerTag & '>' & chr(10) />
 		
 		<cfreturn html />
 	</cffunction>
@@ -254,7 +254,12 @@
 		
 		<cfset var classes = '' />
 		<cfset var defaults = {
-			navClasses = []
+			groupTag = '',
+			innerTag = 'li',
+			isExpanded = false,
+			navClasses = [],
+			numLevels = 1,
+			outerTag = 'ul'
 		} />
 		<cfset var html = '' />
 		<cfset var navHtml = '' />
