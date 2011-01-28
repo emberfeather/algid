@@ -89,6 +89,9 @@
 			<!--- Create a new sparkplug --->
 			<cfset arguments.theApplication.sparkplug = createObject('component', 'algid.inc.resource.application.sparkplug').init( arguments.theApplication.sparkplug.getAppBaseDirectory() ) />
 			
+			<!--- End the application --->
+			<cfset arguments.theApplication.sparkplug.end(application) />
+			
 			<!--- Start the application --->
 			<cfset arguments.theApplication.sparkplug.start(application) />
 			
