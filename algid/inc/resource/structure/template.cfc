@@ -65,7 +65,7 @@
 	<cffunction name="addLevel" access="public" returntype="void" output="false">
 		<cfargument name="title" type="string" required="true" />
 		<cfargument name="navTitle" type="string" required="true" />
-		<cfargument name="link" type="string" required="true" />
+		<cfargument name="link" type="string" default="" />
 		<cfargument name="position" type="numeric" default="0" />
 		<cfargument name="isCustom" type="boolean" default="false" />
 		
