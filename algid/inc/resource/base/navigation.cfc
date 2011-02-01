@@ -4,6 +4,11 @@
 		return this;
 	}
 	
+	private string function cleanPath( required string path ) {
+		// Default to doing nothing to the path
+		return arguments.path;
+	}
+	
 	public string function createPathList( string path, string key = '' ) {
 		var pathList = '';
 		var pathPart = '';
@@ -42,9 +47,6 @@
 		<cfset var attributes = '' />
 		<cfset var currentPath = '' />
 		<cfset var currentPathAtLevel = '' />
-		<cfset var defaults = {
-				navClasses = []
-			} />
 		<cfset var html = '' />
 		<cfset var isSelected = '' />
 		<cfset var navigation = '' />
@@ -61,12 +63,6 @@
 		<cfif currentPathAtLevel neq ''>
 			<cfset currentPathAtLevel = left(currentPathAtLevel, len(currentPathAtLevel) - 1) />
 		</cfif>
-		
-		<!--- Extend the options --->
-		<cfset arguments.options = extend(defaults, arguments.options) />
-		
-		<!--- For generating the navigation HTML exclude blank nav titles --->
-		<cfset arguments.options.hideBlankNavTitles = true />
 		
 		<!--- Store the nav positions for later --->
 		<cfset positions = arguments.navPosition />
@@ -89,22 +85,19 @@
 		</cfif>
 		
 		<!--- Generate the html off the given navigation --->
-		<cfset html = '<nav>' & chr(10) />
-		
-		<cfset html &= '<ul class="' />
+		<cfset html = '<' & arguments.options.outerTag & ' class="' />
 		
 		<!--- Add navigation classes --->
 		<cfif arrayLen(arguments.options.navClasses)>
-			<cfset html &= arguments.options.navClasses[1] />
+			<cfset html &= ' ' & arguments.options.navClasses[1] />
 		</cfif>
 		
-		<cfset html &= ' ' & arguments.navPosition />
 		<cfset html &= ' level-' & arguments.level />
 		
 		<!--- Close the opening ul --->
 		<cfset html &= '">' & chr(10) />
 		
-		<cfoutput query="navigation" group="contentID">
+		<cfoutput query="navigation" group="navTitle">
 			<!--- Discover the attributes for the page --->
 			<cfset attributes = {} />
 			
@@ -115,7 +108,7 @@
 			</cfif>
 			
 			<!--- Set the navigation  --->
-			<cfset arguments.theURL.setCurrentPage('_base', navigation.path) />
+			<cfset arguments.theURL.setCurrentPage('_base', cleanPath(navigation.path)) />
 			
 			<!--- Check if the page is selected --->
 			<cfset isSelected = (currentPathAtLevel eq navigation.path or currentPath eq navigation.path) />
@@ -130,7 +123,7 @@
 				<cfset arguments.theURL.setCurrentPage(varName, theURL.search(varName)) />
 			</cfloop>
 			
-			<cfset html &= '<li>' />
+			<cfset html &= '<' & arguments.options.innerTag & '>' />
 			
 			<cfset html &= '<a' />
 			
@@ -204,12 +197,10 @@
 				<cfset arguments.theURL.removeCurrentPage(varName) />
 			</cfloop>
 			
-			<cfset html &= '</li>' & chr(10) />
+			<cfset html &= '</' & arguments.options.innerTag & '>' & chr(10) />
 		</cfoutput>
 		
-		<cfset html &= '</ul>' & chr(10) />
-		
-		<cfset html &= '</nav>' & chr(10) />
+		<cfset html &= '</' & arguments.options.outerTag & '>' & chr(10) />
 		
 		<cfreturn html />
 	</cffunction>
@@ -261,8 +252,26 @@
 		<cfargument name="locale" type="string" default="en_US" />
 		<cfargument name="authUser" type="component" required="false" />
 		
-		<!--- Set the base parent path dependent upon the current level --->
-		<cfset arguments.parentPath = getBasePathForLevel(arguments.level, arguments.theURL.search('_base')) />
+		<cfset var classes = '' />
+		<cfset var defaults = {
+			groupTag = '',
+			innerTag = 'li',
+			isExpanded = false,
+			navClasses = [],
+			numLevels = 1,
+			outerTag = 'ul'
+		} />
+		<cfset var html = '' />
+		<cfset var navHtml = '' />
+		
+		<!--- Extend the options --->
+		<cfset arguments.options = extend(defaults, arguments.options) />
+		
+		<!--- For generating the navigation HTML exclude blank nav titles --->
+		<cfset arguments.options.hideBlankNavTitles = true />
+		
+		<!--- Set the base parent path dependent upon the current level and optionally a custom parent path --->
+		<cfset arguments.parentPath = getBasePathForLevel(arguments.level, (structKeyExists(arguments.options, 'parentPath') ? arguments.options.parentPath : arguments.theURL.search('_base'))) />
 		
 		<!---
 			If we can't find a parent path for the level we are looking
@@ -275,6 +284,29 @@
 		<!--- Clean the URL instance --->
 		<cfset arguments.theURL.cleanCurrentPage() />
 		
-		<cfreturn generateHTML(argumentCollection = arguments) />
+		<!--- Determine navigation classes --->
+		<cfif arrayLen(arguments.options.navClasses)>
+			<cfset classes &= ' ' & arguments.options.navClasses[1] />
+			
+			<!--- Check if there are multiple nav classes being used --->
+			<cfif arrayLen(arguments.options.navClasses)>
+				<cfset arrayDeleteAt(arguments.options.navClasses, 1) />
+			</cfif>
+		</cfif>
+		
+		<!--- Generate the html off the given navigation --->
+		<cfset navHtml = generateHTML(argumentCollection = arguments) />
+		
+		<cfif navHtml eq ''>
+			<cfreturn '' />
+		</cfif>
+		
+		<cfset html = '<nav class="' & classes & ' ' & arguments.navPosition & '">' & chr(10) />
+		
+		<cfset html &= navHtml />
+		
+		<cfset html &= '</nav>' & chr(10) />
+		
+		<cfreturn html />
 	</cffunction>
 </cfcomponent>
