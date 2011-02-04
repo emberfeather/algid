@@ -30,7 +30,7 @@
 		<cfset super.init() />
 		
 		<!--- Make the dsUpdate the same as the dsAlter --->
-		<cfset defaults.dsUpdate = duplicate(defaults.dsAlter) />
+		<cfset defaults.dsUpdate = evaluate(serialize(defaults.dsAlter)) />
 		
 		<cfset set__properties(defaults) />
 		

@@ -161,10 +161,10 @@
 				<cfset html  &= chr(10) />
 				
 				<!--- Decrement the depth so that it eventually ends --->
-				<cfset temp = duplicate(arguments) />
+				<cfset temp = evaluate(serialize(arguments)) />
 				<cfset temp.level++ />
 				<cfset temp.parentPath = navigation.path & '/' />
-				<cfset temp.options = duplicate(arguments.options) />
+				<cfset temp.options = evaluate(serialize(arguments.options)) />
 				<cfset temp.options.depth-- />
 				
 				<!--- Check if there are multiple nav classes being used --->
@@ -173,7 +173,7 @@
 				</cfif>
 				
 				<!--- Set the position to the original --->
-				<cfset temp.navPosition = duplicate(positions) />
+				<cfset temp.navPosition = evaluate(serialize(positions)) />
 				
 				<!--- Remove the first position since it has already been used --->
 				<cfif isArray(temp.navPosition)>

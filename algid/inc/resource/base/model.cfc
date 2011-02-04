@@ -75,10 +75,8 @@
 			<!--- Get the value from the original --->
 			<cfinvoke component="#arguments.original#" method="get#i#" returnvariable="value" />
 			
-			<!--- TODO Check for an object with a clone method that could be used to clone variables...? --->
-			
-			<!--- Duplicate the value so that it is not the same as the original --->
-			<cfset value = duplicate(value) />
+			<!--- Copy the value so that it is not the same as the original --->
+			<cfset value = evaluate(serialize(value)) />
 			
 			<!--- Set the new value --->
 			<cfinvoke component="#this#" method="set#i#">
