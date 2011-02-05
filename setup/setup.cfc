@@ -664,7 +664,6 @@
 		<cfset args.directories &= ',inc,inc/model,inc/resource,inc/service,inc/view' />
 		<cfset args.directories &= ',script' />
 		<cfset args.directories &= ',style' />
-		<cfset args.directories &= ',service' />
 		
 		<!--- The static files --->
 		<cfset args.staticFiles = '' />
