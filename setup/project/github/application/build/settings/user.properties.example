@@ -1,16 +1,5 @@
-# SVN Information
-svn.username=
-#svn.password=
-
-# SVN Log Options
-svn.log.startDate=2009-01-01
-
 # General
 general.verbose=true
-
-# SVN Settings
-svn.javahl=false
-svn.svnkit=true
 
 # Build Settings
 #build.war.lib=/path/to/war/lib/files
@@ -26,3 +15,9 @@ test.mxunit.componentpath=test
 
 # varScoper
 test.varscoper.base=/varscoper
+
+# less CSS
+compile.less.path=/home/randy/bin/
+
+# Set options for the build
+options.lessCSS=true
