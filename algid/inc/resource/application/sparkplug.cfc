@@ -439,6 +439,9 @@
 		<cfset var temp = '' />
 		
 		<!--- Create the default singletons --->
+		<cfset temp = createObject('component', 'cf-compendium.inc.resource.utility.diff').init() />
+		<cfset arguments.theApplication.managers.singleton.setDiff(temp) />
+		
 		<cfset temp = createObject('component', 'cf-compendium.inc.resource.i18n.i18n').init(expandPath(arguments.theApplication.managers.singleton.getApplication().getI18n().base)) />
 		<cfset arguments.theApplication.managers.singleton.setI18N(temp) />
 		
