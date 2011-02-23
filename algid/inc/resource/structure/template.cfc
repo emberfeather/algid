@@ -9,14 +9,14 @@
 		
 		<cfset var args = '' />
 		<cfset var defaults = {
-				attributes = {},
-				authUser = '',
-				pageTitles = [],
-				meta = {},
-				scripts = [],
-				styles = [],
-				template = ''
-			} />
+			attributes = {},
+			authUser = '',
+			pageTitles = [],
+			meta = {},
+			scripts = [],
+			styles = [],
+			template = ''
+		} />
 		<cfset var i = '' />
 		
 		<cfset super.init() />
@@ -37,10 +37,10 @@
 		
 		<!--- Get the current page information --->
 		<cfset args = {
-				domain = arguments.domain,
-				theUrl = arguments.theUrl,
-				locale = arguments.locale
-			} />
+			domain = arguments.domain,
+			theUrl = arguments.theUrl,
+			locale = arguments.locale
+		} />
 		
 		<!--- Check if we have an auth user --->
 		<cfif isObject(this.getAuthUser())>
@@ -138,9 +138,9 @@
 		</cfif>
 		
 		<cfset script = {
-				script = arguments.value,
-				fallback = arguments.fallback
-			} />
+			script = arguments.value,
+			fallback = arguments.fallback
+		} />
 		
 		<cfset arrayAppend( variables.instance.scripts, script ) />
 	</cffunction>
@@ -176,9 +176,9 @@
 		</cfloop>
 		
 		<cfset style = {
-				href = arguments.href,
-				media = arguments.media
-			} />
+			href = arguments.href,
+			media = arguments.media
+		} />
 		
 		<cfset arrayAppend( variables.instance.styles, style ) />
 	</cffunction>
@@ -206,9 +206,9 @@
 			
 			<cfif isUnique>
 				<cfset style = {
-						href = i,
-						media = 'all'
-					} />
+					href = i,
+					media = 'all'
+				} />
 				
 				<cfset arrayAppend( variables.instance.styles, style ) />
 			</cfif>
@@ -288,10 +288,10 @@
 		<cfargument name="options" type="struct" default="#{}#" />
 		
 		<cfset var defaults = {
-				separator = ' : ',
-				showMultiple = false,
-				useNavTitle = true
-			} />
+			separator = ' : ',
+			showMultiple = false,
+			useNavTitle = true
+		} />
 		<cfset var i = '' />
 		<cfset var htmlTitle = '' />
 		<cfset var levels = '' />
@@ -380,12 +380,12 @@
 		
 		<!--- Create an argument collection --->
 		<cfset args = {
-				theURL = variables.theURL,
-				level = arguments.level,
-				navPosition = arguments.navPosition,
-				options = extend(defaults, arguments.options),
-				locale = variables.locale
-			} />
+			theURL = variables.theURL,
+			level = arguments.level,
+			navPosition = arguments.navPosition,
+			options = extend(defaults, arguments.options),
+			locale = variables.locale
+		} />
 		
 		<!--- Check for user --->
 		<cfif structKeyExists(arguments, 'authUser')>

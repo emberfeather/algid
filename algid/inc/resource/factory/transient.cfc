@@ -9,7 +9,7 @@
 	</cffunction>
 <cfscript>
 	public struct function get_definitions() {
-		return duplicate(variables.instance);
+		return evaluate(serialize(variables.instance));
 	}
 </cfscript>
 	<cffunction name="onMissingMethod" access="public" returntype="any" output="false">

@@ -13,38 +13,17 @@
 		<echo message="Starting: CSS and JS minification"/>
 		
 		<!-- Create a single, concatenated JS file -->
-		<concat destfile="${build.script}jquery.${project.name}.js">
+		<concat destfile="${build.script}jquery.${project.key}.js">
 			<fileset dir="${build.script}" includes="jquery.base.js" />
 		</concat>
 		
 		<!-- Create a single, concatenated CSS file -->
-		<concat destfile="${build.style}${project.name}.css">
+		<concat destfile="${build.style}${project.key}.css">
 			<fileset dir="${build.style}" includes="base.css" />
 		</concat>
 		
-		<!-- Compress the JS files with Google Closure Compiler -->
-		<apply executable="java" parallel="false" dest="${basedir}/${project.name}">
-			<fileset dir="${basedir}${file.separator}${project.name}" includes="**/*.js" excludes="**/*-min.js" />
-			<arg line="-jar"/>
-			<arg path="${master.lib}${file.separator}${master.lib.jar.compiler}" />
-			<arg line="--js"/>
-			<srcfile/>
-			<arg line="--js_output_file"/>
-			<mapper type="glob" from="*.js" to="*-min.js"/>
-			<targetfile/>
-		</apply>
-		
-		<!-- Compress the CSS files with Yahoo UI Compressor -->
-		<apply executable="java" parallel="false" dest="${basedir}/${project.name}">
-			<fileset dir="${basedir}${file.separator}${project.name}" includes="**/*.css" excludes="**/*-min.css" />
-			<arg line="-jar"/>
-			<arg path="${master.lib}${file.separator}${master.lib.jar.compressor}" />
-			<arg line="-v"/>
-			<srcfile/>
-			<arg line="-o"/>
-			<mapper type="glob" from="*.css" to="*-min.css"/>
-			<targetfile/>
-		</apply>
+		<!-- Use the master minify -->
+		<antcall target="ef-ant.minify"/>
 		
 		<echo message="Finished: CSS and JS minification"/>
 	</target>
