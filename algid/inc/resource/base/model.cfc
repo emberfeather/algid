@@ -38,6 +38,11 @@
 		<cfargument name="dataGrid" type="struct" default="#{}#" />
 		<cfargument name="options" type="struct" default="#{}#" />
 		
+		<!--- Check for form options --->
+		<cfif not structKeyExists(arguments.form, 'options')>
+			<cfset arguments.form.options = {} />
+		</cfif>
+		
 		<cfset variables.attributes[arguments.attribute] = arguments />
 		
 		<!--- Add to the attribute order --->
