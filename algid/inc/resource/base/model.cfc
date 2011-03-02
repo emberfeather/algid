@@ -34,14 +34,7 @@
 		<cfargument name="attribute" type="string" required="true" />
 		<cfargument name="defaultValue" type="any" default="" />
 		<cfargument name="validation" type="struct" default="#{}#" />
-		<cfargument name="form" type="struct" default="#{}#" />
-		<cfargument name="dataGrid" type="struct" default="#{}#" />
 		<cfargument name="options" type="struct" default="#{}#" />
-		
-		<!--- Check for form options --->
-		<cfif not structKeyExists(arguments.form, 'options')>
-			<cfset arguments.form.options = {} />
-		</cfif>
 		
 		<cfset variables.attributes[arguments.attribute] = arguments />
 		
@@ -49,11 +42,6 @@
 		<cfset variables.attributeOrder = listAppend(variables.attributeOrder, arguments.attribute) />
 		
 		<cfset variables.instance[arguments.attribute] = arguments.defaultValue />
-		
-		<!--- Check for a confirm form option --->
-		<cfif structKeyExists(arguments.form, 'confirm')>
-			<cfset variables.instance[arguments.attribute & 'Confirm'] = arguments.defaultValue />
-		</cfif>
 	</cffunction>
 <cfscript>
 	/**
