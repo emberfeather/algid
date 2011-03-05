@@ -439,6 +439,9 @@
 		<cfset var temp = '' />
 		
 		<!--- Create the default singletons --->
+		<cfset temp = createObject('component', 'cf-compendium.inc.resource.utility.cleanData').init() />
+		<cfset arguments.theApplication.managers.singleton.setCleanData(temp) />
+		
 		<cfset temp = createObject('component', 'cf-compendium.inc.resource.utility.diff').init() />
 		<cfset arguments.theApplication.managers.singleton.setDiff(temp) />
 		
@@ -480,6 +483,7 @@
 		<cfset arguments.theApplication.factories.transient.setTokens('cf-compendium.inc.resource.security.tokens') />
 		<cfset arguments.theApplication.factories.transient.setUrl('cf-compendium.inc.resource.utility.url') />
 		<cfset arguments.theApplication.factories.transient.setUrlRewrite('cf-compendium.inc.resource.utility.urlRewrite') />
+		<cfset arguments.theApplication.factories.transient.setValidation('cf-compendium.inc.resource.validation.validation') />
 	</cffunction>
 	
 	<cffunction name="start" access="public" returntype="void" output="false">
