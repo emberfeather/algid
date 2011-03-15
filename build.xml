@@ -37,7 +37,7 @@
 		<!-- Load ANT tasks -->
 		<taskdef name="jslint" classname="com.googlecode.jslint4java.ant.JSLintTask" classpath="${master.lib}${file.separator}${master.lib.jar.jslint}" />
 		
-		<jslint options="eqeqeq,immed,passfail">
+		<jslint options="immed,passfail">
 			<formatter type="plain" />
 			<formatter type="xml" destfile="${build.dist}/jslint/jslint.xml" />
 			<fileset dir="${test.jslint.filePath}" casesensitive="yes">
