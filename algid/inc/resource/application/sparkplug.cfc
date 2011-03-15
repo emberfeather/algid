@@ -439,6 +439,9 @@
 		<cfset var temp = '' />
 		
 		<!--- Create the default singletons --->
+		<cfset temp = createObject('component', 'cf-compendium.inc.resource.utility.cleanData').init() />
+		<cfset arguments.theApplication.managers.singleton.setCleanData(temp) />
+		
 		<cfset temp = createObject('component', 'cf-compendium.inc.resource.utility.diff').init() />
 		<cfset arguments.theApplication.managers.singleton.setDiff(temp) />
 		
@@ -465,6 +468,7 @@
 		<cfset arguments.theApplication.factories.transient.setFormatHTML('cf-compendium.inc.resource.utility.formatHtml') />
 		<cfset arguments.theApplication.factories.transient.setFormExtended('cf-compendium.inc.resource.structure.formExtended') />
 		<cfset arguments.theApplication.factories.transient.setFormStandard('cf-compendium.inc.resource.structure.formStandard') />
+		<cfset arguments.theApplication.factories.transient.setLabel('cf-compendium.inc.resource.i18n.label') />
 		<cfset arguments.theApplication.factories.transient.setManagerModel('algid.inc.resource.manager.model') />
 		<cfset arguments.theApplication.factories.transient.setManagerService('algid.inc.resource.manager.service') />
 		<cfset arguments.theApplication.factories.transient.setManagerSingleton('algid.inc.resource.manager.singleton') />
@@ -479,6 +483,7 @@
 		<cfset arguments.theApplication.factories.transient.setTokens('cf-compendium.inc.resource.security.tokens') />
 		<cfset arguments.theApplication.factories.transient.setUrl('cf-compendium.inc.resource.utility.url') />
 		<cfset arguments.theApplication.factories.transient.setUrlRewrite('cf-compendium.inc.resource.utility.urlRewrite') />
+		<cfset arguments.theApplication.factories.transient.setValidation('cf-compendium.inc.resource.validation.validation') />
 	</cffunction>
 	
 	<cffunction name="start" access="public" returntype="void" output="false">

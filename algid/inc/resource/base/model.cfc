@@ -34,8 +34,6 @@
 		<cfargument name="attribute" type="string" required="true" />
 		<cfargument name="defaultValue" type="any" default="" />
 		<cfargument name="validation" type="struct" default="#{}#" />
-		<cfargument name="form" type="struct" default="#{}#" />
-		<cfargument name="dataGrid" type="struct" default="#{}#" />
 		<cfargument name="options" type="struct" default="#{}#" />
 		
 		<cfset variables.attributes[arguments.attribute] = arguments />
@@ -44,11 +42,6 @@
 		<cfset variables.attributeOrder = listAppend(variables.attributeOrder, arguments.attribute) />
 		
 		<cfset variables.instance[arguments.attribute] = arguments.defaultValue />
-		
-		<!--- Check for a confirm form option --->
-		<cfif structKeyExists(arguments.form, 'confirm')>
-			<cfset variables.instance[arguments.attribute & 'Confirm'] = arguments.defaultValue />
-		</cfif>
 	</cffunction>
 <cfscript>
 	/**
@@ -157,43 +150,6 @@
 					<cfset arguments.missingMethodArguments[1] = cleanUUID(toString(arguments.missingMethodArguments[1])) />
 				</cfif>
 				
-				<!--- Check for option to clean the input before validating --->
-				<cfif structKeyExists(variables.attributes, attribute) and structKeyExists(variables.attributes[attribute].options, 'cleanData')>
-					<cfset cleanData = __getCleanData() />
-					
-					<cfinvoke component="#cleanData#" method="#variables.attributes[attribute].options.cleanData#" returnvariable="arguments.missingMethodArguments[1]">
-						<cfinvokeargument name="value" value="#arguments.missingMethodArguments[1]#" />
-					</cfinvoke>
-				</cfif>
-				
-				<!--- Check for any validation given in the attribute meta --->
-				<cfif structKeyExists(variables.attributes, attribute) and not structIsEmpty(variables.attributes[attribute].validation)>
-					<cfset validator = __getValidator() />
-					
-					<!--- Try to validate with each of the specified tests against the validation object --->
-					<cfloop list="#structKeyList(variables.attributes[attribute].validation)#" index="i">
-						<cfif isStruct(variables.attributes[attribute].validation[i])>
-							<!--- If it is a struct we can use it as an argument collection --->
-							<cfset variables.attributes[attribute].validation[i].label = get__attributeLabel(attribute) />
-							<cfset variables.attributes[attribute].validation[i].value = arguments.missingMethodArguments />
-							
-							<cfinvoke component="#validator#" method="#i#" argumentcollection="#variables.attributes[attribute].validation[i]#" />
-						<cfelseif isArray(variables.attributes[attribute].validation[i])>
-							<!--- If it is an array we can use it as an argument collection --->
-							<cfset arrayPrepend(variables.attributes[attribute].validation[i], arguments.missingMethodArguments) />
-							<cfset arrayPrepend(variables.attributes[attribute].validation[i], get__attributeLabel(attribute)) />
-							
-							<cfinvoke component="#validator#" method="#i#" argumentcollection="#variables.attributes[attribute].validation[i]#" />
-						<cfelse>
-							<cfinvoke component="#validator#" method="#i#">
-								<cfinvokeargument name="label" value="#get__attributeLabel(attribute)#" />
-								<cfinvokeargument name="value" value="#arguments.missingMethodArguments[1]#" />
-								<cfinvokeargument name="extra" value="#variables.attributes[attribute].validation[i]#" />
-							</cfinvoke>
-						</cfif>
-					</cfloop>
-				</cfif>
-				
 				<!--- Set the value --->
 				<cfset variables.instance[attribute] = arguments.missingMethodArguments[1] />
 			</cfcase>
@@ -208,32 +164,6 @@
 		<cfargument name="name" type="string" required="true" />
 		
 		<cfset variables.label.addBundle(argumentCollection = arguments) />
-	</cffunction>
-	
-	<cffunction name="__getCleanData" access="private" returntype="component" output="false">
-		<!--- Make sure that we have a cleaning object --->
-		<cfif not structKeyExists(variables, 'cleanData')>
-			<!--- Create the clean object --->
-			<cfset variables.cleanData = createObject('component', 'cf-compendium.inc.resource.utility.cleanData').init() />
-		</cfif>
-		
-		<cfreturn variables.cleanData />
-	</cffunction>
-	
-	<cffunction name="__getValidator" access="private" returntype="component" output="false">
-		<cfset var bundle = '' />
-		<cfset var format = '' />
-		
-		<!--- Make sure that we have a validator object --->
-		<cfif not structKeyExists(variables, 'validator')>
-			<cfset bundle = variables.i18n.getResourceBundle('/cf-compendium/i18n/inc/resource/utility', 'validation', variables.locale) />
-			<cfset format = variables.i18n.getMessageFormat(variables.locale) />
-			
-			<!--- Create the validator object --->
-			<cfset variables.validator = createObject('component', 'cf-compendium.inc.resource.utility.validation').init(bundle, format) />
-		</cfif>
-		
-		<cfreturn variables.validator />
 	</cffunction>
 	
 	<cffunction name="_toJSON" access="public" returntype="string" output="false">
