@@ -461,6 +461,7 @@
 		<cfset arguments.theApplication.factories.transient.setContrast('cf-compendium.inc.resource.utility.contrast') />
 		<cfset arguments.theApplication.factories.transient.setExtend('cf-compendium.inc.resource.utility.extend') />
 		<cfset arguments.theApplication.factories.transient.setDatagrid('cf-compendium.inc.resource.structure.datagrid') />
+		<cfset arguments.theApplication.factories.transient.setDetail('cf-compendium.inc.resource.structure.detail') />
 		<cfset arguments.theApplication.factories.transient.setFactoryTransient('algid.inc.resource.factory.transient') />
 		<cfset arguments.theApplication.factories.transient.setFilter('cf-compendium.inc.resource.utility.filter') />
 		<cfset arguments.theApplication.factories.transient.setFilterActive('cf-compendium.inc.resource.utility.filterActive') />
