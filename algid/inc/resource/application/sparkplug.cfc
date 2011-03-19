@@ -466,6 +466,7 @@
 		<cfset arguments.theApplication.factories.transient.setFilter('cf-compendium.inc.resource.utility.filter') />
 		<cfset arguments.theApplication.factories.transient.setFilterActive('cf-compendium.inc.resource.utility.filterActive') />
 		<cfset arguments.theApplication.factories.transient.setFilterVertical('cf-compendium.inc.resource.utility.filterVertical') />
+		<cfset arguments.theApplication.factories.transient.setFormat('cf-compendium.inc.resource.format.format') />
 		<cfset arguments.theApplication.factories.transient.setFormatHTML('cf-compendium.inc.resource.utility.formatHtml') />
 		<cfset arguments.theApplication.factories.transient.setFormExtended('cf-compendium.inc.resource.structure.formExtended') />
 		<cfset arguments.theApplication.factories.transient.setFormStandard('cf-compendium.inc.resource.structure.formStandard') />
