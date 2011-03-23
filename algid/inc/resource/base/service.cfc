@@ -19,7 +19,7 @@ component extends="cf-compendium.inc.resource.base.base" {
 		local.validation.add__bundle(arguments.bundlePath, arguments.bundleName);
 	}
 	
-	public component function getModel(required string plugin, required string model) {
+	public component function getModel(string plugin = '', string model = '') {
 		var models = variables.transport.theRequest.managers.singleton.getManagerModel();
 		
 		return models.get(arguments.plugin, arguments.model);

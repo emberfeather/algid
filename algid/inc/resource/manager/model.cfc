@@ -11,11 +11,17 @@
 	}
 </cfscript>
 	<cffunction name="get" access="public" returntype="component" output="false">
-		<cfargument name="plugin" type="string" required="true" />
-		<cfargument name="model" type="string" required="true" />
+		<cfargument name="plugin" type="string" default="" />
+		<cfargument name="model" type="string" default="" />
 		
 		<cfset var hasTransient = '' />
 		<cfset var temp = '' />
+		
+		<cfif not len(argument.plugin) or not len(arguments.model)>
+			<cfset temp = variables.transport.theApplication.factories.transient.getModel(variables.i18n, variables.locale) />
+			
+			<cfreturn temp />
+		</cfif>
 		
 		<cfset arguments.model = ucase(left(arguments.model, 1)) & right(arguments.model, len(arguments.model) - 1) />
 		
