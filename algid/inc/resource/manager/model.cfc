@@ -17,7 +17,7 @@
 		<cfset var hasTransient = '' />
 		<cfset var temp = '' />
 		
-		<cfif not len(argument.plugin) or not len(arguments.model)>
+		<cfif not len(arguments.plugin) or not len(arguments.model)>
 			<cfset temp = variables.transport.theApplication.factories.transient.getModel(variables.i18n, variables.locale) />
 			
 			<cfreturn temp />
