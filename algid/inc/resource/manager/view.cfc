@@ -43,7 +43,7 @@
 <cfscript>
 	public void function set( required string plugin, required string view, required any value ) {
 		if(!isObject(arguments.value)) {
-			throw('application', 'View needs to be an object', 'Cannot store a view that is not an object');
+			throw(type='application', message='View needs to be an object', detail='Cannot store a view that is not an object');
 		}
 		
 		if (!structKeyExists(variables.instance, arguments.plugin)) {

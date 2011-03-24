@@ -48,7 +48,7 @@
 <cfscript>
 	public void function set( required string plugin, required string model, required any value ) {
 		if(!isObject(arguments.value)) {
-			throw('application', 'Model needs to be an object', 'Cannot store a model that is not an object');
+			throw(type='application', message='Model needs to be an object', detail='Cannot store a model that is not an object');
 		}
 		
 		if (!structKeyExists(variables.instance, arguments.plugin)) {
