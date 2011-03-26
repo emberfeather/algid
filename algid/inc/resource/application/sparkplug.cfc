@@ -468,8 +468,7 @@
 		<cfset arguments.theApplication.factories.transient.setFilterVertical('cf-compendium.inc.resource.utility.filterVertical') />
 		<cfset arguments.theApplication.factories.transient.setFormat('cf-compendium.inc.resource.format.format') />
 		<cfset arguments.theApplication.factories.transient.setFormatHTML('cf-compendium.inc.resource.utility.formatHtml') />
-		<cfset arguments.theApplication.factories.transient.setFormExtended('cf-compendium.inc.resource.structure.formExtended') />
-		<cfset arguments.theApplication.factories.transient.setFormStandard('cf-compendium.inc.resource.structure.formStandard') />
+		<cfset arguments.theApplication.factories.transient.setForm('cf-compendium.inc.resource.structure.form.form') />
 		<cfset arguments.theApplication.factories.transient.setLabel('cf-compendium.inc.resource.i18n.label') />
 		<cfset arguments.theApplication.factories.transient.setManagerModel('algid.inc.resource.manager.model') />
 		<cfset arguments.theApplication.factories.transient.setManagerService('algid.inc.resource.manager.service') />
