@@ -30,7 +30,7 @@
 <cfscript>
 	public void function set( required string key, required any value ) {
 		if(!isObject(arguments.value)) {
-			throw('application', 'Singleton value needs to be an object', 'Cannot store a singleton value that is not an object');
+			throw(type='application', message='Singleton value needs to be an object', detail='Cannot store a singleton value that is not an object');
 		}
 		
 		variables.instance[arguments.key] = arguments.value;

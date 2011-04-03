@@ -43,7 +43,7 @@
 <cfscript>
 	public void function set( required string plugin, required string service, required any value ) {
 		if(!isObject(arguments.value)) {
-			throw('application', 'Service needs to be an object', 'Cannot store a service that is not an object');
+			throw(type='application', message='Service needs to be an object', detail='Cannot store a service that is not an object');
 		}
 		
 		if (!structKeyExists(variables.instance, arguments.plugin)) {

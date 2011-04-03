@@ -30,7 +30,7 @@
 		<cfif arrayLen(variables.instance.messages)>
 			<cfsavecontent variable="html">
 				<cfoutput>
-					<div class="#this.getClass()#">
+					<div class="notification #this.getClass()#">
 						<ul>
 							<cfloop array="#this.getMessages()#" index="i">
 								<li>#i#</li>
