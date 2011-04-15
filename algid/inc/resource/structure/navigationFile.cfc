@@ -350,11 +350,8 @@
 			SELECT contentID, [level], path, title, navTitle, navPosition, description, ids, vars, attribute, attributeValue, allow, deny, defaults, contentPath, orderBy
 			FROM variables.navigation
 			WHERE path IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#createPathList(currentPath)#" list="true" />)
-				and locale = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.locale#" />
-				
-				<!--- TODO add in authUser type permission checking --->
-				
-				ORDER BY path ASC
+				AND locale = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.locale#" />
+			ORDER BY path ASC
 		</cfquery>
 		
 		<!--- Prime the URL --->
