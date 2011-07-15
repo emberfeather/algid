@@ -468,6 +468,7 @@
 		<cfset arguments.theApplication.factories.transient.setFormat('cf-compendium.inc.resource.format.format') />
 		<cfset arguments.theApplication.factories.transient.setFormatHTML('cf-compendium.inc.resource.utility.formatHtml') />
 		<cfset arguments.theApplication.factories.transient.setForm('cf-compendium.inc.resource.structure.form.form') />
+		<cfset arguments.theApplication.factories.transient.setIntrospect('cf-compendium.inc.resource.utility.introspect') />
 		<cfset arguments.theApplication.factories.transient.setLabel('cf-compendium.inc.resource.i18n.label') />
 		<cfset arguments.theApplication.factories.transient.setManagerModel('algid.inc.resource.manager.model') />
 		<cfset arguments.theApplication.factories.transient.setManagerService('algid.inc.resource.manager.service') />
