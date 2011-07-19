@@ -77,7 +77,7 @@
 		
 		<cfparam name="arguments.request.repoName" default="" />
 		
-		<cfreturn element('Repository Name', 'repoName', 'text', arguments.request.repoName, arguments.description) />
+		<cfreturn element('Github Repository Name', 'repoName', 'text', arguments.request.repoName, arguments.description) />
 	</cffunction>
 	
 	<cffunction name="elementTitle" access="private" returntype="string" output="false">
@@ -87,6 +87,15 @@
 		<cfparam name="arguments.request.title" default="" />
 		
 		<cfreturn element('Title', 'title', 'text', arguments.request.title, arguments.description) />
+	</cffunction>
+	
+	<cffunction name="elementUser" access="private" returntype="string" output="false">
+		<cfargument name="request" type="struct" default="#{}#" />
+		<cfargument name="description" type="string" required="true" />
+		
+		<cfparam name="arguments.request.user" default="" />
+		
+		<cfreturn element('Github Username', 'user', 'text', arguments.request.user, arguments.description) />
 	</cffunction>
 	
 	<cffunction name="elementUseSCM" access="private" returntype="string" output="false">
@@ -166,6 +175,7 @@
 			<cfoutput>
 				#elementTitle(arguments.request, 'The full title of the plugin.')#
 				#elementKey(arguments.request, 'A unique key used to identify your plugin. This must be unique among <strong>all</strong> plugins.')#
+				#elementUser(arguments.request, 'The user or group of your github account. EX: http://github.com/<strong>username</strong>')#
 				#elementRepoName(arguments.request, 'The name of your github project. EX: http://github.com/&lt;username&gt;/<strong>algid-pluginName</strong>')#
 				#elementPath(arguments.request, 'The full path to the local repository root.')#
 				#elementUseSCM(arguments.request, 'Would you like the wizard to add the files and set the properties for you?', [ 'None', 'Git' ])#

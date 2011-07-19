@@ -1,8 +1,8 @@
 {
-	"archive": "",
+	"archive": "http://github.com/@user@/@repoName@/tarball/0.1.0",
 	"key": "@key@",
 	"title": "@title@",
-	"releaseNotes": "",
-	"URL": "",
+	"releaseNotes": "http://github.com/@user@/@repoName@/wiki/Release-Notes",
+	"URL": "http://github.com/@user@/@repoName@",
 	"version": "0.1.0"
 }
