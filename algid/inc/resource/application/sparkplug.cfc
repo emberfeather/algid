@@ -481,6 +481,7 @@
 		<cfset arguments.theApplication.factories.transient.setPaginate('cf-compendium.inc.resource.utility.paginate') />
 		<cfset arguments.theApplication.factories.transient.setPlugin('algid.inc.resource.plugin.plugin') />
 		<cfset arguments.theApplication.factories.transient.setQueue('cf-compendium.inc.resource.utility.queue') />
+		<cfset arguments.theApplication.factories.transient.setScrubber('cf-compendium.inc.resource.scrubber.scrubber') />
 		<cfset arguments.theApplication.factories.transient.setStack('cf-compendium.inc.resource.utility.stack') />
 		<cfset arguments.theApplication.factories.transient.setTokens('cf-compendium.inc.resource.security.tokens') />
 		<cfset arguments.theApplication.factories.transient.setUrl('cf-compendium.inc.resource.utility.url') />
