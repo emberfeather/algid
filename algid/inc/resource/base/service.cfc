@@ -19,6 +19,39 @@ component extends="cf-compendium.inc.resource.base.base" {
 		local.validation.add__bundle(arguments.bundlePath, arguments.bundleName);
 	}
 	
+	public void function add__scrubber(required string transientName) {
+		local.scrubber = get__scrubber();
+		
+		local.scrub = variables.transport.theApplication.factories.transient['get' & arguments.transientName]();
+		
+		local.scrubber.add__scrubber(local.scrub);
+	}
+	
+	public void function scrub__model( required component model ) {
+		// Ensure the validation has been created
+		local.scrubber = get__scrubber();
+		
+		local.attributes = listToArray(arguments.model.get__attributeList());
+		
+		// Loop through all the model attributes and validate
+		for(local.i = 1; local.i <= arrayLen(local.attributes); local.i++) {
+			local.attribute = arguments.model.get__attribute(local.attributes[local.i]);
+			
+			if(!structIsEmpty(local.attribute.scrub)) {
+				local.keys = listToArray(structKeyList(local.attribute.scrub));
+				
+				for(local.j = 1; local.j <= arrayLen(local.keys); local.j++) {
+					arguments.model['set' & local.attributes[local.i]](
+						local.scrubber[local.keys[local.j]](
+							arguments.model['get' & local.attributes[local.i]](),
+							local.attribute.scrub[local.keys[local.j]]
+						)
+					);
+				}
+			}
+		}
+	}
+	
 	public component function getModel(string plugin = '', string model = '') {
 		var models = variables.transport.theRequest.managers.singleton.getManagerModel();
 		
@@ -31,8 +64,16 @@ component extends="cf-compendium.inc.resource.base.base" {
 		return services.get(arguments.plugin, arguments.service);
 	}
 	
+	public component function get__scrubber() {
+		if (not structKeyExists(variables, 'scrubber')) {
+			// Create the scrubber object
+			variables.scrubber = variables.transport.theApplication.factories.transient.getScrubber();
+		}
+		
+		return variables.scrubber;
+	}
+	
 	public component function get__validation() {
-		// Make sure that we have a validator object
 		if (not structKeyExists(variables, 'validation')) {
 			// Create the validator object
 			variables.validation = variables.transport.theApplication.factories.transient.getValidation(variables.i18n, variables.locale);

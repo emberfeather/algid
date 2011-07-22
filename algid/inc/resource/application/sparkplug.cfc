@@ -461,7 +461,6 @@
 		<cfset arguments.theApplication.factories.transient.setContrast('cf-compendium.inc.resource.utility.contrast') />
 		<cfset arguments.theApplication.factories.transient.setExtend('cf-compendium.inc.resource.utility.extend') />
 		<cfset arguments.theApplication.factories.transient.setDatagrid('cf-compendium.inc.resource.structure.datagrid') />
-		<cfset arguments.theApplication.factories.transient.setDetail('cf-compendium.inc.resource.structure.detail') />
 		<cfset arguments.theApplication.factories.transient.setFactoryTransient('algid.inc.resource.factory.transient') />
 		<cfset arguments.theApplication.factories.transient.setFilter('cf-compendium.inc.resource.utility.filter') />
 		<cfset arguments.theApplication.factories.transient.setFilterActive('cf-compendium.inc.resource.utility.filterActive') />
@@ -469,6 +468,7 @@
 		<cfset arguments.theApplication.factories.transient.setFormat('cf-compendium.inc.resource.format.format') />
 		<cfset arguments.theApplication.factories.transient.setFormatHTML('cf-compendium.inc.resource.utility.formatHtml') />
 		<cfset arguments.theApplication.factories.transient.setForm('cf-compendium.inc.resource.structure.form.form') />
+		<cfset arguments.theApplication.factories.transient.setIntrospect('cf-compendium.inc.resource.utility.introspect') />
 		<cfset arguments.theApplication.factories.transient.setLabel('cf-compendium.inc.resource.i18n.label') />
 		<cfset arguments.theApplication.factories.transient.setManagerModel('algid.inc.resource.manager.model') />
 		<cfset arguments.theApplication.factories.transient.setManagerService('algid.inc.resource.manager.service') />
@@ -481,6 +481,7 @@
 		<cfset arguments.theApplication.factories.transient.setPaginate('cf-compendium.inc.resource.utility.paginate') />
 		<cfset arguments.theApplication.factories.transient.setPlugin('algid.inc.resource.plugin.plugin') />
 		<cfset arguments.theApplication.factories.transient.setQueue('cf-compendium.inc.resource.utility.queue') />
+		<cfset arguments.theApplication.factories.transient.setScrubber('cf-compendium.inc.resource.scrubber.scrubber') />
 		<cfset arguments.theApplication.factories.transient.setStack('cf-compendium.inc.resource.utility.stack') />
 		<cfset arguments.theApplication.factories.transient.setTokens('cf-compendium.inc.resource.security.tokens') />
 		<cfset arguments.theApplication.factories.transient.setUrl('cf-compendium.inc.resource.utility.url') />

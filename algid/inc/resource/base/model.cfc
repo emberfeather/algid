@@ -34,6 +34,7 @@
 		<cfargument name="attribute" type="string" required="true" />
 		<cfargument name="defaultValue" type="any" default="" />
 		<cfargument name="validation" type="struct" default="#{}#" />
+		<cfargument name="scrub" type="struct" default="#{}#" />
 		<cfargument name="options" type="struct" default="#{}#" />
 		
 		<cfset variables.attributes[arguments.attribute] = arguments />
