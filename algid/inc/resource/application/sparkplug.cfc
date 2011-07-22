@@ -139,49 +139,13 @@
 	<cffunction name="loadAll" access="private" returntype="void" output="false">
 		<cfargument name="plugins" type="component" required="true" />
 		<cfargument name="enabledPlugins" type="array" required="true" />
-		<cfargument name="useThreaded" type="boolean" default="true" />
 		
-		<cfset var counter = 1 />
-		<cfset var counterList = 1 />
-		<cfset var currThreads = '' />
 		<cfset var i = '' />
 		<cfset var numPlugins = arrayLen(arguments.enabledPlugins) />
-		<cfset var numPluginsPerThread = 10 />
-		<cfset var precedence = '' />
-		<cfset var plugin = '' />
-		<cfset var pluginConfig = '' />
-		<cfset var pluginList = '' />
-		<cfset var projectConfig = '' />
-		<cfset var randomPrefix = 'p-' & left(createUUID(), 8) & '-' />
-		<cfset var search = '' />
 		
 		<!--- Read in all plugin configs --->
 		<cfloop from="1" to="#numPlugins#" index="i">
-			<cfif arguments.useThreaded>
-				<cfset pluginList = listAppend(pluginList, arguments.enabledPlugins[i]) />
-				
-				<cfif counterList lt numPluginsPerThread and i lt numPlugins>
-					<cfset counterList++ />
-					
-					<cfcontinue />
-				</cfif>
-				
-				<!--- Use a separate thread to read each list --->
-				<cfthread action="run" name="#randomPrefix##counter#" plugins="#arguments.plugins#" pluginList="#pluginList#" enabledPlugins="#arguments.enabledPlugins#">
-					<cfset var i = '' />
-					
-					<cfloop list="#attributes.pluginList#" index="i">
-						<cfset attributes.plugins.set(i, readPlugin(attributes.enabledPlugins, i)) />
-					</cfloop>
-				</cfthread>
-				
-				<cfset currThreads = listAppend(currThreads, '#randomPrefix##counter#') />
-				<cfset pluginList = '' />
-				<cfset counterList = 1 />
-				<cfset counter++ />
-			<cfelse>
-				<cfset arguments.plugins.set(arguments.enabledPlugins[i], readPlugin(arguments.enabledPlugins, arguments.enabledPlugins[i])) />
-			</cfif>
+			<cfset arguments.plugins.set(arguments.enabledPlugins[i], readPlugin(arguments.enabledPlugins, arguments.enabledPlugins[i])) />
 		</cfloop>
 		
 		<!--- Read in all project configs --->
@@ -189,44 +153,8 @@
 		<cfset numPlugins = arrayLen(variables.projects) />
 		
 		<cfloop from="1" to="#numPlugins#" index="i">
-			<cfif arguments.useThreaded>
-				<cfset pluginList = listAppend(pluginList, variables.projects[i]) />
-				
-				<cfif counterList lt numPluginsPerThread and counterList lt numPlugins>
-					<cfset counterList++ />
-					
-					<cfcontinue />
-				</cfif>
-				
-				<!--- Use a separate thread to read each list --->
-				<cfthread action="run" name="#randomPrefix##counter#" plugins="#arguments.plugins#" pluginList="#pluginList#">
-					<cfset var i = '' />
-					
-					<cfloop list="#attributes.pluginList#" index="i">
-						<cfset attributes.plugins.set(i, readProject(i)) />
-					</cfloop>
-				</cfthread>
-				
-				<cfset currThreads = listAppend(currThreads, '#randomPrefix##counter#') />
-				
-				<cfset pluginList = '' />
-				<cfset counterList = 1 />
-				<cfset counter++ />
-			<cfelse>
-				<cfset arguments.plugins.set(variables.projects[i], readProject(variables.projects[i])) />
-			</cfif>
+			<cfset arguments.plugins.set(variables.projects[i], readProject(variables.projects[i])) />
 		</cfloop>
-		
-		<!--- If threading, join the threads --->
-		<cfif arguments.useThreaded>
-			<cfthread action="join" name="#currThreads#" timeout="200000" />
-			
-			<cfloop list="#currThreads#" index="i">
-				<cfif cfthread[i].status eq 'terminated'>
-					<cfthrow message="#cfthread[i].error.message#" detail="#cfthread[i].error.detail#" extendedinfo="#cfthread[i].error.stacktrace#" />
-				</cfif>
-			</cfloop>
-		</cfif>
 	</cffunction>
 	
 	<cffunction name="normalizePath" access="private" returntype="string" output="false">
@@ -534,7 +462,7 @@
 		<cfset setDefaults(tempApplication) />
 		
 		<!--- Load all plugins and projects configurations --->
-		<cfset loadAll( tempApplication.managers.plugin, plugins, objApplication.getUseThreaded() ) />
+		<cfset loadAll( tempApplication.managers.plugin, plugins ) />
 		
 		<!--- Check prerequisites --->
 		<cfset checkPrerequisites( tempApplication.managers.plugin, plugins )>
