@@ -242,12 +242,12 @@
 		<cfargument name="authUser" type="component" required="false" />
 		
 		<cfset var navigation = '' />
-		<cfset var permission = '' />
-		<cfset var permissions = '' />
+		<cfset var role = '' />
+		<cfset var roles = '' />
 		
-		<!--- Retrieve user permissions --->
+		<!--- Retrieve user roles --->
 		<cfif structKeyExists(arguments, 'authUser')>
-			<cfset permissions = arguments.authUser.getPermissions('*') />
+			<cfset roles = arguments.authUser.getRoles() />
 		</cfif>
 		
 		<!--- Query the navigation query for the page information --->
@@ -264,7 +264,7 @@
 					and navTitle <> <cfqueryparam cfsqltype="cf_sql_varchar" value="" />
 				</cfif>
 				
-				<!--- Permission checking --->
+				<!--- Role checking --->
 				and (
 					1 = 0 <!--- One of the others has to be true --->
 					or (
@@ -273,10 +273,13 @@
 							<!--- Everyone is allowed --->
 							allow = '*'
 							
-							<!--- Has explicit permission --->
+							<!--- Has explicit role --->
 							<cfif structKeyExists(arguments, 'authUser')>
-								<cfloop array="#permissions#" index="permission">
-									or <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> IN allow
+								<cfloop array="#roles#" index="role">
+									or allow = <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
+									or allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
+									or allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
+									or allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
 								</cfloop>
 							</cfif>
 							
@@ -286,8 +289,11 @@
 								
 								<!--- Is not explicitly blocked --->
 								<cfif structKeyExists(arguments, 'authUser')>
-									<cfloop array="#permissions#" index="permission">
-										and <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> not IN deny
+									<cfloop array="#roles#" index="role">
+										and deny <> <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
+										and deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
+										and deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
+										and deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
 									</cfloop>
 								</cfif>
 							)
@@ -300,8 +306,11 @@
 							
 							<!--- Is not explicitly blocked --->
 							<cfif structKeyExists(arguments, 'authUser')>
-								<cfloop array="#permissions#" index="permission">
-									and <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> not IN deny
+								<cfloop array="#roles#" index="role">
+									and deny <> <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
+									and deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
+									and deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
+									and deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
 								</cfloop>
 							</cfif>
 						)
@@ -309,10 +318,13 @@
 							<!--- Everyone is allowed --->
 							allow = '*'
 							
-							<!--- Has explicit permission --->
+							<!--- Has explicit role --->
 							<cfif structKeyExists(arguments, 'authUser')>
-								<cfloop array="#permissions#" index="permission">
-									or <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> IN allow
+								<cfloop array="#roles#" index="role">
+									or allow = <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
+									or allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
+									or allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
+									or allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
 								</cfloop>
 							</cfif>
 						)
