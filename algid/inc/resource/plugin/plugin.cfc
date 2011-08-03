@@ -1,23 +1,23 @@
 <cfcomponent extends="cf-compendium.inc.resource.base.object" output="false">
 	<cffunction name="init" access="public" returntype="any" output="false">
 		<cfset var defaults = {
-				applicationSingletons = {},
-				applicationTransients = {},
-				i18n = {
-					locales = [
-						'en_US'
-					]
-				},
-				key = 'undefined',
-				plugin = '',
-				prerequisites = {},
-				replaces = {},
-				requestSingletons = {},
-				requestTransients = {},
-				sessionSingletons = {},
-				sessionTransients = {},
-				version = ''
-			} />
+			applicationSingletons = {},
+			applicationTransients = {},
+			i18n = {
+				locales = [
+					'en_US'
+				]
+			},
+			key = 'undefined',
+			plugin = '',
+			prerequisites = {},
+			replaces = {},
+			requestSingletons = {},
+			requestTransients = {},
+			sessionSingletons = {},
+			sessionTransients = {},
+			version = ''
+		} />
 		
 		<cfset super.init() />
 		
