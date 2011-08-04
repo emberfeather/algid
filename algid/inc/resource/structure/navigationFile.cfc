@@ -286,10 +286,10 @@
 							<!--- Has explicit role --->
 							<cfif structKeyExists(arguments, 'authUser')>
 								<cfloop array="#roles#" index="role">
-									or allow = <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
-									or allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
-									or allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
-									or allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
+									OR allow = <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
+									OR allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
+									OR allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
+									OR allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
 								</cfloop>
 							</cfif>
 							
@@ -300,41 +300,40 @@
 								<!--- Is not explicitly blocked --->
 								<cfif structKeyExists(arguments, 'authUser')>
 									<cfloop array="#roles#" index="role">
-										and deny <> <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
-										and deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
-										and deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
-										and deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
+										AND deny <> <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
+										AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
+										AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
+										AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
 									</cfloop>
 								</cfif>
 							)
 						)
 					) or (
 						secureOrder = 'deny,allow'
-						and (
+						AND (
 							<!--- Everyone is not blocked --->
 							deny <> '*'
 							
 							<!--- Is not explicitly blocked --->
 							<cfif structKeyExists(arguments, 'authUser')>
 								<cfloop array="#roles#" index="role">
-									and deny <> <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
-									and deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
-									and deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
-									and deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
+									AND deny <> <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
+									AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
+									AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
+									AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
 								</cfloop>
 							</cfif>
-						)
-						and (
+						) AND (
 							<!--- Everyone is allowed --->
 							allow = '*'
 							
 							<!--- Has explicit role --->
 							<cfif structKeyExists(arguments, 'authUser')>
 								<cfloop array="#roles#" index="role">
-									or allow = <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
-									or allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
-									or allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
-									or allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
+									OR allow = <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
+									OR allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
+									OR allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
+									OR allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
 								</cfloop>
 							</cfif>
 						)
@@ -407,10 +406,10 @@
 								<!--- Is not explicitly blocked --->
 								<cfif structKeyExists(arguments, 'authUser')>
 									<cfloop array="#roles#" index="role">
-										and deny <> <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
-										and deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
-										and deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
-										and deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
+										AND deny <> <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
+										AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
+										AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
+										AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
 									</cfloop>
 								</cfif>
 							)
@@ -424,10 +423,10 @@
 							<!--- Is not explicitly blocked --->
 							<cfif structKeyExists(arguments, 'authUser')>
 								<cfloop array="#roles#" index="role">
-									and deny <> <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
-									and deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
-									and deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
-									and deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
+									AND deny <> <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
+									AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
+									AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
+									AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
 								</cfloop>
 							</cfif>
 						)
