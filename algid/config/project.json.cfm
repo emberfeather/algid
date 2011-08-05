@@ -9,5 +9,5 @@
 	"prerequisites": {
 		"cf-compendium": "0.1.5"
 	},
-	"version": "0.1.9"
+	"version": "0.1.10"
 }
