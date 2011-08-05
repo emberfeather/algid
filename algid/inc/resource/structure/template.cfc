@@ -6,6 +6,7 @@
 		<cfargument name="i18n" type="component" required="true" />
 		<cfargument name="locale" type="string" required="true" />
 		<cfargument name="options" type="struct" default="#{}#" />
+		<cfargument name="authUser" type="component" required="false" />
 		
 		<cfset var args = '' />
 		<cfset var defaults = {
@@ -26,6 +27,7 @@
 		<!--- Store the navigation and url objects --->
 		<cfset variables.navigation = arguments.navigation />
 		<cfset variables.theUrl = arguments.theUrl />
+		<cfset variables.authUser = structKeyExists(arguments, 'authUser') ? arguments.authUser : '' />
 		
 		<cfset variables.i18n = arguments.i18n />
 		<cfset variables.locale = arguments.locale />
@@ -43,8 +45,8 @@
 		} />
 		
 		<!--- Check if we have an auth user --->
-		<cfif isObject(this.getAuthUser())>
-			<cfset args.authUser = this.getAuthUser() />
+		<cfif isObject(variables.authUser)>
+			<cfset args.authUser = variables.authUser />
 		</cfif>
 		
 		<cfset variables.currentPage = variables.navigation.locatePage( argumentCollection = args ) />
@@ -425,11 +427,15 @@
 	<cffunction name="getContentPath" access="public" returntype="string" output="false">
 		<cfargument name="prefix" type="string" required="true" />
 		
-		<cfset var level = '' />
+		<cfif not variables.currentPage.countLevels()>
+			<cfheader statuscode="400" statustext="Page not found">
+			
+			<cfthrow type="forbidden" message="#variables.label.get('notFound')#" />
+		</cfif>
 		
-		<cfset level = variables.currentPage.getLastLevel() />
+		<cfset local.level = variables.currentPage.getLastLevel() />
 		
-		<cfreturn variables.navigation.convertContentPath(level.path, level.contentPath, arguments.prefix) />
+		<cfreturn variables.navigation.convertContentPath(local.level.path, local.level.contentPath, arguments.prefix) />
 	</cffunction>
 	
 	<!---

@@ -106,15 +106,25 @@
 				<cfset querySetCell(variables.navigation, 'navPosition', i.xmlAttributes.position, currentRow) />
 			</cfif>
 			
+			<!--- Check for permissions --->
+			<cfif structKeyExists(i.xmlAttributes, 'allow')>
+				<cfset querySetCell(variables.navigation, 'allow', i.xmlAttributes.allow, currentRow) />
+			</cfif>
+			
+			<!--- Check for permissions --->
+			<cfif structKeyExists(i.xmlAttributes, 'deny')>
+				<cfset querySetCell(variables.navigation, 'deny', i.xmlAttributes.deny, currentRow) />
+			</cfif>
+			
 			<!--- Make arguments for the next level --->
 			<cfset args = {
-					elements = i.xmlChildren,
-					<!--- TODO make the content path actually change for each level --->
-					contentPath = contentPath,
-					level = arguments.level + 1,
-					parentPath = plainPath,
-					bundle = arguments.bundle
-				} />
+				elements = i.xmlChildren,
+				<!--- TODO make the content path actually change for each level --->
+				contentPath = contentPath,
+				level = arguments.level + 1,
+				parentPath = plainPath,
+				bundle = arguments.bundle
+			} />
 			
 			<cfset addNavElementsXML( argumentCollection = args ) />
 		</cfloop>
@@ -242,12 +252,12 @@
 		<cfargument name="authUser" type="component" required="false" />
 		
 		<cfset var navigation = '' />
-		<cfset var permission = '' />
-		<cfset var permissions = '' />
+		<cfset var role = '' />
+		<cfset var roles = '' />
 		
-		<!--- Retrieve user permissions --->
+		<!--- Retrieve user roles --->
 		<cfif structKeyExists(arguments, 'authUser')>
-			<cfset permissions = arguments.authUser.getPermissions('*') />
+			<cfset roles = arguments.authUser.getRoles() />
 		</cfif>
 		
 		<!--- Query the navigation query for the page information --->
@@ -264,7 +274,7 @@
 					and navTitle <> <cfqueryparam cfsqltype="cf_sql_varchar" value="" />
 				</cfif>
 				
-				<!--- Permission checking --->
+				<!--- Role checking --->
 				and (
 					1 = 0 <!--- One of the others has to be true --->
 					or (
@@ -273,10 +283,13 @@
 							<!--- Everyone is allowed --->
 							allow = '*'
 							
-							<!--- Has explicit permission --->
+							<!--- Has explicit role --->
 							<cfif structKeyExists(arguments, 'authUser')>
-								<cfloop array="#permissions#" index="permission">
-									or <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> IN allow
+								<cfloop array="#roles#" index="role">
+									OR allow = <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
+									OR allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
+									OR allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
+									OR allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
 								</cfloop>
 							</cfif>
 							
@@ -286,33 +299,41 @@
 								
 								<!--- Is not explicitly blocked --->
 								<cfif structKeyExists(arguments, 'authUser')>
-									<cfloop array="#permissions#" index="permission">
-										and <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> not IN deny
+									<cfloop array="#roles#" index="role">
+										AND deny <> <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
+										AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
+										AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
+										AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
 									</cfloop>
 								</cfif>
 							)
 						)
 					) or (
 						secureOrder = 'deny,allow'
-						and (
+						AND (
 							<!--- Everyone is not blocked --->
 							deny <> '*'
 							
 							<!--- Is not explicitly blocked --->
 							<cfif structKeyExists(arguments, 'authUser')>
-								<cfloop array="#permissions#" index="permission">
-									and <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> not IN deny
+								<cfloop array="#roles#" index="role">
+									AND deny <> <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
+									AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
+									AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
+									AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
 								</cfloop>
 							</cfif>
-						)
-						and (
+						) AND (
 							<!--- Everyone is allowed --->
 							allow = '*'
 							
-							<!--- Has explicit permission --->
+							<!--- Has explicit role --->
 							<cfif structKeyExists(arguments, 'authUser')>
-								<cfloop array="#permissions#" index="permission">
-									or <cfqueryparam cfsqltype="cf_sql_varchar" value="#permission#" /> IN allow
+								<cfloop array="#roles#" index="role">
+									OR allow = <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
+									OR allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
+									OR allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
+									OR allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
 								</cfloop>
 							</cfif>
 						)
@@ -340,6 +361,13 @@
 		<cfset var navigation = '' />
 		<cfset var currentPath = '' />
 		<cfset var varName = '' />
+		<cfset var role = '' />
+		<cfset var roles = '' />
+		
+		<!--- Retrieve user roles --->
+		<cfif structKeyExists(arguments, 'authUser')>
+			<cfset roles = arguments.authUser.getRoles() />
+		</cfif>
 		
 		<!--- Check the base path --->
 		<cfset currentPath = arguments.theURL.search('_base') />
@@ -351,6 +379,73 @@
 			FROM variables.navigation
 			WHERE path IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#createPathList(currentPath)#" list="true" />)
 				AND locale = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.locale#" />
+				
+				<!--- Role checking --->
+				and (
+					1 = 0 <!--- One of the others has to be true --->
+					or (
+						secureOrder = 'allow,deny'
+						and (
+							<!--- Everyone is allowed --->
+							allow = '*'
+							
+							<!--- Has explicit role --->
+							<cfif structKeyExists(arguments, 'authUser')>
+								<cfloop array="#roles#" index="role">
+									or allow = <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
+									or allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
+									or allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
+									or allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
+								</cfloop>
+							</cfif>
+							
+							or (
+								<!--- Everyone is not blocked --->
+								deny <> '*'
+								
+								<!--- Is not explicitly blocked --->
+								<cfif structKeyExists(arguments, 'authUser')>
+									<cfloop array="#roles#" index="role">
+										AND deny <> <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
+										AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
+										AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
+										AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
+									</cfloop>
+								</cfif>
+							)
+						)
+					) or (
+						secureOrder = 'deny,allow'
+						and (
+							<!--- Everyone is not blocked --->
+							deny <> '*'
+							
+							<!--- Is not explicitly blocked --->
+							<cfif structKeyExists(arguments, 'authUser')>
+								<cfloop array="#roles#" index="role">
+									AND deny <> <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
+									AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
+									AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
+									AND deny NOT LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
+								</cfloop>
+							</cfif>
+						)
+						and (
+							<!--- Everyone is allowed --->
+							allow = '*'
+							
+							<!--- Has explicit role --->
+							<cfif structKeyExists(arguments, 'authUser')>
+								<cfloop array="#roles#" index="role">
+									or allow = <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#" />
+									or allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#role#,%" />
+									or allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#,%" />
+									or allow LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#role#" />
+								</cfloop>
+							</cfif>
+						)
+					)
+				)
 			ORDER BY path ASC
 		</cfquery>
 		
