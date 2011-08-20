@@ -379,6 +379,9 @@
 		<cfset temp = createObject('component', 'cf-compendium.inc.resource.storage.objectSerial').init() />
 		<cfset arguments.theApplication.managers.singleton.setObjectSerial(temp) />
 		
+		<cfset temp = createObject('component', 'cf-compendium.inc.resource.utility.pluralize').init() />
+		<cfset arguments.theApplication.managers.singleton.setPluralize(temp) />
+		
 		<cfset temp = createObject('component', 'algid.inc.resource.utility.version').init() />
 		<cfset arguments.theApplication.managers.singleton.setVersions(temp) />
 		
