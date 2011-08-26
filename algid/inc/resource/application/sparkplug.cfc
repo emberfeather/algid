@@ -379,6 +379,9 @@
 		<cfset temp = createObject('component', 'cf-compendium.inc.resource.storage.objectSerial').init() />
 		<cfset arguments.theApplication.managers.singleton.setObjectSerial(temp) />
 		
+		<cfset temp = createObject('component', 'cf-compendium.inc.resource.utility.pluralize').init() />
+		<cfset arguments.theApplication.managers.singleton.setPluralize(temp) />
+		
 		<cfset temp = createObject('component', 'algid.inc.resource.utility.version').init() />
 		<cfset arguments.theApplication.managers.singleton.setVersions(temp) />
 		
@@ -411,6 +414,7 @@
 		<cfset arguments.theApplication.factories.transient.setQueue('cf-compendium.inc.resource.utility.queue') />
 		<cfset arguments.theApplication.factories.transient.setScrubber('cf-compendium.inc.resource.scrubber.scrubber') />
 		<cfset arguments.theApplication.factories.transient.setStack('cf-compendium.inc.resource.utility.stack') />
+		<cfset arguments.theApplication.factories.transient.setTemplate('algid.inc.resource.structure.template') />
 		<cfset arguments.theApplication.factories.transient.setTokens('cf-compendium.inc.resource.security.tokens') />
 		<cfset arguments.theApplication.factories.transient.setUrl('cf-compendium.inc.resource.utility.url') />
 		<cfset arguments.theApplication.factories.transient.setUrlRewrite('cf-compendium.inc.resource.utility.urlRewrite') />
