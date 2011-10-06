@@ -229,7 +229,7 @@
 		<!--- The versioned files --->
 		<cfset args.versionedFiles = '.gitignore,.gitmodules,Application.cfc,build.xml,README.md,version.json' />
 		<cfset args.versionedFiles &= ',build/settings/project.properties,build/settings/test.properties,build/settings/user.properties.example,build/settings/version.properties' />
-		<cfset args.versionedFiles &= ',test/HttpAntRunner.cfc,test/notATest.cfc,test/RemoteFacade.cfc' />
+		<cfset args.versionedFiles &= ',test/HttpAntRunner.cfc,test/index.cfm,test/notATest.cfc,test/RemoteFacade.cfc' />
 		
 		<!--- The unversioned files --->
 		<cfset args.unversionedFiles = '' />
