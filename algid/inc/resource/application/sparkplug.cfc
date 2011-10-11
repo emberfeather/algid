@@ -534,7 +534,7 @@
 			Minimizing race conditions by having fully formed variables replace
 			the current application information
 		--->
-		<cflock scope="application" type="exclusive" timeout="20">
+		<cflock scope="application" type="exclusive" timeout="20" throwontimeout="true">
 			<cfloop list="#structKeyList(tempApplication)#" index="i">
 				<cfset arguments.theApplication[i] = tempApplication[i] />
 			</cfloop>
