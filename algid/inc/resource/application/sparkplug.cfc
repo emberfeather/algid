@@ -236,6 +236,7 @@
 		<cfset var plugin = '' />
 		<cfset var settings = { '__fullname' = 'algid.inc.resource.plugin.plugin' } />
 		<cfset var settingsFile = 'settings.json.cfm' />
+		<cfset var settingsPath = variables.storagePath & '/' & arguments.pluginKey & '/config/' />
 		
 		<cfif not fileExists(configPath & configFile)>
 			<cfthrow message="Could not find the plugin configuration" detail="The plugin could not be detected at #variables.appBaseDirectory# for #arguments.pluginKey#" />
@@ -255,12 +256,24 @@
 		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
 		
 		<!--- Check if there is not a settings file yet --->
-		<cfif not fileExists(configPath & settingsFile)>
-			<cffile action="write" file="#configPath & settingsFile#" output="{}" addnewline="false" />
+		<cfif not directoryExists(settingsPath)>
+			<cfset directoryCreate(settingsPath) />
+		</cfif>
+		
+		<cfif not fileExists(settingsPath & settingsFile)>
+			<!--- TODO Remove after release 0.1.11 --->
+			<cfif fileExists(configPath & settingsFile)>
+				<cfset fileMove(configPath & settingsFile, settingsPath & settingsFile) />
+			<cfelse>
+				<cffile action="write" file="#settingsPath & settingsFile#" output="{}" addnewline="false" />
+			</cfif>
+			
+			<!--- TODO Uncomment after release 0.1.11 --->
+			<!--- <cffile action="write" file="#settingsPath & settingsFile#" output="{}" addnewline="false" /> --->
 		</cfif>
 		
 		<!--- Read the plugin settings file --->
-		<cffile action="read" file="#configPath & settingsFile#" variable="contents" />
+		<cffile action="read" file="#settingsPath & settingsFile#" variable="contents" />
 		
 		<!--- Extend the settings --->
 		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
@@ -324,6 +337,8 @@
 		<cfset var objectSerial = '' />
 		<cfset var plugin = '' />
 		<cfset var settings = { '__fullname' = 'algid.inc.resource.plugin.plugin' } />
+		<cfset var settingsFile = 'settings.json.cfm' />
+		<cfset var settingsPath = variables.storagePath & '/' & arguments.project & '/config/' />
 		
 		<cfset configPath = expandPath(configPath) />
 		
@@ -341,6 +356,21 @@
 		<!--- Extend the settings --->
 		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
 		
+		<!--- Check if there is not a settings file yet --->
+		<cfif not directoryExists(settingsPath)>
+			<cfset directoryCreate(settingsPath) />
+		</cfif>
+		
+		<cfif not fileExists(settingsPath & settingsFile)>
+			<cffile action="write" file="#settingsPath & settingsFile#" output="{}" addnewline="false" />
+		</cfif>
+		
+		<!--- Read the settings file --->
+		<cffile action="read" file="#settingsPath & settingsFile#" variable="contents" />
+		
+		<!--- Extend the settings --->
+		<cfset settings = extender.extend( settings, deserializeJSON(contents) ) />
+		
 		<!--- Create the application singleton --->
 		<cfset plugin = objectSerial.deserialize( input = settings, doComplete = true, isTrustedSource = true ) />
 		
@@ -351,7 +381,12 @@
 		<cfargument name="pluginKey" type="string" required="true" />
 		
 		<cfset var pluginVersion = '' />
-		<cfset var pluginVersionFile = variables.appBaseDirectory & 'plugins/' & arguments.pluginKey & '/config/version.json.cfm' />
+		<cfset var pluginVersionFile = variables.storagePath & '/' & arguments.pluginKey & '/config/version.json.cfm' />
+		
+		<!--- TODO Remove after release 0.1.11 --->
+		<cfif fileExists(variables.appBaseDirectory & 'plugins/' & arguments.pluginKey & '/config/version.json.cfm')>
+			<cfset fileMove(variables.appBaseDirectory & 'plugins/' & arguments.pluginKey & '/config/version.json.cfm', pluginVersionFile) />
+		</cfif>
 		
 		<cfif fileExists(pluginVersionFile)>
 			<!--- Read the application version file --->
@@ -545,7 +580,7 @@
 		<cfargument name="pluginKey" type="string" required="true" />
 		<cfargument name="version" type="string" required="true" />
 		
-		<cfset var pluginVersionFile = variables.appBaseDirectory & 'plugins/' & arguments.pluginKey & '/config/version.json.cfm' />
+		<cfset var pluginVersionFile = variables.storagePath & '/' & arguments.pluginKey & '/config/version.json.cfm' />
 		
 		<!--- Overwrite the application version file --->
 		<cffile action="write" file="#pluginVersionFile#" output="#arguments.version#" addNewLine="false" />
