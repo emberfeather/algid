@@ -261,15 +261,7 @@
 		</cfif>
 		
 		<cfif not fileExists(settingsPath & settingsFile)>
-			<!--- TODO Remove after release 0.1.11 --->
-			<cfif fileExists(configPath & settingsFile)>
-				<cfset fileMove(configPath & settingsFile, settingsPath & settingsFile) />
-			<cfelse>
-				<cffile action="write" file="#settingsPath & settingsFile#" output="{}" addnewline="false" />
-			</cfif>
-			
-			<!--- TODO Uncomment after release 0.1.11 --->
-			<!--- <cffile action="write" file="#settingsPath & settingsFile#" output="{}" addnewline="false" /> --->
+			<cffile action="write" file="#settingsPath & settingsFile#" output="{}" addnewline="false" />
 		</cfif>
 		
 		<!--- Read the plugin settings file --->
@@ -382,11 +374,6 @@
 		
 		<cfset var pluginVersion = '' />
 		<cfset var pluginVersionFile = variables.storagePath & '/' & arguments.pluginKey & '/config/version.json.cfm' />
-		
-		<!--- TODO Remove after release 0.1.11 --->
-		<cfif fileExists(variables.appBaseDirectory & 'plugins/' & arguments.pluginKey & '/config/version.json.cfm')>
-			<cfset fileMove(variables.appBaseDirectory & 'plugins/' & arguments.pluginKey & '/config/version.json.cfm', pluginVersionFile) />
-		</cfif>
 		
 		<cfif fileExists(pluginVersionFile)>
 			<!--- Read the application version file --->
