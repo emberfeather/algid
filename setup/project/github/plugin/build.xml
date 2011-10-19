@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="algid-@key@" default="minify" basedir=".">
+<project name="@repoName@" default="minify" basedir=".">
 	<!-- Include the property files -->
 	<property file="${basedir}/build/settings/user.properties"/>
 	<property file="${basedir}/build/settings/project.properties"/>
