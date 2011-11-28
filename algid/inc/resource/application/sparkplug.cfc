@@ -401,6 +401,9 @@
 		<cfset temp = createObject('component', 'cf-compendium.inc.resource.storage.objectSerial').init() />
 		<cfset arguments.theApplication.managers.singleton.setObjectSerial(temp) />
 		
+		<cfset temp = createObject('component', 'cf-compendium.inc.resource.structure.form.attributes').init() />
+		<cfset arguments.theApplication.managers.singleton.setAttributes(temp) />
+		
 		<cfset temp = createObject('component', 'cf-compendium.inc.resource.utility.pluralize').init() />
 		<cfset arguments.theApplication.managers.singleton.setPluralize(temp) />
 		
