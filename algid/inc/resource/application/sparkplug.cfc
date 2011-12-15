@@ -239,7 +239,7 @@
 		<cfset var settingsPath = variables.storagePath & '/' & arguments.pluginKey & '/config/' />
 		
 		<cfif not fileExists(configPath & configFile)>
-			<cfthrow message="Could not find the plugin configuration" detail="The plugin could not be detected at #variables.appBaseDirectory# for #arguments.pluginKey#" />
+			<cfthrow message="Could not find the plugin configuration" detail="The plugin could not be detected for #arguments.pluginKey# at #settingsPath#" />
 		</cfif>
 		
 		<!--- Create the utility objects --->
@@ -400,6 +400,9 @@
 		
 		<cfset temp = createObject('component', 'cf-compendium.inc.resource.storage.objectSerial').init() />
 		<cfset arguments.theApplication.managers.singleton.setObjectSerial(temp) />
+		
+		<cfset temp = createObject('component', 'cf-compendium.inc.resource.structure.form.attributes').init() />
+		<cfset arguments.theApplication.managers.singleton.setAttributes(temp) />
 		
 		<cfset temp = createObject('component', 'cf-compendium.inc.resource.utility.pluralize').init() />
 		<cfset arguments.theApplication.managers.singleton.setPluralize(temp) />
