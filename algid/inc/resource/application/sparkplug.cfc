@@ -239,7 +239,7 @@
 		<cfset var settingsPath = variables.storagePath & '/' & arguments.pluginKey & '/config/' />
 		
 		<cfif not fileExists(configPath & configFile)>
-			<cfthrow message="Could not find the plugin configuration" detail="The plugin could not be detected at #variables.appBaseDirectory# for #arguments.pluginKey#" />
+			<cfthrow message="Could not find the plugin configuration" detail="The plugin could not be detected for #arguments.pluginKey# at #settingsPath#" />
 		</cfif>
 		
 		<!--- Create the utility objects --->
