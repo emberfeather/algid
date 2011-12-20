@@ -12,11 +12,6 @@
 	<target name="minify" depends="prepare" description="Minify the CSS and JS files">
 		<echo message="Starting: CSS and JS minification"/>
 		
-		<!-- Create a single, concatenated JS file -->
-		<concat destfile="${build.script}jquery.${project.key}.js">
-			<fileset dir="${build.script}" includes="jquery.base.js" />
-		</concat>
-		
 		<!-- Create a single, concatenated CSS file -->
 		<concat destfile="${build.style}${project.key}.css">
 			<fileset dir="${build.style}" includes="base.css" />

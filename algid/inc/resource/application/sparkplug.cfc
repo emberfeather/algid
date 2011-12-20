@@ -239,7 +239,7 @@
 		<cfset var settingsPath = variables.storagePath & '/' & arguments.pluginKey & '/config/' />
 		
 		<cfif not fileExists(configPath & configFile)>
-			<cfthrow message="Could not find the plugin configuration" detail="The plugin could not be detected at #variables.appBaseDirectory# for #arguments.pluginKey#" />
+			<cfthrow message="Could not find the plugin configuration" detail="The plugin could not be detected for #arguments.pluginKey# at #settingsPath#" />
 		</cfif>
 		
 		<!--- Create the utility objects --->
@@ -261,15 +261,7 @@
 		</cfif>
 		
 		<cfif not fileExists(settingsPath & settingsFile)>
-			<!--- TODO Remove after release 0.1.11 --->
-			<cfif fileExists(configPath & settingsFile)>
-				<cfset fileMove(configPath & settingsFile, settingsPath & settingsFile) />
-			<cfelse>
-				<cffile action="write" file="#settingsPath & settingsFile#" output="{}" addnewline="false" />
-			</cfif>
-			
-			<!--- TODO Uncomment after release 0.1.11 --->
-			<!--- <cffile action="write" file="#settingsPath & settingsFile#" output="{}" addnewline="false" /> --->
+			<cffile action="write" file="#settingsPath & settingsFile#" output="{}" addnewline="false" />
 		</cfif>
 		
 		<!--- Read the plugin settings file --->
@@ -383,11 +375,6 @@
 		<cfset var pluginVersion = '' />
 		<cfset var pluginVersionFile = variables.storagePath & '/' & arguments.pluginKey & '/config/version.json.cfm' />
 		
-		<!--- TODO Remove after release 0.1.11 --->
-		<cfif fileExists(variables.appBaseDirectory & 'plugins/' & arguments.pluginKey & '/config/version.json.cfm')>
-			<cfset fileMove(variables.appBaseDirectory & 'plugins/' & arguments.pluginKey & '/config/version.json.cfm', pluginVersionFile) />
-		</cfif>
-		
 		<cfif fileExists(pluginVersionFile)>
 			<!--- Read the application version file --->
 			<cffile action="read" file="#pluginVersionFile#" variable="pluginVersion" />
@@ -413,6 +400,9 @@
 		
 		<cfset temp = createObject('component', 'cf-compendium.inc.resource.storage.objectSerial').init() />
 		<cfset arguments.theApplication.managers.singleton.setObjectSerial(temp) />
+		
+		<cfset temp = createObject('component', 'cf-compendium.inc.resource.structure.form.attributes').init() />
+		<cfset arguments.theApplication.managers.singleton.setAttributes(temp) />
 		
 		<cfset temp = createObject('component', 'cf-compendium.inc.resource.utility.pluralize').init() />
 		<cfset arguments.theApplication.managers.singleton.setPluralize(temp) />
