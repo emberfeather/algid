@@ -128,7 +128,7 @@
 			<cfset plugin = arguments.theApplication.managers.plugin.get(i) />
 			
 			<!--- Configure the application for the plugin --->
-			<cfset plugin.getConfigure().onApplicationEnd(argumentCollection = arguments) />
+			<cfset plugin.getConfigure().onApplicationEnd(arguments.theApplication) />
 		</cfloop>
 	</cffunction>
 	
