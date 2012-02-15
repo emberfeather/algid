@@ -404,6 +404,9 @@
 		<cfset temp = createObject('component', 'cf-compendium.inc.resource.structure.form.attributes').init() />
 		<cfset arguments.theApplication.managers.singleton.setAttributes(temp) />
 		
+		<cfset temp = createObject('component', 'cf-compendium.inc.resource.utility.formatAP').init() />
+		<cfset arguments.theApplication.managers.singleton.setFormatAP(temp) />
+		
 		<cfset temp = createObject('component', 'cf-compendium.inc.resource.utility.pluralize').init() />
 		<cfset arguments.theApplication.managers.singleton.setPluralize(temp) />
 		
